@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Categories extends Model
+class Comment extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'category_name',
+        'comment',
     ];
 
     protected $hidden = [
         'id_user',
         'id_video',
-
     ];
 }
