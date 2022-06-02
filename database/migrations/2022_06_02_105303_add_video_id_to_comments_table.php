@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('comments', function (Blueprint $table) {
             $table->unsignedBigInteger('id_video')->nullable()->after('comment');
-            $table->foreign('id_video')->references('id')->on('video');
+            $table->foreign('id_video')->references('id')->on('videos');
         });
     }
 

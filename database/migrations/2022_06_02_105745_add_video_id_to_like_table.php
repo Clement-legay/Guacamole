@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('like', function (Blueprint $table) {
-            $table->unsignedBigInteger('id_video')->nullable()->after('like');
-            $table->foreign('id_video')->references('id')->on('video');
+        Schema::table('likes', function (Blueprint $table) {
+            $table->unsignedBigInteger('id_video')->nullable()->after('is_liked');
+            $table->foreign('id_video')->references('id')->on('videos');
         });
     }
 
@@ -26,7 +26,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('like', function (Blueprint $table) {
+        Schema::table('likes', function (Blueprint $table) {
             $table->dropForeign(['id_video']);
             $table->dropColumn('id_video');
         });
