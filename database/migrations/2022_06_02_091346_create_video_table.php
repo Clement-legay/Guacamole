@@ -24,8 +24,7 @@ return new class extends Migration
             $table->string('views');
             $table->string('status');
             $table->string('type');
-            $table->timestamps('created_at');
-            $table->timestamp('updated_at');
+            $table->timestamps();
         });
     }
 
