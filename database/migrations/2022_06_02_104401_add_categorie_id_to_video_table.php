@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('video', function (Blueprint $table) {
             $table->unsignedBigInteger('id_categorie')->nullable()->after('type');
-            $table->foreign('id_categorie')->references('id')->on('categorie');
+            $table->foreign('id_categorie')->references('id')->on('categories');
         });
     }
 
