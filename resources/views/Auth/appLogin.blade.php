@@ -7,22 +7,18 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" href="{{ asset('img/logo2.png') }}">
     <link href="{{asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{asset('css/loginRegister.css') }}" rel="stylesheet">
     <script src="{{asset('js/app.js') }}" defer></script>
     <title>@yield('title')</title>
 </head>
 <body>
-@extends('layouts.nav')
+<div class="position-absolute">
+    <img height="60" width="60" src="{{ asset('img/logo2.png') }}">
+    <span class="text-black-50" style="top: 10px;font-size: 1.8em; font-weight: lighter">Guacatube</span>
+</div>
 
-    <div class="row p-0 m-0">
-        <div class="col-2 p-0" id="sidebar">
-            @component('layouts.sidebar')
-            @endcomponent
-        </div>
-        <div class="col-10 p-0" id="content">
-            <div class="p-4 mt-5 pt-4 bg-light" style="min-height: 60vh">
-                @yield('content')
-            </div>
-        </div>
-    </div>
+<div class="vh-100 d-flex justify-content-center align-items-center">
+    @yield('content')
+</div>
 </body>
 </html>
