@@ -27,7 +27,7 @@ class VideoFactory extends Factory
             'thumbnail' => 'https://picsum.photos/id/' . $this->faker->numberBetween(1, 999) . '/1920/1080',
             'video' => public_path('videoTest.mp4'),
             'views' => $this->faker->numberBetween(1,10000),
-            'duration' => '00:00:57',
+            'duration' => $this->faker->time('H:i:s'),
             'status' => 'online',
             'type' => 'public',
         ];

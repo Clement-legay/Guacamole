@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -22,11 +21,11 @@ class DatabaseSeeder extends Seeder
         DB::table('Likes')->delete();
         DB::table('Roles')->delete();
 
-        \App\Models\User::factory(200)->create();
-        \App\Models\Video::factory(100)->create();
-        \App\Models\Category::factory(10)->create();
-        \App\Models\Comment::factory(200)->create();
-        \App\Models\Like::factory(2000)->create();
         \App\Models\Role::factory(1)->create();
+        \App\Models\User::factory(200)->create();
+        \App\Models\Category::factory(10)->create();
+        \App\Models\Video::factory(100)->create();
+        \App\Models\Comment::factory(200)->create();
+        \App\Models\Like::factory(200)->create();
     }
 }
