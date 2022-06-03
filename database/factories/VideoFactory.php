@@ -27,7 +27,7 @@ class VideoFactory extends Factory
             'thumbnail' => $this->faker->imageUrl(),
             'video' => public_path('videoTest.mp4'),
             'views' => $this->faker->numberBetween(1,10000),
-            'duration' => '00:00:57',
+            'duration' => $this->faker->time('H:i:s'),
             'status' => 'online',
             'type' => 'public',
         ];

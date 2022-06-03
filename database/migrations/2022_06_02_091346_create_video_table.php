@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('token');
             $table->string('thumbnail');
             $table->string('video');
-            $table->string('duration');
-            $table->string('views');
+            $table->time('duration');
+            $table->integer('views');
             $table->string('status');
             $table->string('type');
             $table->timestamps();
