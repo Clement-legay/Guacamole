@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('videos', function (Blueprint $table) {
-            $table->unsignedBigInteger('id_categorie')->nullable()->after('type');
-            $table->foreign('id_categorie')->references('id')->on('categories');
+            $table->unsignedBigInteger('category_id')->nullable()->after('type');
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
@@ -27,8 +27,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('videos', function (Blueprint $table) {
-            $table->dropForeign(['id_categorie']);
-            $table->dropColumn('id_categorie');
+            $table->dropForeign(['category_id']);
+            $table->dropColumn('category_id');
         });
     }
 };

@@ -18,8 +18,8 @@ class CommentFactory extends Factory
     {
         return [
             'comment' => $this->faker->sentence,
-            'id_user' => $this->faker->numberBetween(1,200),
-            'id_video' => $this->faker->numberBetween(1,100),
+            'user_id' => $this->faker->numberBetween(1,200),
+            'video_id' => $this->faker->numberBetween(1,100),
         ];
     }
 }

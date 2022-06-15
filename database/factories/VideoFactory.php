@@ -19,15 +19,13 @@ class VideoFactory extends Factory
     public function definition()
     {
         return [
-            'id_user' => $this->faker->numberBetween(1,200),
-            'id_categorie' => $this->faker->numberBetween(1,10),
+            'user_id' => $this->faker->numberBetween(1,200),
+            'category_id' => $this->faker->numberBetween(1,10),
             'title' => $this->faker->jobTitle(),
             'description' => $this->faker->sentence,
-            'token' => Str::random(10),
             'thumbnail' => 'https://picsum.photos/id/' . $this->faker->numberBetween(1, 999) . '/1920/1080',
-            'video' => public_path('videoTest.mp4'),
-            'views' => $this->faker->numberBetween(1,10000),
-            'duration' => $this->faker->time('H:i:s'),
+            'video' => 'videoTest.mp4',
+            'duration' => $this->faker->numberBetween(1, 1000000),
             'status' => 'online',
             'type' => 'public',
         ];

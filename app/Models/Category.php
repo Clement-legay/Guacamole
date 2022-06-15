@@ -17,4 +17,9 @@ class Category extends Model
         'id_video',
 
     ];
+
+    static function searchCategory($search, $limit)
+    {
+        return Category::where('category_name', 'like', '%' . $search . '%')->take($limit)->get();
+    }
 }

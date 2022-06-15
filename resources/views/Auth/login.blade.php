@@ -1,6 +1,6 @@
 @extends('Auth.appLogin')
 
-@section('title', 'GuacaTube | Login')
+@section('title', 'Login')
 
 @section('content')
     <div class="container">
@@ -12,7 +12,7 @@
                             <h1 style="text-decoration: underline #9DA27A">Login</h1>
                         </div>
                         <div class="col-auto">
-                            <a class="modal-title text-black-50" style="font-size: 2em; text-decoration: none">Register</a>
+                            <a href="{{route('register')}}" class="modal-title text-black-50" style="font-size: 2em; text-decoration: none">Register</a>
                         </div>
                     </div>
                     <div class="card-body">

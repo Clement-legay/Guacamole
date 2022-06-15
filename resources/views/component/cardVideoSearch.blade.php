@@ -12,7 +12,7 @@
                                 <p class="card-subtitle" style="font-size: 1em">{{ $video->title }}</p>
                             </div>
                             <div class="col-12">
-                                <p class="card-text text-black-50 text-body">{{ $video->views > 1000 ? round($video->views / 1000) . 'k' : $video->views }} views • {{ $video->sinceWhen() }}</p>
+                                <p class="card-text text-black-50 text-body">{{ $video->views()->count() > 1000 ? round($video->views()->count() / 1000) . 'k' : $video->views()->count() }} views • {{ $video->sinceWhen() }}</p>
                             </div>
                         </div>
                     </div>

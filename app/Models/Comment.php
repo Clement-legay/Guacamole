@@ -10,10 +10,27 @@ class Comment extends Model
     use HasFactory;
     protected $fillable = [
         'comment',
+        'user_id',
+        'video_id',
+        'previous_id'
     ];
 
-    protected $hidden = [
-        'id_user',
-        'id_video',
-    ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function video()
+    {
+        return $this->belongsTo(Video::class);
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(Comment::class, 'previous_id');
+    }
+
+    public function id() {
+        return base64_encode($this->id);
+    }
 }

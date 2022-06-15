@@ -17,8 +17,8 @@ class LikeFactory extends Factory
     public function definition()
     {
         return [
-            'id_user' => $this->faker->numberBetween(1,200),
-            'id_video' => $this->faker->numberBetween(1,100),
+            'user_id' => $this->faker->numberBetween(1,200),
+            'video_id' => $this->faker->numberBetween(1,100),
             'is_liked' => $this->faker->boolean,
         ];
     }

@@ -17,13 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('description');
-            $table->string('token');
             $table->string('thumbnail');
             $table->string('video');
-            $table->time('duration');
-            $table->integer('views');
-            $table->string('status');
-            $table->string('type');
+            $table->Integer('duration');
+            $table->enum('status', ['pending', 'downloading', 'downloaded', 'processing', 'processed', 'failed', 'online']);
+            $table->enum('type', ['public', 'private', 'unlisted']);
             $table->timestamps();
         });
     }
@@ -35,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('video');
+        Schema::dropIfExists('videos');
     }
 };
