@@ -15,15 +15,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('Users')->delete();
-        DB::table('Videos')->delete();
-        DB::table('Categories')->delete();
-        DB::table('Comments')->delete();
-        DB::table('Likes')->delete();
-        DB::table('Roles')->delete();
-        DB::table('Subscribes')->delete();
-        DB::table('Views')->delete();
-        DB::table('Tags')->delete();
+        DB::table('users')->delete();
+        DB::table('videos')->delete();
+        DB::table('categories')->delete();
+        DB::table('comments')->delete();
+        DB::table('likes')->delete();
+        DB::table('roles')->delete();
+        DB::table('subscribes')->delete();
+        DB::table('views')->delete();
+        DB::table('tags')->delete();
 
         \App\Models\Role::factory(1)->create();
         \App\Models\User::factory(200)->create();
