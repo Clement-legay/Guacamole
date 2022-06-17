@@ -17,7 +17,7 @@ class TagFactory extends Factory
     public function definition()
     {
         return [
-            'name' => '#' . $this->faker->word,
+            'name' => $this->faker->word,
             'video_id' => $this->faker->numberBetween(1, 200),
         ];
     }

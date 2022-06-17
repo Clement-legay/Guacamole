@@ -99,11 +99,15 @@
             </div>
             @if((url()->current() == route('video.create')) == false)
                 <div id="avatar-row" class="row justify-content-center align-content-center">
-                    <img src="{{ $video->thumbnail }}" alt="{{ $video->title }}" width="100%">
+                    <a href="{{route('watch', $video->id())}}">
+                        <img src="{{ asset($video->thumbnail) }}" alt="{{ $video->title }}" width="100%">
+                    </a>
                 </div>
                 <div class="row justify-content-center align-content-start pt-2 link-name">
                     <div class="col-auto">
-                        <span style="font-size: 0.9em; font-weight: 500">Your video</span>
+                        <a style="text-decoration: none; color: black" href="{{route('watch', $video->id())}}">
+                            <span style="font-size: 0.9em; font-weight: 500">Your video</span>
+                        </a>
                     </div>
                 </div>
                 <div class="row justify-content-center align-content-center link-name">
@@ -121,14 +125,14 @@
         </div>
 
         @if((url()->current() == route('video.create')) == false)
-        <div onclick="doNav('{{ route('video.edit', base64_encode($video->id)) }}')" class="col-12 profile_pages mt-3">
+        <div onclick="doNav('{{ route('video.details', base64_encode($video->id)) }}')" class="col-12 profile_pages mt-3">
         @else
         <div class="col-12 mt-3 disabled">
         @endif
             <div class="row justify-content-center align-content-center">
                 <div class="col-3">
                     <div class="row justify-content-center align-content-center">
-                        @if((url()->current() == route('video.create')) == false && route('video.edit', base64_encode($video->id)) == url()->current())
+                        @if((url()->current() == route('video.create')) == false && route('video.details', base64_encode($video->id)) == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-pen-fill"></i>
                         @else
                             <i style="font-size: 1.5em" class="bi bi-pen"></i>

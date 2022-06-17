@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Video;
+use App\Models\View;
+use FFMpeg\Format\Video\X264;
 use Illuminate\Http\Request;
+use ProtoneMedia\LaravelFFMpeg\Exporters\HLSVideoFilters;
+use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 class videoController extends Controller
 {
@@ -26,6 +31,14 @@ class videoController extends Controller
     {
         $video = Video::find(base64_decode($video));
 
+        $view = View::create([
+            'video_id' => $video->id,
+            'user_id' => auth()->user()->id ?? null,
+            'time_watched' => 0
+        ]);
+
+        $view->save();
+
         return view('video.player', compact('video'));
     }
 
@@ -44,16 +57,52 @@ class videoController extends Controller
             'type' => 'required',
         ]);
 
-        Video::create([
+        $category = Category::where('category_name', $request->category)->first();
+
+        if ($request->hasFile('video')) {
+            $lowFormat = (new X264('aac'))->setKiloBitrate(500);
+            $highFormat = (new X264('aac'))->setKiloBitrate(1000);
+
+            FFMpeg::open($request->file('video'))
+                ->exportForHLS()
+                ->addFormat($lowFormat, function (HLSVideoFilters $filters) {
+                    $filters->resize(1280, 720);
+                })
+                ->addFormat($highFormat, function (HLSVideoFilters $filters) {
+                    $filters->resize(1920, 1080);
+                })
+                ->toDisk('public')
+                ->save('videos/videoTest.m3u8');
+
+            $this->info('Video processing finished.');
+
+
+
+            $request->file('video')->store('public/videos');
+            $video = 'storage/videos/' . $request->file('video')->hashName();
+        }
+
+        if ($request->hasFile('thumbnail')) {
+            $request->file('thumbnail')->store('public/thumbnails');
+            $thumbnail = 'storage/thumbnails/' . $request->file('thumbnail')->hashName();
+        }
+
+
+
+        dd('no upload for now');
+
+        $video = Video::create([
             'title' => $request->title,
             'description' => $request->description,
-            'video' => $request->video->store('videos'),
-            'thumbnail' => $request->thumbnail->store('thumbnails'),
+            'video' => $video,
+            'thumbnail' => $thumbnail,
             'type' => $request->type,
             'user_id' => auth()->user()->id,
+            'category_id' => $category->id,
+            'duration' => 0,
         ]);
 
-        return redirect()->route('video.manage');
+        return redirect()->route('video.details', base64_encode($video->id));
     }
 
     public function show($video)

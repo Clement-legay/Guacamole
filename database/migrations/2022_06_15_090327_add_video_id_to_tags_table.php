@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('tags', function (Blueprint $table) {
-            $table->bigInteger('video_id')->unsigned();
+            $table->bigInteger('video_id')->unsigned()->nullable();
             $table->foreign('video_id')->references('id')->on('videos');
         });
     }

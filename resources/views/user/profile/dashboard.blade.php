@@ -80,7 +80,7 @@
                     <span class="p-0 m-0" style="font-size: 0.8em">Since your chanel's creation</span>
 
                     <div class="row mt-3">
-                        @foreach(auth()->user()->subscribers()->limit(4)->get() as $subscriber)
+                        @foreach(auth()->user()->subscribers()->selectRaw('users.*, subscribes.created_at as subscribed_at')->orderBy('subscribed_at', 'desc')->take(5)->get() as $subscriber)
                             <div class="col-12 mb-2">
                                 <div class="row justify-content-start">
                                     <div class="col-auto">
@@ -91,7 +91,7 @@
                                     <div class="col-5">
                                         <span class="p-0 m-0" style="font-size: 1em">{{ $subscriber->username }}</span>
                                         <br>
-                                        <span class="p-0 m-0" style="font-size: 0.8em">{{ $subscriber->subscribers()->get()->count() }} subscribers</span>
+                                        <span class="p-0 m-0" style="font-size: 0.8em">{{ $subscriber->subscribers()->get()->count() }} subs</span>
                                     </div>
                                 </div>
                             </div>

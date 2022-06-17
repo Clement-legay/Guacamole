@@ -121,12 +121,42 @@ class User extends Authenticatable
         return $this->hasMany(View::class);
     }
 
+    public function likes()
+    {
+        return $this->hasMany(Like::class)->where('is_liked', 1);
+    }
+
+    public function dislikes()
+    {
+        return $this->hasMany(Like::class)->where('is_liked', 0);
+    }
+
     public function profile_image()
     {
         if ($this->profile_image) {
             return "<img width='100%' height='100%' src='" . asset('storage/PI/' . $this->profile_image) . "' alt='Profile Image' class='img-fluid'>";
         } else {
-            return "<div style='border-radius: 50%; background: " . $this->color . "; color: white; width: 100%; height: 100%; padding-top: 17%; text-align: center; font-size: 2em'>" . substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1) . "</div>";
+            return "<div style='border-radius: 50%; background: " . $this->color . "; color: white; width: 100%; height: 100%; padding-top: 17%; text-align: center; text-transform: uppercase; font-size: 2em'>" . substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1) . "</div>";
         }
+    }
+
+    public function suggestions($limit)
+    {
+        return View::countViewsAll(now()->subWeek(), $limit);
+    }
+
+    public function hasLikedVideo($videoId)
+    {
+        return $this->likes()->where('video_id', $videoId)->exists();
+    }
+
+    public function hasDislikedVideo($videoId)
+    {
+        return $this->dislikes()->where('video_id', $videoId)->exists();
+    }
+
+    public function id()
+    {
+        return base64_encode($this->id);
     }
 }

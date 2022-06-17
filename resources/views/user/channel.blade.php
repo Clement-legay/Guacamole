@@ -42,7 +42,7 @@
 </div>
 <div class="flex-row">
     <div class="d-flex justify-content-center align-items-center">
-        <div class="flex-column col-12" style="background: #f0f0f0">
+        <div class="flex-column col-12 bg-light">
             <div class="flex-row px-3">
                 <div class="d-flex justify-content-center align-items-center">
                     <div class="flex-column justify-content-center col-11 px-4">

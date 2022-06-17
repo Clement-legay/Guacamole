@@ -29,6 +29,11 @@ class Video extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
     public function sinceWhen()
     {
         return $this->created_at->diffForHumans();
@@ -42,6 +47,11 @@ class Video extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function id()
+    {
+        return base64_encode($this->id);
     }
 
     public function likes()
@@ -62,6 +72,11 @@ class Video extends Model
     public function tags()
     {
        return $this->hasMany(Tag::class, 'video_id');
+    }
+
+    public function tagsName()
+    {
+       return $this->hasMany(Tag::class, 'video_id')->get()->pluck('name')->implode(' ');
     }
 
     public function viewCountById($betweenFirst, $betweenLast)

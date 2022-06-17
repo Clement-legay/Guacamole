@@ -83,14 +83,18 @@
         <div class="col-12">
             <div id="avatar-row" class="row justify-content-center align-content-center">
                 <div class="col-auto">
-                    <div id="avatar" style="width: 100px; height: 100px; font-size: 1.2em">
-                        {!! auth()->user()->profile_image() !!}
-                    </div>
+                    <a style="text-decoration: none" href="{{ route('channel', auth()->user()->id()) }}">
+                        <div id="avatar" style="width: 100px; height: 100px; font-size: 1.2em">
+                            {!! auth()->user()->profile_image() !!}
+                        </div>
+                    </a>
                 </div>
             </div>
             <div class="row justify-content-center align-content-center pt-2 link-name">
                 <div class="col-auto">
-                    <span style="font-size: 0.9em; font-weight: 500">Your chanel</span>
+                    <a style="text-decoration: none; color: black" href="{{ route('channel', auth()->user()->id()) }}">
+                        <span style="font-size: 0.9em; font-weight: 500">Your chanel</span>
+                    </a>
                 </div>
             </div>
             <div class="row justify-content-center align-content-center link-name">

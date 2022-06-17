@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\loginController;
 use App\Http\Controllers\Auth\registerController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SubscribeController;
 use App\Http\Controllers\UserController;
@@ -23,6 +24,10 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/subscribe/{user}', [SubscribeController::class, 'subscribe'])->name('subscribe');
     Route::get('/unsubscribe/{user}', [SubscribeController::class, 'unsubscribe'])->name('unsubscribe');
+
+    Route::get('/like/{video}', [LikeController::class, 'like'])->name('like');
+    Route::get('/dislike/{video}', [LikeController::class, 'dislike'])->name('dislike');
+    Route::get('/deleteOpinion/{video}', [LikeController::class, 'deleteOpinion'])->name('deleteOpinion');
 
     Route::group(['prefix'=>'profile', 'as'=>'profile.'], function () {
         Route::get('/content', [UserController::class, 'profile'])->name('content');
@@ -45,12 +50,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/upload', [VideoController::class, 'upload'])->name('upload');
 
         Route::get('/{video}', [VideoController::class, 'show'])->name('details');
-        Route::get('/{video}/edit', [VideoController::class, 'edit'])->name('edit');
-        Route::put('/{video}/update', [VideoController::class, 'update'])->name('update');
-        Route::delete('/{video}/delete', [VideoController::class, 'delete'])->name('delete');
-
         Route::get('/{video}/dashboard', [VideoController::class, 'dashboard'])->name('dashboard');
         Route::get('/{video}/comments', [VideoController::class, 'comments'])->name('comments');
+
+        Route::put('/{video}/update', [VideoController::class, 'update'])->name('update');
+        Route::delete('/{video}/delete', [VideoController::class, 'delete'])->name('delete');
     });
 
     Route::group(['prefix'=>'comment', 'as'=>'comment.'], function () {

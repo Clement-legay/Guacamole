@@ -41,7 +41,7 @@
                 <td>{{ $video->created_at->format('d F Y') }}</td>
                 <td>{{ $video->views()->get()->count() }}</td>
                 <td>{{ $video->comments()->get()->count() }}</td>
-                <td>{{ $video->likes()->get()->count() / ($video->likes()->get()->count() + $video->dislikes()->get()->count()) * 100 }}%</td>
+                <td>{{ $video->likes()->get()->count() > 0 ? $video->likes()->get()->count() / ($video->likes()->get()->count() + $video->dislikes()->get()->count()) * 100 : 0}}%</td>
             </tr>
             @endforeach
         </tbody>

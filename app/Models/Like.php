@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Like extends Model
 {
     use HasFactory;
-    protected $hidden = [
-        'id_user',
-        'id_video',
+    protected $fillable = [
+        'user_id',
+        'video_id',
         'is_liked',
     ];
 }
