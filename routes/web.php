@@ -20,7 +20,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group(['domain' => ((env('APP_ENV') == 'production') ? 'www.guacatube.fr' : null)], function() {
+
+// check app_env to change the route domain
+Route::group(['domain' => env('APP_ENV') == 'production' ? env('APP_DOMAIN') : null], function () {
     Route::group(['middleware' => 'auth'], function () {
         Route::get('/subscribe/{user}', [SubscribeController::class, 'subscribe'])->name('subscribe');
         Route::get('/unsubscribe/{user}', [SubscribeController::class, 'unsubscribe'])->name('unsubscribe');
@@ -54,7 +56,7 @@ Route::group(['domain' => ((env('APP_ENV') == 'production') ? 'www.guacatube.fr'
             Route::get('/{video}/comments', [VideoController::class, 'comments'])->name('comments');
 
             Route::put('/{video}/update', [VideoController::class, 'update'])->name('update');
-            Route::delete('/{video}/delete', [VideoController::class, 'delete'])->name('delete');
+            Route::get('/{video}/delete', [VideoController::class, 'delete'])->name('delete');
         });
 
         Route::group(['prefix' => 'comment', 'as' => 'comment.'], function () {
@@ -92,4 +94,3 @@ Route::group(['domain' => ((env('APP_ENV') == 'production') ? 'www.guacatube.fr'
 
     Route::get('/watch/{video}', [videoController::class, 'watch'])->name('watch');
 });
-

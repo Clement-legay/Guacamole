@@ -31,7 +31,7 @@
             <tr onclick="doNav('{{ route('video.details', base64_encode($video->id)) }}')" class="video_row">
                 <th scope="row">{{ $video->id }}</th>
                 <td>
-                    <img width="150" height="84" src="{{ $video->thumbnail }}" alt="{{ $video->title }}">
+                    <img width="150" height="84" src="{{ asset($video->thumbnail) }}" alt="{{ $video->title }}">
                 </td>
                 <td>
                     <p>{{ $video->title }}</p>

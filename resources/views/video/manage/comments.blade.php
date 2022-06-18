@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Comments')
+@section('title', $video->title . ' | Comments')
 
 @section('background', 'p-4')
 
@@ -83,7 +83,7 @@
 
     <div class="row justify-content-center pt-4">
         <div class="dropdown-divider" style="padding: 0 !important;"></div>
-        @foreach(auth()->user()->getAllComments()->orderBy('created_at', 'desc')->get() as $comment)
+        @foreach($video->comments()->orderBy('created_at', 'desc')->get() as $comment)
         <div class="col-12 comment_row py-2">
             <div class="row justify-content-center">
                 <div class="col-1 pt-2">
@@ -109,7 +109,7 @@
                 <div class="col-4">
                     <div class="row justify-content-center">
                         <div class="col-4">
-                            <img src="{{ asset($comment->video()->first()->thumbnail) }}" width="150" height="84" alt="{{ $comment->video()->first()->title }}">
+                            <img src="{{ asset($comment->video()->first()->thumbnail) }}" width="100%" alt="{{ $comment->video()->first()->title }}">
                         </div>
                         <div class="col-6">
                             <p class="p-0 m-0 video_name" style="font-size: 0.9em; font-weight: 400">{{ $comment->video()->first()->title }}</p>

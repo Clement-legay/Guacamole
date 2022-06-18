@@ -87,9 +87,12 @@ class User extends Authenticatable
         return $this->hasManyThrough(Comment::class, Video::class);
     }
 
-    public function mostViewedVideos($betweenFirst, $limit)
+    public function mostViewedVideos($limit)
     {
-        return $this->videos()->join('views', 'video_id', 'videos.id')->whereBetween('views.created_at', [$betweenFirst, now()])->selectRaw('videos.*, count(*) as views')->groupBy('id')->orderBy('views', 'desc')->limit($limit);
+        return $this->hasMany(Video::class)
+            ->withCount('views')
+            ->orderBy('views_count', 'desc')
+            ->limit($limit);
     }
 
     public function getChanelViews($betweenFirst, $betweenLast)

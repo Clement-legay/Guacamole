@@ -22,23 +22,17 @@ class View extends Model
     //return an array of videos with the most views
     static function countViewsAll($betweenFirst, $limit)
     {
-        return Video::join('views', 'videos.id', '=', 'views.video_id')
-            ->whereBetween('views.created_at', [$betweenFirst, now()])
-            ->selectRaw('videos.*, count(*) as views')
-            ->groupBy('id')
-            ->orderBy('views', 'desc')
+        return Video::withCount('views')
+            ->orderBy('views_count', 'desc')
             ->limit($limit)
             ->get();
     }
 
-    static function countViewsByCat($betweenFirst, Category $category, $limit)
+    static function countViewsByCat(Category $category, $limit)
     {
-        return Video::join('views', 'videos.id', '=', 'views.video_id')
-            ->whereBetween('views.created_at', [$betweenFirst, now()])
-            ->where('videos.category_id', $category->id)
-            ->selectRaw('videos.*, count(*) as views')
-            ->groupBy('id')
-            ->orderBy('views', 'desc')
+        return Video::withCount('views')
+            ->where('category_id', $category->id)
+            ->orderBy('views_count', 'desc')
             ->limit($limit)
             ->get();
     }

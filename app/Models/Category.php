@@ -12,12 +12,6 @@ class Category extends Model
         'category_name',
     ];
 
-    protected $hidden = [
-        'id_user',
-        'id_video',
-
-    ];
-
     static function searchCategory($search, $limit)
     {
         return Category::where('category_name', 'like', '%' . $search . '%')->take($limit)->get();

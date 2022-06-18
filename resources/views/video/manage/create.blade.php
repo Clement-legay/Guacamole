@@ -3,156 +3,13 @@
 @section('title', 'Create Video')
 
 @section('head')
-
+    <link rel="stylesheet" href="{{ asset('css/styleVideoForm.css') }}">
+    <script src="{{ asset('js/scriptVideoForm.js') }}"></script>
 @endsection
 
 @section('background', 'p-4 me-5 pe-5')
 
 @section('content')
-
-    <style>
-        .title-prop {
-            font-size: 0.75em;
-            font-weight: 400;
-        }
-
-        .prop-link {
-            font-size: 0.9em;
-            font-weight: 500;
-            color: #007bff;
-        }
-
-        .prop {
-            font-size: 0.9em;
-            font-weight: 500;
-        }
-
-        .btn-file {
-            width: 100%;
-            background: #67875E;
-            color: white;
-        }
-
-        .counter {
-            font-size: 0.7em;
-            font-weight: 500;
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            padding-bottom: 5px;
-            padding-right: 5px;
-        }
-
-        .dropdown-item {
-            cursor: pointer;
-        }
-
-        .dropdown-item:nth-child(2n) {
-            background: #f5f5f5;
-        }
-
-        .text-input {
-            width: 100%;
-            resize: none;
-        }
-
-        #autocomplete-categories {
-            width: 100%;
-            position: absolute;
-            z-index: 100;
-            background: #fff;
-            top: 36px;
-            left: 0;
-        }
-    </style>
-
-    <script>
-        function selectItem(item) {
-            if (item.id === 'video') {
-                document.getElementById('name').innerText = item.files[0].name.split('.')[0];
-                document.getElementById('size').innerText = Math.round(item.files[0].size / 1024 / 1024) + " MB";
-            } else {
-                document.getElementById('thumbnail-picture').src = URL.createObjectURL(item.files[0]);
-            }
-        }
-        function count(item, counter, limit) {
-            counter = document.getElementById(counter)
-            item = document.getElementById(item)
-            counter.innerText = item.value.length + " / " + limit
-
-            if (item.value.length > limit) {
-                counter.style.color = "red"
-                item.classList.add("border-danger")
-            } else {
-                counter.style.color = "black"
-                item.classList.remove("border-danger")
-            }
-        }
-
-        function categoriesAutocomplete(input, autocompleteName, API) {
-            autocomplete = document.getElementById(autocompleteName);
-            input = document.getElementById(input)
-
-            // empty autocomplete
-            autocomplete.innerHTML = ""
-
-            if (API === 'categories') {
-                let xmlHttp = new XMLHttpRequest();
-                xmlHttp.open( "GET", "{{ route('API_categories') }}?search=" + input.value + "&limit=5", false ); // false for synchronous request
-                xmlHttp.send( null );
-                let response = JSON.parse(xmlHttp.responseText)
-
-                for (let i = 0; i < response.length; i++) {
-                    // create html element
-                    let element = document.createElement("p")
-                    element.classList.add("dropdown-item")
-                    element.classList.add("py-2")
-                    element.classList.add("mb-0")
-                    element.innerText = response[i].category_name
-                    element.setAttribute("onclick", "selectCategory('category', '" + response[i].category_name + "', '" + autocompleteName + "')")
-
-                    // append element to dropdown
-                    autocomplete.appendChild(element)
-                }
-            }
-        }
-
-        function checkMatch(item) {
-            item = document.getElementById(item)
-
-            if (item.value.length === 1) {
-                console.log("match")
-                if (item.value[item.value.length -1] !== '#') {
-                    item.value = '#' + item.value
-                }
-            } else if (item.value[item.value.length - 1] === ' ') {
-                if (item.value.length > 1) {
-                        item.value = item.value + '#'
-                    }
-                }
-
-            // // innertext matches pattern
-            // if (item.value.match(/^(#\w+( ?))+$/)) {
-            //     item.classList.remove("border-danger")
-            //     return true
-            // } else {
-            //     item.classList.add("border-danger")
-            //     item.value = item.value.slice(0, -1)
-            //     return false
-            // }
-        }
-
-        function selectCategory(item, name, autocomplete) {
-            document.getElementById(item).value = name
-            document.getElementById(autocomplete).innerHTML = ""
-
-        }
-
-        function outCategories(autocomplete) {
-            // document.getElementById(autocomplete).innerHTML = ""
-        }
-    </script>
-
     <form action="{{ route('video.upload') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row justify-content-between pe-5 mb-2">
@@ -200,7 +57,7 @@
                     </div>
                     <div class="col-6 mb-3">
                         <div class="form-group" style="position: relative" onfocusout="outCategories('autocomplete-categories')">
-                            <input style="height: 38px" type="text" aria-label="category" oninput="categoriesAutocomplete('category', 'autocomplete-categories', 'categories')" placeholder="Category" class="form-control @error('category') is-invalid @enderror" id="category" name="category">
+                            <textarea style="height: 38px" type="text" aria-label="category" oninput="categoriesAutocomplete('category', 'autocomplete-categories', 'categories')" rows="1" placeholder="Category" class="form-control @error('category') is-invalid @enderror" id="category" name="category">{{ old('category') }}</textarea>
                             <div id="autocomplete-categories">
 
                             </div>
@@ -215,15 +72,15 @@
                         <div class="form-group">
                             <select name="type" aria-label="privacy" class="form-control @error('type') is-invalid @enderror" id="type">
                                 <option value="null">Select privacy</option>
-                                <option value="public"><i class="bi bi-eye-fill"></i> Public</option>
-                                <option value="private"><i class="bi bi-eye-slash-fill"></i> Private</option>
-                                <option value="unlisted"><i class="bi bi-eyeglasses"></i> Unlisted</option>
+                                <option value="public" {{ old('type') === 'public' ? 'selected' : '' }}><i class="bi bi-eye-fill"></i> Public</option>
+                                <option value="private" {{ old('type') === 'private' ? 'selected' : '' }}><i class="bi bi-eye-slash-fill"></i> Private</option>
+                                <option value="unlisted" {{ old('type') === 'unlisted' ? 'selected' : '' }}><i class="bi bi-eyeglasses"></i> Unlisted</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <input type="text" aria-label="tags" oninput="checkMatch('tags')" class="form-control @error('tags') is-invalid @enderror" id="tags" name="tags" placeholder="Tags">
+                            <input type="text" value="{{ old('tags') }}" aria-label="tags" oninput="checkMatch('tags')" class="form-control @error('tags') is-invalid @enderror" id="tags" name="tags" placeholder="Tags">
                             @error('tags')
                             <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -242,7 +99,7 @@
                                     <div class="col-12 mb-3">
                                         <div class="form-group">
                                             <label for="video" id="videoOpener" class="btn btn-file" ><i class="bi bi-upload"></i> Upload a file</label>
-                                            <input type="file" onchange="selectItem(video)" style="display: none" class=" @error('video') is-invalid @enderror" id="video" name="video">
+                                            <input type="file" onchange="selectItem(video)" style="display: none" class=" @error('video') is-invalid @enderror" id="video" name="video" accept="video/*">
                                             @error('video')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>

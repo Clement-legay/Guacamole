@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" href="{{ asset('img/logo2.png') }}">
     @yield('head')
-    <link href="{{asset('css/app.css') }}" rel="stylesheet">
-    <script src="{{asset('js/app.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <script src="{{ asset('js/app.js') }}"></script>
     <title>@yield('title')</title>
 </head>
 <body>

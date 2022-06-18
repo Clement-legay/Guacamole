@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Tag;
 use App\Models\Video;
 use App\Models\View;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use ProtoneMedia\LaravelFFMpeg\Exporters\HLSVideoFilters;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
@@ -15,6 +17,19 @@ class videoController extends Controller
     public function index()
     {
         return view('video');
+    }
+
+    public function delete($video)
+    {
+        $video = Video::find(base64_decode($video));
+
+        unlink(storage_path('app/public/videos/' . explode('/', $video->video)[count(explode('/', $video->video)) - 1]));
+
+        unlink(storage_path('app/public/thumbnails/' . explode('/', $video->thumbnail)[count(explode('/', $video->thumbnail)) - 1]));
+
+        $video->delete();
+
+        return redirect()->route('profile.content');
     }
 
     public function search(Request $request)
@@ -55,41 +70,28 @@ class videoController extends Controller
             'video' => 'required|mimes:mp4,mov,ogg,qt',
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
             'type' => 'required',
+            'category' => 'required',
         ]);
 
-        $category = Category::where('category_name', $request->category)->first();
+        $category = Category::firstOrCreate(['category_name' => $request->category]);
 
         if ($request->hasFile('video')) {
-            $lowFormat = (new X264('aac'))->setKiloBitrate(500);
-            $highFormat = (new X264('aac'))->setKiloBitrate(1000);
-
-            FFMpeg::open($request->file('video'))
-                ->exportForHLS()
-                ->addFormat($lowFormat, function (HLSVideoFilters $filters) {
-                    $filters->resize(1280, 720);
-                })
-                ->addFormat($highFormat, function (HLSVideoFilters $filters) {
-                    $filters->resize(1920, 1080);
-                })
-                ->toDisk('public')
-                ->save('videos/videoTest.m3u8');
-
-            $this->info('Video processing finished.');
-
-
-
-            $request->file('video')->store('public/videos');
-            $video = 'storage/videos/' . $request->file('video')->hashName();
+            $return = $request->file('video')->store('public/videos');
+            if ($return) {
+                $video = 'storage/videos/' . $request->file('video')->hashName();
+            } else {
+                return redirect()->back()->with('error', 'Error uploading video');
+            }
         }
 
         if ($request->hasFile('thumbnail')) {
-            $request->file('thumbnail')->store('public/thumbnails');
-            $thumbnail = 'storage/thumbnails/' . $request->file('thumbnail')->hashName();
+            $return = $request->file('thumbnail')->store('public/thumbnails');
+            if ($return) {
+                $thumbnail = 'storage/thumbnails/' . $request->file('thumbnail')->hashName();
+            } else {
+                return redirect()->back()->with('error', 'Error uploading thumbnail');
+            }
         }
-
-
-
-        dd('no upload for now');
 
         $video = Video::create([
             'title' => $request->title,
@@ -101,6 +103,50 @@ class videoController extends Controller
             'category_id' => $category->id,
             'duration' => 0,
         ]);
+
+        foreach (explode(' ', $request->tags) as $tag) {
+            Tag::create(['name' => $tag, 'video_id' => $video->id]);
+        }
+
+        return redirect()->route('video.details', base64_encode($video->id));
+    }
+
+    public function update(Request $request, $video)
+    {
+        $video = Video::find(base64_decode($video));
+
+        $request->validate([
+            'title' => 'required|max:191',
+            'description' => 'required|max:191',
+            'thumbnail' => 'image|mimes:jpeg,png,jpg,gif,svg',
+            'type' => 'required',
+            'category' => 'required',
+        ]);
+
+        $category = Category::firstOrCreate(['category_name' => $request->category]);
+
+        if ($request->hasFile('thumbnail')) {
+            $return = $request->file('thumbnail')->store('public/thumbnails');
+            if ($return) {
+                $thumbnail = 'storage/thumbnails/' . $request->file('thumbnail')->hashName();
+            } else {
+                return redirect()->back()->with('error', 'Error uploading thumbnail');
+            }
+        }
+
+        $video->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'thumbnail' => $thumbnail ?? $video->thumbnail,
+            'type' => $request->type,
+            'category_id' => $category->id,
+        ]);
+
+        $video->tags()->delete();
+
+        foreach (explode(' ', $request->tags) as $tag) {
+            Tag::firstOrCreate(['name' => $tag, 'video_id' => $video->id]);
+        }
 
         return redirect()->route('video.details', base64_encode($video->id));
     }
@@ -123,13 +169,13 @@ class videoController extends Controller
     {
         $video = Video::find(base64_decode($video));
 
-        return view('video.manage.show', compact('video'));
+        return view('video.manage.dashboard', compact('video'));
     }
 
     public function comments($video)
     {
         $video = Video::find(base64_decode($video));
 
-        return view('video.manage.show', compact('video'));
+        return view('video.manage.comments', compact('video'));
     }
 }
