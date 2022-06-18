@@ -15,7 +15,7 @@ class PageController extends Controller
         if (isset($_GET['category'])) {
             $categorySelected = Category::find($_GET['category']);
 
-            $mostViewedThisWeek = View::countViewsByCat(now()->subWeek(), $categorySelected, 24);
+            $mostViewedThisWeek = View::countViewsByCat($categorySelected, 24);
 
             return view('welcome', compact('mostViewedThisWeek', 'categories', 'categorySelected'));
         } else {

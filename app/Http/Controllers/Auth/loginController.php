@@ -11,7 +11,7 @@ class loginController extends Controller
 {
     public function index()
     {
-        return view('auth.login');
+        return view('Auth.login');
     }
 
     public function login(Request $request)
@@ -32,7 +32,7 @@ class loginController extends Controller
                 return redirect()->route('verification', base64_encode($id . '+pendingLogin'));
             }
         } else {
-            return redirect()->route('login');
+            return redirect()->route('login')->with('error', 'Invalid credentials');
         }
     }
 

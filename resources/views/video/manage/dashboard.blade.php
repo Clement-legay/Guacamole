@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', $video->title . ' | Dashboard')
 
-@section('background', 'bg-light p-4')
+@section('background', 'p-4')
 
 @section('content')
-    <h3 class="mb-3">Contenu de la chaîne</h3>
+    <h3 class="mb-3">{{ $video->title }}'s analytics</h3>
 
     <div class="row">
         <div class="col-4">

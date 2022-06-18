@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('likes', function (Blueprint $table) {
             $table->unsignedBigInteger('video_id')->nullable()->after('is_liked');
-            $table->foreign('video_id')->references('id')->on('videos');
+            $table->foreign('video_id')->references('id')->on('videos')->cascadeOnDelete();
         });
     }
 

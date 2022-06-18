@@ -2,6 +2,10 @@
 
 @section('title', $video->title)
 
+@section('head')
+
+@endsection
+
 @section('content')
 
     <style>

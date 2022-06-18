@@ -54,7 +54,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/{video}/comments', [VideoController::class, 'comments'])->name('comments');
 
         Route::put('/{video}/update', [VideoController::class, 'update'])->name('update');
-        Route::delete('/{video}/delete', [VideoController::class, 'delete'])->name('delete');
+        Route::get('/{video}/delete', [VideoController::class, 'delete'])->name('delete');
     });
 
     Route::group(['prefix'=>'comment', 'as'=>'comment.'], function () {

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('views', function (Blueprint $table) {
             $table->bigInteger('video_id')->unsigned()->nullable();
-            $table->foreign('video_id')->references('id')->on('videos');
+            $table->foreign('video_id')->references('id')->on('videos')->cascadeOnDelete();
         });
     }
 
