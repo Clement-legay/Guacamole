@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->tinyInteger('canCreate')->default(0);
             $table->tinyInteger('canUpdate')->default(0);
             $table->tinyInteger('canComment')->default(0);

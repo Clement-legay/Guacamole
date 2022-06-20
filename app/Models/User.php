@@ -129,6 +129,10 @@ class User extends Authenticatable
         return $this->hasMany(Like::class)->where('is_liked', 1);
     }
 
+    public function role() {
+        return $this->belongsTo(Role::class);
+    }
+
     public function dislikes()
     {
         return $this->hasMany(Like::class)->where('is_liked', 0);
@@ -161,5 +165,9 @@ class User extends Authenticatable
     public function id()
     {
         return base64_encode($this->id);
+    }
+    public function isAdmin()
+    {
+        return $this->is_admin == 1;
     }
 }

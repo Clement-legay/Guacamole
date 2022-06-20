@@ -84,6 +84,12 @@ class videoController extends Controller
             }
         }
 
+        $duration = FFMpeg::open($video)
+            ->getFrameFromSeconds(1)
+            ->getDurationInSeconds();
+
+        dd($duration);
+
         if ($request->hasFile('thumbnail')) {
             $return = $request->file('thumbnail')->store('public/thumbnails');
             if ($return) {

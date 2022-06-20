@@ -109,7 +109,7 @@
                 <div class="col-4">
                     <div class="row justify-content-center">
                         <div class="col-4">
-                            <img src="{{ asset($comment->video()->first()->thumbnail) }}" width="150" height="84" alt="{{ $comment->video()->first()->title }}">
+                            <img src="{{ asset($comment->video()->first()->thumbnail) }}" width="100%" height="auto" alt="{{ $comment->video()->first()->title }}">
                         </div>
                         <div class="col-6">
                             <p class="p-0 m-0 video_name" style="font-size: 0.9em; font-weight: 400">{{ $comment->video()->first()->title }}</p>

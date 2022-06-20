@@ -22,6 +22,9 @@
             @elseif(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'video.'))
                 @component('layouts.sidebarVideo', ['video' => $video ?? null])
                 @endcomponent
+            @elseif(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'admin.'))
+                @component('layouts.sidebarAdmin')
+                @endcomponent
             @else
                 @component('layouts.sidebar')
                 @endcomponent
