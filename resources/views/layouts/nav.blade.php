@@ -61,7 +61,7 @@
                                                 <i style="font-size: 1.2em" class="bi bi-person-fill"></i>
                                             @endguest
                                             @auth
-                                                <div style="width: 35px; height: 35px; font-size: 0.55em">
+                                                <div style="width: 35px; height: 35px; font-size: 0.50em">
                                                     {!! auth()->user()->profile_image() !!}
                                                 </div>
                                             @endauth

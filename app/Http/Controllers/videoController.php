@@ -6,10 +6,7 @@ use App\Models\Category;
 use App\Models\Tag;
 use App\Models\Video;
 use App\Models\View;
-use FFMpeg\Format\Video\X264;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use ProtoneMedia\LaravelFFMpeg\Exporters\HLSVideoFilters;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 class videoController extends Controller
@@ -23,9 +20,9 @@ class videoController extends Controller
     {
         $video = Video::find(base64_decode($video));
 
-        unlink(storage_path('app/public/videos/' . explode('/', $video->video)[count(explode('/', $video->video)) - 1]));
+//        unlink(storage_path('app/public/videos/' . explode('/', $video->video)[count(explode('/', $video->video)) - 1]));
 
-        unlink(storage_path('app/public/thumbnails/' . explode('/', $video->thumbnail)[count(explode('/', $video->thumbnail)) - 1]));
+//        unlink(storage_path('app/public/thumbnails/' . explode('/', $video->thumbnail)[count(explode('/', $video->thumbnail)) - 1]));
 
         $video->delete();
 
@@ -84,11 +81,9 @@ class videoController extends Controller
             }
         }
 
-        $duration = FFMpeg::open($video)
+        $duration = FFMpeg::open('public/videos/' . $request->file('video')->hashName())
             ->getFrameFromSeconds(1)
             ->getDurationInSeconds();
-
-        dd($duration);
 
         if ($request->hasFile('thumbnail')) {
             $return = $request->file('thumbnail')->store('public/thumbnails');
@@ -107,7 +102,7 @@ class videoController extends Controller
             'type' => $request->type,
             'user_id' => auth()->user()->id,
             'category_id' => $category->id,
-            'duration' => 0,
+            'duration' => $duration,
         ]);
 
         foreach (explode(' ', $request->tags) as $tag) {
