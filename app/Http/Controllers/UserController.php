@@ -113,8 +113,8 @@ class UserController extends Controller
             'email' => 'required',
             'password' => 'required',
             'color' => 'required',
-            'profile_image' => 'required',
-            'banner_image' => 'required',
+            'profile_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'banner_image' =>  'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $user->first_name = $request->first_name;
@@ -125,8 +125,39 @@ class UserController extends Controller
         $user->color = $request->color;
         $user->profile_image = $request->profile_image;
         $user->banner_image = $request->banner_image;
+        $user->role = $request->role;
         $user->save();
 
-        return redirect()->route('user.index');
+        return redirect()->back();
+    }
+
+    public function adminUpdate(Request $request, $user)
+    {
+        $user = User::find(base64_decode($user));
+
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'username' => 'required',
+            'email' => 'required'
+        ]);
+
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->role_id = $request->role;
+        $user->save();
+
+        return redirect()->back();
+    }
+
+    public function adminDelete($user)
+    {
+        $user = User::find(base64_decode($user));
+
+        $user->delete();
+
+        return redirect()->route('admin.users');
     }
 }

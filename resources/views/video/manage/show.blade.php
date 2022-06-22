@@ -10,6 +10,36 @@
 @section('background', 'p-4 me-5 pe-5')
 
 @section('content')
+    <script>
+        function categoriesAutocomplete(input, autocompleteName, API) {
+            autocomplete = document.getElementById(autocompleteName);
+            input = document.getElementById(input)
+
+            if (input.value[input.value.length - 1] === '\n') {
+                input.value = input.value.slice(0, -1)
+            }
+
+            autocomplete.innerHTML = ""
+
+            if (API === 'categories') {
+                let xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", "{{ route('API_categories') }}?search=" + input.value + "&limit=5", false ); // false for synchronous request
+                xmlHttp.send( null );
+                let response = JSON.parse(xmlHttp.responseText)
+
+                for (let i = 0; i < response.length; i++) {
+                    let element = document.createElement("p")
+                    element.classList.add("dropdown-item")
+                    element.classList.add("py-2")
+                    element.classList.add("mb-0")
+                    element.innerText = response[i].category_name
+                    element.setAttribute("onclick", "selectCategory('category', '" + response[i].category_name + "', '" + autocompleteName + "')")
+
+                    autocomplete.appendChild(element)
+                }
+            }
+        }
+    </script>
 
     <form action="{{ route('video.update', $video->id()) }}" method="POST" enctype="multipart/form-data">
         @method('PUT')
@@ -109,9 +139,8 @@
                             <div class="card-body">
                                 <div class="row justify-content-center">
                                     <div class="form-group">
-                                        <video width="100%" height="auto" controls>
-                                            <source src="{{ asset($video->video) }}" type="video/mp4">
-                                        </video>
+                                        @component('component.playerJS', ['video' => $video])
+                                        @endcomponent
                                     </div>
                                     <div class="col-12 mb-3">
                                         <p class="p-0 m-0 title-prop">Video link</p>

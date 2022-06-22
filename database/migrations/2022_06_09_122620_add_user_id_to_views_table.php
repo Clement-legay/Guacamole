@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('views', function (Blueprint $table) {
             $table->bigInteger('user_id')->unsigned()->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

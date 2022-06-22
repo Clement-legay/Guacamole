@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\registerController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SubscribeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\videoController;
@@ -66,9 +67,14 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+        Route::redirect('/', '/admin/videos', 301);
+
         Route::get('/users', [AdminController::class, 'users'])->name('users');
-        Route::get('/users/{user}', [AdminController::class, 'user'])->name('user');
-        Route::put('/users/{user}', [AdminController::class, 'update'])->name('update');
+        Route::get('/users/{user}', [AdminController::class, 'user'])->name('user.select');
+        Route::put('/users/{user}/update', [UserController::class, 'adminUpdate'])->name('user.update');
+        Route::get('/users/{user}/delete', [UserController::class, 'adminDelete'])->name('user.delete');
+
+        Route::post('/users/role/create', [RoleController::class, 'create'])->name('role.create');
 
         Route::get('/videos', [AdminController::class, 'videos'])->name('videos');
         Route::get('/videos/{video}', [AdminController::class, 'video'])->name('video');

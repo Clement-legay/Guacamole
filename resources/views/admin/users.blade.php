@@ -10,7 +10,45 @@
             background-color: #f5f5f5;
             cursor: pointer;
         }
+
+        #role-maker {
+            position: absolute;
+            top: 25px;
+            right: -205px;
+            z-index: 1;
+            height: 300px;
+            width: 200px;
+            border-radius: 5px;
+            background: white;
+            display: none;
+        }
     </style>
+
+    <script>
+        function editUser(user, role) {
+            console.log(role);
+            let openModal = document.getElementById('openModal');
+            let last_name = document.getElementById('last_name');
+            let first_name = document.getElementById('first_name');
+            let username = document.getElementById('username');
+            let email = document.getElementById('email');
+
+
+            openModal.click();
+            first_name.value = user.first_name;
+            last_name.value = user.last_name;
+            username.value = user.username;
+            email.value = user.email;
+
+
+        }
+
+        function openRoleMaker() {
+            let roleMaker = document.getElementById('role-maker')
+
+            roleMaker.style.display === "none" ? roleMaker.style.display = "flex" : roleMaker.style.display = "none"
+        }
+    </script>
 
     <h3>Users</h3>
 
@@ -22,14 +60,14 @@
             <th scope="col">User</th>
             <th scope="col"></th>
             <th scope="col">Role</th>
-            <th scope="col">Creation Date</th>
             <th scope="col">Subscribers</th>
+            <th scope="col">Creation Date</th>
             <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
         @foreach($users as $user)
-            <tr onclick="doNav('{{ null }}')" class="user_row">
+            <tr onclick="doNav('{{ route('admin.user.select', $user->id()) }}')" class="user_row">
                 <th scope="row">{{ $user->id }}</th>
                 <td>
                     <div style="width: 45px; height: 45px; font-size: 0.6em">
@@ -46,8 +84,170 @@
                 <td>
                     <a href="#" class="btn"><i class="bi bi-pen-fill"></i></a>
                 </td>
+
             </tr>
         @endforeach
         </tbody>
     </table>
+
+    @if(isset($userSelected) && $userSelected != null)
+
+        <!-- Button trigger modal -->
+        <button type="button" style="display: none" id="openModal" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body px-5 pt-0 pb-0">
+                        <div class="row justify-content-center pt-3 pb-2">
+                            <div class="col-auto">
+                                <div id="PP-slot" style="font-size: 0.8em; width: 60px; height: 60px">
+                                    {!! $userSelected->profile_image() !!}
+                                </div>
+                            </div>
+                        </div>
+                        <form action="{{ route('admin.user.update', $userSelected->id()) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="row form-group">
+                                <div class="col-6">
+                                    <label for="first_name">First name</label>
+                                    <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="first_name" name="first_name" value="{{ old('first_name') ?? $userSelected->first_name }}">
+                                    @error('first_name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-6">
+                                    <label for="last_name">Last name</label>
+                                    <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="last_name" name="last_name" value="{{ old('last_name') ?? $userSelected->last_name }}">
+                                    @error('last_name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-6">
+                                    <label for="username">Username</label>
+                                    <input type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" value="{{ old('username') ??  $userSelected->username }}">
+                                    @error('username')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="col-6">
+                                    <label for="role">Role</label>
+                                    <div class="flex-row d-flex align-items-center">
+                                        <div class="col-10 flex-column">
+                                            <select type="role" class="form-control @error('role') is-invalid @enderror" id="role" name="role">
+                                                <option value="" @if($userSelected->role()->first() == null) selected @endif>No attribution</option>
+                                                @foreach($roles as $role)
+                                                    <option value="{{ $role->id }}" @if($userSelected->role()->first() && $userSelected->role()->first()-> id == $role->id) selected @endif>{{ $role->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('role')
+                                                <div class="invalid-feedback">
+                                                    {{ $errors->first('role') }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-2 flex-column ps-1">
+                                            <btn class="btn btn-primary" style="background-color: black; border: black" type="button" onclick="openRoleMaker()"><i class="bi bi-plus-circle"></i></btn>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') ?? $userSelected->email }}">
+                                    @error('email')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('email') }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="row justify-content-between py-3">
+                                <div class="col-auto">
+                                    <a type="button" class="btn" style="border: black; background-color: black; color: white" href="{{ route('admin.users') }}">Close</a>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="row justify-content-end">
+                                        <div class="col-auto">
+                                            <a type="button" class="btn btn-danger" href="{{ route('admin.user.delete', $userSelected->id()) }}">Delete</a>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="submit" class="btn" style="border: #3b6532; background-color: #3b6532 ; color: white">Update</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="role-maker">
+                        <form method="post" action="{{ route('admin.role.create') }}">
+                            <div class="row form-group px-3 pt-2">
+                                <div class="col-12">
+                                    <label for="role_name">Role name</label>
+                                    <input type="text" placeholder="Role Name" class="form-control @error('role_name') is-invalid @enderror" id="role_name" name="role_name" value="{{ old('role_name') }}">
+                                    @error('role_name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="row justify-content-center pt-3">
+                                <div class="form-check col-8">
+                                    <input class="form-check-input" type="checkbox" value="" id="canUpdate">
+                                    <label style="font-size: 0.75em" class="form-check-label" for="canUpdate">
+                                        Can Update ?
+                                    </label>
+                                </div>
+                                <div class="form-check col-8">
+                                    <input class="form-check-input" type="checkbox" value="" id="canCreate" checked>
+                                    <label style="font-size: 0.75em" class="form-check-label" for="canCreate">
+                                        Can Create ?
+                                    </label>
+                                </div>
+                                <div class="form-check col-8">
+                                    <input class="form-check-input" type="checkbox" value="" id="canDeleteVideo">
+                                    <label style="font-size: 0.75em" class="form-check-label" for="canDeleteVideo">
+                                        Can Delete Video ?
+                                    </label>
+                                </div>
+                                <div class="form-check col-8">
+                                    <input class="form-check-input" type="checkbox" value="" id="canDeleteComment">
+                                    <label style="font-size: 0.75em" class="form-check-label" for="canDeleteComment">
+                                        Can Delete Comment ?
+                                    </label>
+                                </div>
+                                <div class="form-check col-8">
+                                    <label style="font-size: 0.75em" class="form-check-label" for="canBanUser">
+                                        Can Delete User ?
+                                    </label>
+                                    <input class="form-check-input" type="checkbox" value="" id="canBanUser">
+                                </div>
+                            </div>
+                            <div class="row justify-content-around py-3">
+                                <div class="col-auto">
+                                    <button type="button" class="btn" style="border: black; background-color: black; color: white" onclick="openRoleMaker()">Close</button>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="row justify-content-end">
+                                        <div class="col-auto">
+                                            <button type="submit" class="btn" style="border: #3b6532; background-color: #3b6532 ; color: white">Create</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+            </div>
+            <script defer>
+                document.getElementById('openModal').click();
+            </script>
+    @endif
 @endsection

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('comments', function (Blueprint $table) {
             $table->unsignedBigInteger('previous_id')->nullable()->after('comment');
-            $table->foreign('previous_id')->references('id')->on('comments');
+            $table->foreign('previous_id')->references('id')->on('comments')->cascadeOnDelete();
         });
     }
 

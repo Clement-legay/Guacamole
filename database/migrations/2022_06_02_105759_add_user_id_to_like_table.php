@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('likes', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id')->nullable()->after('is_liked');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
         });
     }
 

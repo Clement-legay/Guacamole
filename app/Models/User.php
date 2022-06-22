@@ -166,6 +166,7 @@ class User extends Authenticatable
     {
         return base64_encode($this->id);
     }
+
     public function isAdmin()
     {
         return $this->is_admin == 1;

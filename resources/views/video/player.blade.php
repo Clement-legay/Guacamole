@@ -86,12 +86,8 @@
             <div class="col-8 flex-column">
                 <div class="row justify-content-center">
                     <div class="col-12 p-0 m-0">
-                        <video width="100%" height="100%" controls>
-                            <source src="{{ asset($video->video) }}" type="video/mp4"/>
-
-                            Your browser does not support the video tag.
-
-                        </video>
+                        @component('component.playerJS', ['video' => $video])
+                        @endcomponent
                     </div>
                     <div class="col-12 p-0 m-0">
                         <p class="p-0 m-0" style="font-weight: 500; font-size: 0.95em; color: #065fd4">
