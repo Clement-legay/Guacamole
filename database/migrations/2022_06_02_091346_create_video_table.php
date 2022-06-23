@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('thumbnail');
             $table->string('video');
+            $table->integer('progress')->default(0);
             $table->Integer('duration');
             $table->enum('status', ['pending', 'downloading', 'downloaded', 'processing', 'processed', 'failed', 'online']);
             $table->enum('type', ['public', 'private', 'unlisted']);

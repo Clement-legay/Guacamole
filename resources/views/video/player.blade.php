@@ -79,11 +79,17 @@
             else document.getElementById(id).style.display = 'none';
 
         }
+
+        window.addEventListener('beforeunload', function() {
+            let xml = new XMLHttpRequest();
+            xml.open('GET', '{{ route('API_views', ['id' => $view->id()]) }}?time=' + player.currentTime(), true);
+            xml.send();
+        });
     </script>
 
     <div class="flex-row">
         <div class="d-flex justify-content-center px-5 pt-4">
-            <div class="col-8 flex-column">
+            <div class="col-xxl-8 col-xl-8 col-lg-5 flex-column">
                 <div class="row justify-content-center">
                     <div class="col-12 p-0 m-0">
                         @component('component.playerJS', ['video' => $video])

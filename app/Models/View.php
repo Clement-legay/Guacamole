@@ -14,6 +14,10 @@ class View extends Model
         'time_watched'
     ];
 
+    public function id() {
+        return base64_encode($this->id);
+    }
+
     public function countViews(Video $video)
     {
         return $this->where('video_id', $video->id)->count();

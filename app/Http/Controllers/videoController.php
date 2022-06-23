@@ -6,8 +6,13 @@ use App\Models\Category;
 use App\Models\Tag;
 use App\Models\Video;
 use App\Models\View;
+use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use ProtoneMedia\LaravelFFMpeg\Exporters\HLSVideoFilters;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
@@ -21,10 +26,12 @@ class videoController extends Controller
     public function delete($video)
     {
         $video = Video::find(base64_decode($video));
+        $videoName = explode('/', $video->video)[count(explode('/', $video->video)) - 1];
+        $videoNoExt = explode('.', $videoName)[0];
 
-        unlink(storage_path('app/public/videos/' . explode('/', $video->video)[count(explode('/', $video->video)) - 1]));
+        Storage::deleteDirectory('app/public/videos/' . $videoNoExt);
 
-        unlink(storage_path('app/public/thumbnails/' . explode('/', $video->thumbnail)[count(explode('/', $video->thumbnail)) - 1]));
+        Storage::delete('app/public/thumbnails/' . $videoNoExt . 'jpg');
 
         $video->delete();
 
@@ -45,15 +52,18 @@ class videoController extends Controller
     {
         $video = Video::find(base64_decode($video));
 
-        $view = View::create([
-            'video_id' => $video->id,
-            'user_id' => auth()->user()->id ?? null,
-            'time_watched' => 0
-        ]);
+        if (Auth::user() && Auth::user()->lastView($video->id)) {
+            $view = Auth::user()->lastView($video->id);
+        } else {
+            $view = View::create([
+                'video_id' => $video->id,
+                'user_id' => auth()->user()->id ?? null,
+                'time_watched' => 0
+            ]);
+            $view->save();
+        }
 
-        $view->save();
-
-        return view('video.player', compact('video'));
+        return view('video.player', compact('video', 'view'));
     }
 
     public function create()
@@ -77,17 +87,14 @@ class videoController extends Controller
         if ($request->hasFile('video')) {
             $return = $request->file('video')->store('public/uploads');
             if ($return) {
-                $video = 'storage/uploads/' . $request->file('video')->hashName();
+                $video = $request->file('video')->hashName();
             } else {
                 return redirect()->back()->with('error', 'Error uploading video');
             }
         }
 
-        $ffmpeg = FFMpeg::open('public/uploads/' . $request->file('video')->hashName());
-        $duration = $ffmpeg->getDurationInSeconds();
-        $link = $this->encryptHLS($request->file('video')->hashName());
-
-        unlink(storage_path('app/public/uploads/' . $request->file('video')->hashName()));
+        $duration = FFMpeg::open('public/uploads/' . $request->file('video')->hashName())->getDurationInSeconds();
+//        $link = $this->encryptHLS($request->file('video')->hashName());
 
         if ($request->hasFile('thumbnail')) {
             $return = $request->file('thumbnail')->store('public/thumbnails');
@@ -96,15 +103,18 @@ class videoController extends Controller
             } else {
                 return redirect()->back()->with('error', 'Error uploading thumbnail');
             }
+        } else {
+            $thumbnail = $this->generateThumbnail($request->file('video')->hashName());
         }
 
         $video = Video::create([
             'title' => $request->title,
             'description' => $request->description,
-            'video' => $link,
+            'video' => $video,
             'thumbnail' => $thumbnail,
             'type' => $request->type,
             'user_id' => auth()->user()->id,
+            'status' => 'processing',
             'category_id' => $category->id,
             'duration' => $duration,
         ]);
@@ -113,21 +123,25 @@ class videoController extends Controller
             Tag::create(['name' => $tag, 'video_id' => $video->id]);
         }
 
+        Artisan::queue('video-upload:process', [
+            'video' => $video->id(),
+        ]);
+
+
         return redirect()->route('video.details', base64_encode($video->id));
     }
 
-    public function encryptHLS($videoName)
+    public function generateThumbnail($videoName)
     {
-        $highBitRate = (new X264('aac'))->setKiloBitrate(1058);
+        $ffmpeg = FFMpeg::open('public/uploads/' . $videoName);
+        $ffmpeg->getFrameFromSeconds(1)
+            ->export()
+            ->toDisk('public')
+            ->save('/thumbnails/' . explode('.', $videoName)[0] . '.jpg');
 
-        $video = FFMpeg::open('public/uploads/' . $videoName)
-                    ->exportForHLS()
-                    ->addFormat($highBitRate)
-                    ->toDisk('public')
-                    ->save('/videos/' . explode('.', $videoName)[0] . '.m3u8');
-
-        return 'storage/videos/' . explode('.', $videoName)[0] . '.m3u8';
+        return 'storage/thumbnails/' . explode('.', $videoName)[0];
     }
+
     public function update(Request $request, $video)
     {
         $video = Video::find(base64_decode($video));

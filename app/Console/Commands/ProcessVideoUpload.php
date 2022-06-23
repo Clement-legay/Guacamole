@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 
+use App\Models\Video;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Console\Command;
 use ProtoneMedia\LaravelFFMpeg\Exporters\HLSVideoFilters;
@@ -16,7 +17,7 @@ class ProcessVideoUpload extends Command
      *
      * @var string
      */
-    protected $signature = 'video-upload:process';
+    protected $signature = 'video-upload:process {video}';
 
     /**
      * The console command description.
@@ -32,24 +33,21 @@ class ProcessVideoUpload extends Command
      */
     public function handle()
     {
+        $this->video = Video::find(base64_decode($this->argument('video')));
 
-        $lowFormat = (new X264('aac'))->setKiloBitrate(500);
-        $highFormat = (new X264('aac'))->setKiloBitrate(1000);
+        $highBitRate = (new X264('aac'))->setKiloBitrate(1058);
 
-        $this->info('Starting video processing...');
-
-        FFMpeg::fromDisk('public')
-            ->open('uploads/videoTest.mp4')
+        $video = FFMpeg::open('public/uploads/' . $this->video->video)
             ->exportForHLS()
-            ->addFormat($lowFormat, function (HLSVideoFilters $filters) {
-                $filters->resize(1280, 720);
-            })
-            ->addFormat($highFormat, function (HLSVideoFilters $filters) {
-                $filters->resize(1920, 1080);
+            ->addFormat($highBitRate)
+            ->onProgress(function ($percentage) {
+                $this->video->setProgress($percentage);
             })
             ->toDisk('public')
-            ->save('videos/videoTest.m3u8');
+            ->save('/videos/' . explode('.', $this->video->video)[0] . '/' . explode('.', $this->video->video)[0] . '.m3u8');
 
-        $this->info('Video processing finished.');
+        unlink(storage_path('app/public/uploads/' . $this->video->video));
+
+        $this->video->setDone('storage/videos/' . explode('.', $this->video->video)[0] . '/' . explode('.', $this->video->video)[0] . '.m3u8');
     }
 }

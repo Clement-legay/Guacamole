@@ -3,7 +3,7 @@
 
 
 <!-- HTML -->
-<video id='hls-example' class="video-js vjs-big-play-centered" controls data-setup='{"fluid": true}' poster="{{ asset($video->thumbnail) }}">
+<video id='hls' class="video-js vjs-big-play-centered" controls preload="auto" data-setup='{"fluid": true}' poster="{{ asset($video->thumbnail) }}">
     <source type="application/x-mpegURL" src="{{ asset($video->video) }}">
 </video>
 
@@ -15,6 +15,5 @@
 <script src="https://vjs.zencdn.net/7.2.3/video.js"></script>
 
 <script>
-    let player = videojs('hls-example');
-    player.play();
+    let player = videojs('hls');
 </script>

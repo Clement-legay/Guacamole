@@ -22,11 +22,25 @@ class Video extends Model
         'user_id',
         'category_id',
         'duration',
+        'progress',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function setProgress($progress)
+    {
+        $this->progress = $progress;
+        $this->save();
+    }
+
+    public function setDone($link)
+    {
+        $this->video = $link;
+        $this->status = 'online';
+        $this->save();
     }
 
     public function category()

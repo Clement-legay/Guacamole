@@ -10,18 +10,6 @@
             background-color: #f5f5f5;
             cursor: pointer;
         }
-
-        #role-maker {
-            position: absolute;
-            top: 25px;
-            right: -205px;
-            z-index: 1;
-            height: 300px;
-            width: 200px;
-            border-radius: 5px;
-            background: white;
-            display: none;
-        }
     </style>
 
     <script>
@@ -186,65 +174,7 @@
                             </div>
                         </form>
                     </div>
-                    <div id="role-maker">
-                        <form method="post" action="{{ route('admin.role.create') }}">
-                            <div class="row form-group px-3 pt-2">
-                                <div class="col-12">
-                                    <label for="role_name">Role name</label>
-                                    <input type="text" placeholder="Role Name" class="form-control @error('role_name') is-invalid @enderror" id="role_name" name="role_name" value="{{ old('role_name') }}">
-                                    @error('role_name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="row justify-content-center pt-3">
-                                <div class="form-check col-8">
-                                    <input class="form-check-input" type="checkbox" value="" id="canUpdate">
-                                    <label style="font-size: 0.75em" class="form-check-label" for="canUpdate">
-                                        Can Update ?
-                                    </label>
-                                </div>
-                                <div class="form-check col-8">
-                                    <input class="form-check-input" type="checkbox" value="" id="canCreate" checked>
-                                    <label style="font-size: 0.75em" class="form-check-label" for="canCreate">
-                                        Can Create ?
-                                    </label>
-                                </div>
-                                <div class="form-check col-8">
-                                    <input class="form-check-input" type="checkbox" value="" id="canDeleteVideo">
-                                    <label style="font-size: 0.75em" class="form-check-label" for="canDeleteVideo">
-                                        Can Delete Video ?
-                                    </label>
-                                </div>
-                                <div class="form-check col-8">
-                                    <input class="form-check-input" type="checkbox" value="" id="canDeleteComment">
-                                    <label style="font-size: 0.75em" class="form-check-label" for="canDeleteComment">
-                                        Can Delete Comment ?
-                                    </label>
-                                </div>
-                                <div class="form-check col-8">
-                                    <label style="font-size: 0.75em" class="form-check-label" for="canBanUser">
-                                        Can Delete User ?
-                                    </label>
-                                    <input class="form-check-input" type="checkbox" value="" id="canBanUser">
-                                </div>
-                            </div>
-                            <div class="row justify-content-around py-3">
-                                <div class="col-auto">
-                                    <button type="button" class="btn" style="border: black; background-color: black; color: white" onclick="openRoleMaker()">Close</button>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="row justify-content-end">
-                                        <div class="col-auto">
-                                            <button type="submit" class="btn" style="border: #3b6532; background-color: #3b6532 ; color: white">Create</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                </div>
             </div>
             <script defer>
                 document.getElementById('openModal').click();

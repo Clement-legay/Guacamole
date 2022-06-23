@@ -138,6 +138,10 @@ class User extends Authenticatable
         return $this->hasMany(Like::class)->where('is_liked', 0);
     }
 
+    public function lastView($id) {
+        return $this->hasMany(View::class)->where('video_id', $id)->orderBy('created_at', 'desc')->first();
+    }
+
     public function profile_image()
     {
         if ($this->profile_image) {

@@ -66,7 +66,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/{comment}', [CommentController::class, 'update'])->name('update');
     });
 
-    Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+    Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], function () {
         Route::redirect('/', '/admin/videos', 301);
 
         Route::get('/users', [AdminController::class, 'users'])->name('users');
@@ -83,6 +83,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/comments', [AdminController::class, 'comments'])->name('comments');
         Route::get('/comments/{comment}', [AdminController::class, 'comment'])->name('comment');
         Route::put('/comments/{comment}', [AdminController::class, 'update'])->name('update');
+
+        Route::get('/roles', [AdminController::class, 'roles'])->name('roles');
     });
 });
 
