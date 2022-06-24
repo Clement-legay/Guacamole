@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessVideo;
 use App\Models\Category;
 use App\Models\Tag;
 use App\Models\Video;
@@ -123,10 +124,8 @@ class videoController extends Controller
             Tag::create(['name' => $tag, 'video_id' => $video->id]);
         }
 
-        Artisan::queue('video-upload:process', [
-            'video' => $video->id(),
-        ]);
-
+        // dispatch async job to process video
+        ProcessVideo::dispatchSync($video)->onQueue('video-processing');
 
         return redirect()->route('video.details', base64_encode($video->id));
     }
