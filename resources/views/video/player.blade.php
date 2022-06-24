@@ -80,10 +80,18 @@
 
         }
 
-        window.addEventListener('beforeunload', function() {
+        setTimeout(() => {
             let xml = new XMLHttpRequest();
-            xml.open('GET', '{{ route('API_views', ['id' => $view->id()]) }}?time=' + player.currentTime(), true);
+            xml.open('PUT', '{{ route('API_views', ['id' => $view->id()]) }}?time=' + player.currentTime(), true);
             xml.send();
+            let result = xml.responseText;
+            console.log(result);
+        }, 5000)
+
+
+        window.addEventListener('beforeunload', function() {
+            console.log(player.currentTime());
+
         });
     </script>
 

@@ -9,6 +9,7 @@ class ViewController extends Controller
 {
     public function update($id)
     {
+        return response()->json(['status' => 'ntm']);
         $time = request()->input('time');
 
         $view = View::find($id);

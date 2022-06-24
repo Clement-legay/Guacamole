@@ -53,6 +53,11 @@ class videoController extends Controller
     {
         $video = Video::find(base64_decode($video));
 
+        // appel api intern
+        $return = json_decode(route('API_views', ['id' => $video->id]));
+        dd($return);
+
+
         if (Auth::user() && Auth::user()->lastView($video->id)) {
             $view = Auth::user()->lastView($video->id);
         } else {
@@ -124,8 +129,8 @@ class videoController extends Controller
             Tag::create(['name' => $tag, 'video_id' => $video->id]);
         }
 
-        // dispatch async job to process video
-        ProcessVideo::dispatchSync($video)->onQueue('video-processing');
+        // create job to process video
+        ProcessVideo::dispatch($video);
 
         return redirect()->route('video.details', base64_encode($video->id));
     }
