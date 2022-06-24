@@ -213,4 +213,26 @@ class videoController extends Controller
 
         return view('video.manage.comments', compact('video'));
     }
+
+    public function getVideos()
+    {
+        $page = request('page');
+        $limit = request('limit');
+
+        $videos = Video::all()->sortByDesc('created_at')->forPage($page, $limit);
+
+        return response()->json([
+            'videos' => $videos,
+            'total' => $videos->count()
+        ]);
+    }
+
+    public function getVideo($video)
+    {
+        $video = Video::find(base64_decode($video));
+
+        return response()->json([
+            'video' => $video
+        ]);
+    }
 }

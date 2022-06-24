@@ -160,4 +160,13 @@ class UserController extends Controller
 
         return redirect()->route('admin.users');
     }
+
+    public function getUser($user)
+    {
+        $user = User::find(base64_decode($user));
+
+        return response()->json([
+            'user' => $user
+        ]);
+    }
 }

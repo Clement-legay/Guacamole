@@ -26,11 +26,11 @@ Route::get('/categories', [CategoryController::class, 'searchCategory'])->name('
 Route::put('/views/{id}', [ViewController::class, 'update'])->name('API_views');
 
 Route::group(['prefix' => 'video', 'as' => 'video.'], function () {
-    Route::get('?page={page}&row={row}', [videoController::class, 'show'])->name('details');
-    Route::get('/{video}', [videoController::class, 'show'])->name('details');
+    Route::get('?page={page}&limit={limit}', [videoController::class, 'getVideos'])->name('API_videos');
+    Route::get('/{video}', [videoController::class, 'getVideo'])->name('API_video');
 });
 
 Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
-    Route::get('/{user}', [UserController::class, 'show'])->name('details');
+    Route::get('/{user}', [UserController::class, 'getUser'])->name('API_user');
 });
 
