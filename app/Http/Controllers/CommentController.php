@@ -3,26 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function create(Request $request)
     {
         $request->validate([
@@ -41,59 +27,73 @@ class CommentController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function getComment($comment)
     {
-        //
+        $comment = Comment::find(base64_decode($comment));
+
+        return json_encode([
+            'comment' => $comment,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Comment $comment)
+    public function getReplies($comment)
     {
-        //
+        $comment = Comment::find(base64_decode($comment));
+
+        return json_encode([
+            'replies' => $comment->replies()->get(),
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Comment $comment)
+    public function commentAPI(Request $request, $user, $video)
     {
-        //
+        $user = User::find(base64_decode($user));
+        $video = Video::find(base64_decode($video));
+
+        $request->validate([
+            'comment' => 'required|string|max:191',
+        ]);
+
+        $comment = Comment::create([
+            'comment' => $request->comment,
+            'user_id' => $user->id,
+            'video_id' => $video->id,
+        ]);
+
+        $comment->save();
+
+        return response()->json(['success' => true]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Comment $comment)
+    public function replyAPI(Request $request, $user, $comment)
     {
-        //
+        $user = User::find(base64_decode($user));
+        $comment = Comment::find(base64_decode($comment));
+
+        $request->validate([
+            'comment' => 'required|string|max:191',
+        ]);
+
+        $comment = Comment::create([
+            'comment' => $request->comment,
+            'user_id' => $user->id,
+            'previous_id' => $comment->id,
+        ]);
+
+        $comment->save();
+
+        return response()->json(['success' => true]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Comment $comment)
+    public function deleteAPI($comment, $user)
     {
-        //
+        $user = User::find(base64_decode($user));
+        $comment = Comment::find(base64_decode($comment));
+
+        if ($comment->user_id == $user->id) {
+            $comment->delete();
+        }
+
+        return response()->json(['success' => true]);
     }
 }

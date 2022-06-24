@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\verificationToken;
+use App\Models\Video;
+use App\Models\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -167,6 +169,70 @@ class UserController extends Controller
 
         return response()->json([
             'user' => $user
+        ]);
+    }
+
+    public function getUserSubscribers($user)
+    {
+        $details = request('details') ?? 0;
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 10;
+
+        $user = User::find(base64_decode($user));
+
+        if ($details) {
+            return response()->json([
+                'subscribers' => $user->subscribers()->forPage($page, $limit)->get(),
+            ]);
+        } else {
+            return response()->json([
+                'subscribers' => $user->subscribers()->count()
+            ]);
+        }
+    }
+
+    public function getUserSubscriptions($user)
+    {
+        $details = request('details') ?? 0;
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 10;
+
+        $user = User::find(base64_decode($user));
+
+        if ($details) {
+            return response()->json([
+                'subscriptions' => $user->subscriptions()->forPage($page, $limit)->get(),
+            ]);
+        } else {
+            return response()->json([
+                'subscriptions' => $user->subscriptions()->count()
+            ]);
+        }
+    }
+
+    public function getUserHasView($user, $video)
+    {
+        $user = User::find(base64_decode($user));
+        $video = Video::find(base64_decode($video));
+
+        $view = $user->hasView($video->id) ?? View::create([
+                'user_id' => $user->id,
+                'video_id' => $video->id,
+            ]);
+        
+        return response()->json([
+            'hasView' => $view
+        ]);
+    }
+
+    public function getUserHistory($user)
+    {
+        $user = User::find(base64_decode($user));
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 10;
+
+        return response()->json([
+            'history' => $user->history()->orderBy('created_at', 'desc')->groupBy('video_id')->forPage($page, $limit)->get()
         ]);
     }
 }

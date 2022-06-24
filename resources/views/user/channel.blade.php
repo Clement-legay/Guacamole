@@ -31,9 +31,9 @@
                 </div>
                 <div class="col-auto pt-3">
                     @if(Auth::check() && Auth::user()->isSubscribedTo($user))
-                        <a href="{{ route('unsubscribe', $user->id) }}" style="background: #9DA27A; color: white; font-weight: normal; text-transform: uppercase; padding: 8px 13px 8px 13px" class="btn">Unsubscribe</a>
+                        <a href="{{ route('unsubscribe', $user->id()) }}" style="background: #9DA27A; color: white; font-weight: normal; text-transform: uppercase; padding: 8px 13px 8px 13px" class="btn">Unsubscribe</a>
                     @else
-                        <a href="{{ route('subscribe', $user->id) }}" style="background: #9DA27A; color: white; font-weight: normal; text-transform: uppercase; padding: 8px 13px 8px 13px" class="btn">Subscribe</a>
+                        <a href="{{ route('subscribe', $user->id()) }}" style="background: #9DA27A; color: white; font-weight: normal; text-transform: uppercase; padding: 8px 13px 8px 13px" class="btn">Subscribe</a>
                     @endif
                 </div>
             </div>

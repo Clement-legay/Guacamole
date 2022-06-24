@@ -121,6 +121,7 @@ class User extends Authenticatable
 
     public function history()
     {
+        // returns only the first of each video_id
         return $this->hasMany(View::class);
     }
 
@@ -149,6 +150,10 @@ class User extends Authenticatable
         } else {
             return "<div style='border-radius: 50%; background: " . $this->color . "; color: white; width: 100%; height: 100%; padding-top: 17%; text-align: center; text-transform: uppercase; font-size: 2em'>" . substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1) . "</div>";
         }
+    }
+
+    public function hasView($id) {
+        return $this->history()->orderBy('created_at', 'desc')->where('video_id', $id)->first();
     }
 
     public function suggestions($limit)

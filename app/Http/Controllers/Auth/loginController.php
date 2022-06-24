@@ -42,4 +42,26 @@ class loginController extends Controller
 
         return redirect()->back();
     }
+
+    public function loginAPI(Request $request)
+    {
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            $id = Auth::user()->id;
+            if (Auth::user()->email_verified_at) {
+                return response()->json(['success' => true, 'id' => $id]);
+            } else {
+                Auth::logout();
+                return response()->json(['success' => false, 'error' => 'Email not verified']);
+            }
+        } else {
+            return response()->json(['success' => false, 'error' => 'Invalid credentials']);
+        }
+    }
 }

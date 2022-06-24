@@ -40,4 +40,29 @@ class registerController extends Controller
 
         return redirect()->route('verification', base64_encode($user->id . '+pending'));
     }
+
+    public function registerAPI(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'username' => 'required',
+            'color' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|confirmed'
+        ]);
+
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'username' => $request->username,
+            'color' => $request->color,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $user->sendEmailVerificationNotification();
+
+        return response()->json(['success' => true]);
+    }
 }

@@ -53,11 +53,6 @@ class videoController extends Controller
     {
         $video = Video::find(base64_decode($video));
 
-        // appel api intern
-        $return = json_decode(route('API_views', ['id' => $video->id]));
-        dd($return);
-
-
         if (Auth::user() && Auth::user()->lastView($video->id)) {
             $view = Auth::user()->lastView($video->id);
         } else {
@@ -216,14 +211,14 @@ class videoController extends Controller
 
     public function getVideos()
     {
-        $page = request('page');
-        $limit = request('limit');
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 10;
 
         $videos = Video::all()->sortByDesc('created_at')->forPage($page, $limit);
 
         return response()->json([
             'videos' => $videos,
-            'total' => $videos->count()
+            'total' => Video::all()->count()
         ]);
     }
 
@@ -233,6 +228,46 @@ class videoController extends Controller
 
         return response()->json([
             'video' => $video
+        ]);
+    }
+
+    public function getVideoStats($video)
+    {
+        $video = Video::find(base64_decode($video));
+        $props = request('props') ?? 'views,likes,dislikes,comments';
+        $props = explode(',', $props);
+
+        $stats = [
+            'views' => $video->views()->count(),
+            'likes' => $video->likes()->count(),
+            'dislikes' => $video->dislikes()->count(),
+            'comments' => $video->comments()->count(),
+        ];
+
+        $result = [];
+
+        foreach ($props as $prop) {
+            if (array_key_exists($prop, $stats)) {
+                $result[$prop] = $stats[$prop];
+            }
+        }
+
+        return response()->json([
+            'stats' => $result
+        ]);
+    }
+
+    public function getVideoComments($video)
+    {
+        $video = Video::find(base64_decode($video));
+
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 10;
+
+        $comments = $video->comments()->orderBy('created_at', 'desc')->forPage($page, $limit)->get();
+
+        return response()->json([
+            'comments' => $comments
         ]);
     }
 }
