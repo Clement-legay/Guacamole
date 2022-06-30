@@ -24,10 +24,17 @@ class AdminController extends Controller
 
     public function user($id)
     {
-        $users = User::all();
+        $users = User::all()->lazy();
         $userSelected = User::find(base64_decode($id));
         $roles = Role::all();
         return view('admin.users', compact('userSelected', 'users', 'roles'));
+    }
+
+    public function role($id)
+    {
+        $roles = Role::all();
+        $roleSelected = Role::find(base64_decode($id));
+        return view('admin.roles', compact('roleSelected', 'roles'));
     }
 
     public function videos()

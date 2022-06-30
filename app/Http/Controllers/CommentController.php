@@ -6,25 +6,30 @@ use App\Models\Comment;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
     public function create(Request $request)
     {
-        $request->validate([
-            'comment' => 'required|string|max:191',
-        ]);
+        if (Auth::user()->can('create', Comment::class)) {
+            $request->validate([
+                'comment' => 'required|string|max:191',
+            ]);
 
-        $comment = Comment::create([
-            'comment' => $request->comment,
-            'user_id' => auth()->user()->id,
-            'video_id' => $request->video_id ? base64_decode($request->video_id) : null,
-            'previous_id' => $request->previous_id ? base64_decode($request->previous_id) : null,
-        ]);
+            $comment = Comment::create([
+                'comment' => $request->comment,
+                'user_id' => Auth::id(),
+                'video_id' => $request->video_id ? base64_decode($request->video_id) : null,
+                'previous_id' => $request->previous_id ? base64_decode($request->previous_id) : null,
+            ]);
 
-        $comment->save();
+            $comment->save();
 
-        return redirect()->back();
+            return redirect()->back();
+        } else {
+            return redirect()->back()->with('error', 'You are not authorized to comment on this video.');
+        }
     }
 
     public function getComment($comment)

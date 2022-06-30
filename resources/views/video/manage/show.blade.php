@@ -1,10 +1,11 @@
 @extends('layouts.app')
 
-@section('title', $video->title . ' | ' . $video->user()->first()->username)
+@section('title', $video->title . ' | ' . $video->user()->username)
 
 @section('head')
     <link rel="stylesheet" href="{{ asset('css/styleVideoForm.css') }}">
     <script src="{{ asset('js/scriptVideoForm.js') }}"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @endsection
 
 @section('background', 'p-4 me-5 pe-5')
@@ -39,6 +40,43 @@
                 }
             }
         }
+
+        {{--let pollTimeout;--}}
+        {{--let observeChange = {--}}
+        {{--    'poll' : function() {--}}
+        {{--        $.ajax({--}}
+        {{--            type: "GET",--}}
+        {{--            url: '{{ route('video.API_video', $video->id()) }}',--}}
+        {{--            async:true,--}}
+        {{--            success:function(response){--}}
+        {{--                clearTimeout(pollTimeout);--}}
+        {{--                observeChange.update(response);--}}
+        {{--            },--}}
+        {{--            error: function(){--}}
+        {{--                pollTimeout = setTimeout(function()--}}
+        {{--                {--}}
+        {{--                    observeChange.poll();--}}
+        {{--                }, 10000);--}}
+
+        {{--            }--}}
+        {{--        });--}}
+
+        {{--    },--}}
+        {{--    'update' : function(json) {--}}
+        {{--        if(json.changed==="yes"){--}}
+        {{--            window.location.reload();--}}
+        {{--        }--}}
+        {{--        else{--}}
+        {{--            observeChange.poll();--}}
+        {{--        }--}}
+        {{--    }--}}
+        {{--};--}}
+        {{--$(document).ready(function(){--}}
+        {{--    pollTimeout = setTimeout(function()--}}
+        {{--    {--}}
+        {{--        observeChange.poll();--}}
+        {{--    }, 10000);--}}
+        {{--});--}}
     </script>
 
     <form action="{{ route('video.update', $video->id()) }}" method="POST" enctype="multipart/form-data">
@@ -137,20 +175,28 @@
                     <div class="col-12 mb-3">
                         <div class="card bg-light">
                             <div class="card-body">
-                                <div class="row justify-content-center">
-                                    <div class="form-group">
-                                        @component('component.playerJS', ['video' => $video])
-                                        @endcomponent
+                                @if($video->status == 'pending' && $video->progress == 0)
+                                    <h5 class="card-title">Pending</h5>
+                                    <p class="card-text">Your video is pending for approval.</p>
+                                @elseif($video->status == 'pending' && $video->progress =! 0)
+                                    <h5 class="card-title">Your video is processing</h5>
+                                    <p class="card-text">Progress {{ $video->progress }}%</p>
+                                @elseif($video->status == 'online')
+                                    <div class="row justify-content-center">
+                                        <div class="form-group">
+                                            @component('component.playerJS', ['video' => $video])
+                                            @endcomponent
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <p class="p-0 m-0 title-prop">Video link</p>
+                                            <a href="{{ route('watch', $video->id()) }}" style="text-decoration: none" id="link" class="p-0 m-0 prop-link">{{ route('watch', $video->id()) }}</a>
+                                        </div>
+                                        <div class="col-12">
+                                            <p class="p-0 m-0 title-prop">Video name</p>
+                                            <p id="name" class="p-0 m-0 prop">{{ $video->title }}</p>
+                                        </div>
                                     </div>
-                                    <div class="col-12 mb-3">
-                                        <p class="p-0 m-0 title-prop">Video link</p>
-                                        <a href="{{ route('watch', $video->id()) }}" style="text-decoration: none" id="link" class="p-0 m-0 prop-link">{{ route('watch', $video->id()) }}</a>
-                                    </div>
-                                    <div class="col-12">
-                                        <p class="p-0 m-0 title-prop">Video name</p>
-                                        <p id="name" class="p-0 m-0 prop">{{ $video->title }}</p>
-                                    </div>
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>

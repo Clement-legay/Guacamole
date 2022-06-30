@@ -27,7 +27,7 @@ class Video extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->first();
     }
 
     public function setProgress($progress)
@@ -85,12 +85,23 @@ class Video extends Model
 
     public function tags()
     {
-       return $this->hasMany(Tag::class, 'video_id');
+        return Tag::join('tag_assignments', 'tag_assignments.tag_id', '=', 'tags.id')
+            ->where('tag_assignments.video_id', $this->id);
+    }
+
+    public function tagsAssignments()
+    {
+        return $this->hasMany(TagAssignment::class);
     }
 
     public function tagsName()
     {
-       return $this->hasMany(Tag::class, 'video_id')->get()->pluck('name')->implode(' ');
+       return Tag::join('tag_assignments', 'tag_assignments.tag_id', '=', 'tags.id')
+            ->where('video_id', $this->id)
+            ->select('tags.name')
+            ->get()
+            ->pluck('name')
+            ->implode(' ');
     }
 
     public function viewCountById($betweenFirst, $betweenLast)

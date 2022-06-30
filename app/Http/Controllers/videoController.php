@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\ProcessVideo;
 use App\Models\Category;
 use App\Models\Tag;
+use App\Models\TagAssignment;
 use App\Models\Video;
 use App\Models\View;
 use FFMpeg\Coordinate\TimeCode;
@@ -55,6 +56,16 @@ class videoController extends Controller
 
         if (Auth::user() && Auth::user()->lastView($video->id)) {
             $view = Auth::user()->lastView($video->id);
+            if ($view->time_watched > ($video->duration * 0.75)) {
+                $view = View::create([
+                    'video_id' => $video->id,
+                    'user_id' => auth()->user()->id ?? null,
+                    'time_watched' => 0
+                ]);
+                $view->save();
+            }
+            $view->updated_at = now();
+            $view->save();
         } else {
             $view = View::create([
                 'video_id' => $video->id,
@@ -64,7 +75,18 @@ class videoController extends Controller
             $view->save();
         }
 
-        return view('video.player', compact('video', 'view'));
+        if ($video->type == 'private') {
+            if (Auth::user() && Auth::id() == $video->user_id) {
+                return view('video.player', compact('video', 'view'));
+            } elseif (Auth::user() && Auth::user()->role()->isAdmin) {
+                return view('video.player', compact('video', 'view'));
+            } else {
+                $view->delete();
+                return redirect()->route('home');
+            }
+        } else {
+            return view('video.player', compact('video', 'view'));
+        }
     }
 
     public function create()
@@ -121,11 +143,15 @@ class videoController extends Controller
         ]);
 
         foreach (explode(' ', $request->tags) as $tag) {
-            Tag::create(['name' => $tag, 'video_id' => $video->id]);
+            $tag = Tag::firstOrCreate(['name' => $tag]);
+            TagAssignment::create([
+                'video_id' => $video->id,
+                'tag_id' => $tag->id,
+            ]);
         }
 
         // create job to process video
-        ProcessVideo::dispatch($video);
+        ProcessVideo::dispatch($video)->delay(now()->addSeconds(5));
 
         return redirect()->route('video.details', base64_encode($video->id));
     }
@@ -172,10 +198,16 @@ class videoController extends Controller
             'category_id' => $category->id,
         ]);
 
-        $video->tags()->delete();
+        $video->tagsAssignments()->delete();
 
         foreach (explode(' ', $request->tags) as $tag) {
-            Tag::firstOrCreate(['name' => $tag, 'video_id' => $video->id]);
+            $tag = Tag::firstOrCreate(['name' => $tag]);
+            $assignment = TagAssignment::create([
+                'tag_id' => $tag->id,
+                'video_id' => $video->id,
+            ]);
+
+            $assignment->save();
         }
 
         return redirect()->route('video.details', base64_encode($video->id));
@@ -269,5 +301,19 @@ class videoController extends Controller
         return response()->json([
             'comments' => $comments
         ]);
+    }
+
+    public function history()
+    {
+        $historyVideos = Auth::user()->history()->get();
+
+        return view('video.history', compact('historyVideos'));
+    }
+
+    public function liked()
+    {
+        $likedVideos = Auth::user()->likedVideos()->get();
+
+        return view('video.liked', compact('likedVideos'));
     }
 }

@@ -88,13 +88,13 @@
                 <div class="row justify-content-center">
                     <div class="col-1 pt-2">
                         <div style="height: 40px; width: 40px; font-size: 0.5em">
-                            {!! $comment->user()->first()->profile_image() !!}
+                            {!! $comment->user()->profile_image() !!}
                         </div>
                     </div>
                     <div class="col-7 p-0 m-0">
                         <div class="row p-0 m-0">
                             <div class="col-12 p-0 m-0">
-                                <p class="p-0 m-0" style="font-size: 0.9em; font-weight: 500">{{ $comment->user()->first()->username }} • {{ $comment->created_at->diffForHumans() }}</p>
+                                <p class="p-0 m-0" style="font-size: 0.9em; font-weight: 500">{{ $comment->user()->username }} • {{ $comment->created_at->diffForHumans() }}</p>
                             </div>
                             <div class="col-12 p-0 m-0">
                                 <p class="p-0 m-0" style="font-size: 0.8em">{{ $comment->comment }}</p>
@@ -134,7 +134,7 @@
                                             @csrf
                                             <input type="hidden" name="previous_id" value="{{ $comment->id() }}">
                                             <label for="{{ 'reply_' . $comment->id() }}"></label>
-                                            <textarea id="{{ 'reply_' . $comment->id() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $comment->user()->first()->username }}">{{ old('reply') }}</textarea>
+                                            <textarea id="{{ 'reply_' . $comment->id() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $comment->user()->username }}">{{ old('reply') }}</textarea>
                                             <div class="row justify-content-end p-0 m-0">
                                                 <div class="col-auto">
                                                     <button onclick="answer('{{ 'reply_form_' . $comment->id() }}', false)" type="button" class="btn btn-text-blue">BACK</button>
@@ -157,13 +157,13 @@
                         <div class="row justify-content-center px-2">
                             <div class="col-1 pt-2">
                                 <div style="height: 40px; width: 40px; font-size: 0.5em">
-                                    {!! $reply->user()->first()->profile_image() !!}
+                                    {!! $reply->user()->profile_image() !!}
                                 </div>
                             </div>
                             <div class="col-10 p-0 m-0">
                                 <div class="row p-0 m-0">
                                     <div class="col-12 p-0 m-0">
-                                        <p class="p-0 m-0" style="font-size: 0.9em; font-weight: 500">{{ $reply->user()->first()->username }} • {{ $reply->created_at->diffForHumans() }}</p>
+                                        <p class="p-0 m-0" style="font-size: 0.9em; font-weight: 500">{{ $reply->user()->username }} • {{ $reply->created_at->diffForHumans() }}</p>
                                     </div>
                                     <div class="col-12 p-0 m-0">
                                         <p class="p-0 m-0" style="font-size: 0.8em">{{ $reply->comment }}</p>
@@ -190,7 +190,7 @@
                                                 @csrf
                                                 <input type="hidden" name="previous_id" value="{{ $comment->id() }}">
                                                 <label for="{{ 'reply_' . $reply->id() }}"></label>
-                                                <textarea id="{{ 'reply_' . $reply->id() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $reply->user()->first()->username }}">{{ old('reply') }}</textarea>
+                                                <textarea id="{{ 'reply_' . $reply->id() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $reply->user()->username }}">{{ old('reply') }}</textarea>
                                                 <div class="row justify-content-end p-0 m-0">
                                                     <div class="col-auto">
                                                         <button onclick="answer('{{ 'reply_form_' . $reply->id() }}', false)" type="button" class="btn btn-text-blue">BACK</button>

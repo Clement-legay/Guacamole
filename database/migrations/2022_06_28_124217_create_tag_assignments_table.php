@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('tags', function (Blueprint $table) {
-            $table->bigInteger('video_id')->unsigned()->nullable();
-            $table->foreign('video_id')->references('id')->on('videos')->cascadeOnDelete();
+        Schema::create('tag_assignments', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
         });
     }
 
@@ -26,9 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('tags', function (Blueprint $table) {
-            $table->dropForeign(['video_id']);
-            $table->dropColumn('video_id');
-        });
+        Schema::dropIfExists('tag_assignments');
     }
 };

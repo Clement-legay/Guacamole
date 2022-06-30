@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tag>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
  */
-class TagFactory extends Factory
+class TagAssignmentFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +17,8 @@ class TagFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word,
+            'tag_id' => $this->faker->numberBetween(1,600),
+            'video_id' => $this->faker->numberBetween(1,100),
         ];
     }
 }

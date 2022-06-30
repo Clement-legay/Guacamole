@@ -8,9 +8,9 @@
                 <div class="col-12">
                     <div class="row justify-content-between p-3 align-content-center">
                         <div class="col-3">
-                            <a href="{{ route('channel', base64_encode($video->user()->first()->id)) }}" style="text-decoration: none">
-                                <div style="border-radius: 50%; background: {{ $video->user()->first()->color }}; color: white; width: 40px; height: 40px; text-align: center; padding-top: 6px;">
-                                        {{ substr($video->user()->first()->first_name, 0, 1) . substr($video->user()->first()->last_name, 0, 1) }}
+                            <a href="{{ route('channel', base64_encode($video->user()->id)) }}" style="text-decoration: none">
+                                <div style="border-radius: 50%; background: {{ $video->user()->color }}; color: white; width: 40px; height: 40px; text-align: center; padding-top: 6px;">
+                                    {{ substr($video->user()->first_name, 0, 1) . substr($video->user()->last_name, 0, 1) }}
                                 </div>
                             </a>
                         </div>
@@ -20,7 +20,7 @@
                                     <p class="card-subtitle" style="font-size: 1em">{{ $video->title }}</p>
                                 </div>
                                 <div class="col-12">
-                                    <p class="card-text text-black-50 text-body">{{ $video->user()->first()->username }}</p>
+                                    <p class="card-text text-black-50 text-body">{{ $video->user()->username }}</p>
                                 </div>
                                 <div class="col-12">
                                     <p class="card-text text-black-50 text-body">{{ $video->views()->count() > 1000 ? round($video->views()->count() / 1000) . 'k' : $video->views()->count() }} views • {{ $video->sinceWhen() }}</p>

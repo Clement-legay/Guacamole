@@ -2,12 +2,24 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Video;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class Admin
+class Own
 {
+    /**
+     * Create a new middleware instance.
+     *
+     * @return void
+     *
+     */
+    public function __construct(Request $request)
+    {
+        $this->video = Video::find(base64_decode($request->video));
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -17,8 +29,9 @@ class Admin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user() && Auth::user()->role()->isAdmin) {
+        if ($this->video->user_id == Auth::id()) {
             return $next($request);
-        } return redirect()->route('home');
+        }
+        return redirect()->route('home');
     }
 }

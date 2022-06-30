@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         DB::table('roles')->delete();
         DB::table('subscribes')->delete();
         DB::table('views')->delete();
+        DB::table('tag_assignments')->delete();
 
         \App\Models\Role::factory(1)->create();
         \App\Models\User::factory(200)->create();
@@ -34,5 +35,6 @@ class DatabaseSeeder extends Seeder
         \App\Models\Subscribe::factory(4000)->create();
         \App\Models\View::factory(4000)->create();
         \App\Models\Tag::factory(600)->create();
+        \App\Models\TagAssignment::factory(1000)->create();
     }
 }

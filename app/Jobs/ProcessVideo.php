@@ -16,15 +16,26 @@ class ProcessVideo implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $video;
+
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param Video $video
      */
     public function __construct(Video $video)
     {
         $this->video = $video;
+    }
 
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
         $highBitRate = (new X264('aac'))->setKiloBitrate(1058);
 
         $video = FFMpeg::open('public/uploads/' . $this->video->video)
@@ -39,14 +50,5 @@ class ProcessVideo implements ShouldQueue
         unlink(storage_path('app/public/uploads/' . $this->video->video));
 
         $this->video->setDone('storage/videos/' . explode('.', $this->video->video)[0] . '/' . explode('.', $this->video->video)[0] . '.m3u8');
-    }
-
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
     }
 }

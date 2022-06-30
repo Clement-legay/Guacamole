@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +27,8 @@ class registerController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed'
         ]);
+
+        $role = Role::firstOrCreate(['name' => 'default']);
 
         $user = User::create([
             'first_name' => $request->first_name,

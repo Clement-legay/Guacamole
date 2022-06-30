@@ -25,6 +25,9 @@ use Illuminate\Support\Facades\Route;
 
 // check app_env to change the route domain
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/liked', [VideoController::class, 'liked'])->name('likedVideos');
+    Route::get('/history', [VideoController::class, 'history'])->name('history');
+
     Route::get('/subscribe/{user}', [SubscribeController::class, 'subscribe'])->name('subscribe');
     Route::get('/unsubscribe/{user}', [SubscribeController::class, 'unsubscribe'])->name('unsubscribe');
 
@@ -52,9 +55,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/create', [VideoController::class, 'create'])->name('create');
         Route::post('/upload', [VideoController::class, 'upload'])->name('upload');
 
-        Route::get('/{video}', [VideoController::class, 'show'])->name('details');
-        Route::get('/{video}/dashboard', [VideoController::class, 'dashboard'])->name('dashboard');
-        Route::get('/{video}/comments', [VideoController::class, 'comments'])->name('comments');
+        Route::group(['middleware' => 'own'], function () {
+            Route::get('/{video}', [VideoController::class, 'show'])->name('details');
+            Route::get('/{video}/dashboard', [VideoController::class, 'dashboard'])->name('dashboard');
+            Route::get('/{video}/comments', [VideoController::class, 'comments'])->name('comments');
+        });
 
         Route::put('/{video}/update', [VideoController::class, 'update'])->name('update');
         Route::get('/{video}/delete', [VideoController::class, 'delete'])->name('delete');
@@ -74,8 +79,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/users/{user}/update', [UserController::class, 'adminUpdate'])->name('user.update');
         Route::get('/users/{user}/delete', [UserController::class, 'adminDelete'])->name('user.delete');
 
-        Route::post('/users/role/create', [RoleController::class, 'create'])->name('role.create');
-
         Route::get('/videos', [AdminController::class, 'videos'])->name('videos');
         Route::get('/videos/{video}', [AdminController::class, 'video'])->name('video');
         Route::put('/videos/{video}', [AdminController::class, 'update'])->name('update');
@@ -85,6 +88,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/comments/{comment}', [AdminController::class, 'update'])->name('update');
 
         Route::get('/roles', [AdminController::class, 'roles'])->name('roles');
+        Route::post('/roles/create', [RoleController::class, 'create'])->name('role.create');
+        Route::get('/roles/{role}', [AdminController::class, 'role'])->name('role.select');
+        Route::put('/roles/{role}/update', [RoleController::class, 'update'])->name('role.update');
+        Route::get('/roles/{role}/delete', [RoleController::class, 'delete'])->name('role.delete');
     });
 });
 
@@ -104,6 +111,7 @@ Route::group(['middleware' => 'guest'], function () {
 Route::get('/logout', [loginController::class, 'logout'])->name('logout');
 
 Route::get('/', [PageController::class, 'index'])->name('home');
+Route::get('/explore', [PageController::class, 'index'])->name('explore');
 
 Route::post('/search', [videoController::class, 'search'])->name('search');
 Route::get('/search', [videoController::class, 'find'])->name('search');

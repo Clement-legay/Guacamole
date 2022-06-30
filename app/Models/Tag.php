@@ -10,6 +10,15 @@ class Tag extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'video_id',
     ];
+
+    public function videos()
+    {
+        return $this->hasManyThrough(Video::class, TagAssignment::class);
+    }
+
+    public function viewsFrom()
+    {
+        return $this->hasManyThrough(View::class, TagAssignment::class, 'tag_id', 'video_id', 'id', 'video_id');
+    }
 }

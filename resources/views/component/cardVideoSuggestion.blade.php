@@ -18,8 +18,8 @@
                     <div class="col-12">
                         <div class="row align-content-center">
                             <div class="col-auto">
-                                <a style="text-decoration: none" href="{{ route('channel', $video->user()->first()->id()) }}">
-                                    <p class="card-text text-black-50 text-body" style="font-size: 0.8em">{{ $video->user()->first()->username }}</p>
+                                <a style="text-decoration: none" href="{{ route('channel', $video->user()->id()) }}">
+                                    <p class="card-text text-black-50 text-body" style="font-size: 0.8em">{{ $video->user()->username }}</p>
                                 </a>
                             </div>
                         </div>

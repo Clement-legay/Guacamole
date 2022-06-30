@@ -9,10 +9,9 @@ class ViewController extends Controller
 {
     public function update($id)
     {
-        return response()->json(['status' => 'ntm']);
-        $time = request()->input('time');
+        $time = request('time');
 
-        $view = View::find($id);
+        $view = View::find(base64_decode($id));
         $view->time_watched = $time;
         $view->save();
 

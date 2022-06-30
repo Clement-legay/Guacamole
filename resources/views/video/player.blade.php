@@ -3,7 +3,8 @@
 @section('title', $video->title)
 
 @section('head')
-
+    <script src="{{ asset('js/comments.js') }}"></script>
+    <script src="{{ asset('js/player.js') }}"></script>
 @endsection
 
 @section('content')
@@ -66,45 +67,42 @@
     </style>
 
     <script>
-        function answer(id, open=true) {
-            if(open) {
-                document.getElementById(id).style.display = 'block';
-            } else {
-                document.getElementById(id).style.display = 'none';
-            }
+        function setTimeWatchedPlayer(time) {
+            player.currentTime(time);
+            player.posterImage.hide();
         }
 
-        function replies(id) {
-            if (document.getElementById(id).style.display === 'none') document.getElementById(id).style.display = 'block';
-            else document.getElementById(id).style.display = 'none';
+        function setTimeWatchedDB(url) {
+            let xml = new XMLHttpRequest();
+            xml.open('PUT', url + '?time=' + player.currentTime(), true);
+            xml.send();
+        }
 
+        function getTimeWatched() {
+            return player.currentTime();
         }
 
         setTimeout(() => {
-            let xml = new XMLHttpRequest();
-            xml.open('PUT', '{{ route('API_views', ['id' => $view->id()]) }}?time=' + player.currentTime(), true);
-            xml.send();
-            let result = xml.responseText;
-            console.log(result);
-        }, 5000)
+            if ({{ $view->time_watched }} > 0) {
+                setTimeWatchedPlayer({{ $view->time_watched }});
+            }
 
-
-        window.addEventListener('beforeunload', function() {
-            console.log(player.currentTime());
-
-        });
+            window.addEventListener('beforeunload', function() {
+                setTimeWatchedDB('{{ route('API_views', $view->id()) }}');
+            });
+        }, 500)
     </script>
 
     <div class="flex-row">
         <div class="d-flex justify-content-center px-5 pt-4">
-            <div class="col-xxl-8 col-xl-8 col-lg-5 flex-column">
+            <div class="col-xl-12 col-xxl-8 flex-column">
                 <div class="row justify-content-center">
                     <div class="col-12 p-0 m-0">
                         @component('component.playerJS', ['video' => $video])
                         @endcomponent
                     </div>
                     <div class="col-12 p-0 m-0">
-                        <p class="p-0 m-0" style="font-weight: 500; font-size: 0.95em; color: #065fd4">
+                        <p class="p-0 m-0" style="font-weight: 500; font-size: 0.95em">
                             @foreach($video->tags()->get() as $tag)
                                 <a style="text-decoration: none" href="{{ route('hashtag', $tag) }}">
                                     {{ $tag->name }}
@@ -148,29 +146,29 @@
                                         <div class="col-5">
                                             <div class="flex-row d-flex align-items-center justify-content-between p-0 m-0">
                                                 <div class="col-4 flex-column p-0 m-0">
-                                                    <a href="{{ route('channel', base64_encode($video->user()->first()->id)) }}" style="text-decoration: none">
+                                                    <a href="{{ route('channel', base64_encode($video->user()->id)) }}" style="text-decoration: none">
                                                         <div style="height: 40px; width: 40px; font-size: 0.55em">
-                                                            {!! $video->user()->first()->profile_image() !!}
+                                                            {!! $video->user()->profile_image() !!}
                                                         </div>
                                                     </a>
                                                 </div>
                                                 <div class="col-8 flex-column p-0 m-0">
                                                     <div class="row justify-content-center p-0 m-0">
                                                         <div class="col-auto p-0 m-0">
-                                                            <span style="font-weight: 500">{{ $video->user()->first()->username }}</span>
+                                                            <span style="font-weight: 500">{{ $video->user()->username }}</span>
                                                         </div>
                                                         <div class="col-auto p-0 m-0">
-                                                            <span style="font-size: 0.8em">{{ $video->user()->first()->subscribers()->get()->count() > 1000 ? round($video->user()->first()->subscribers()->get()->count() / 1000) . 'k' : $video->user()->first()->subscribers()->get()->count() }} subscribers</span>
+                                                            <span style="font-size: 0.8em">{{ $video->user()->subscribers()->get()->count() > 1000 ? round($video->user()->subscribers()->get()->count() / 1000) . 'k' : $video->user()->subscribers()->get()->count() }} subscribers</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-5">
-                                            @if(Auth::check() && Auth::user()->isSubscribedTo($video->user()->first()))
-                                                <a href="{{ route('unsubscribe', $video->user()->first()->id) }}" style="width: 100%; background: #9DA27A; color: white; font-weight: normal; text-transform: uppercase; padding: 8px 13px 8px 13px" class="btn">Unsubscribe</a>
+                                            @if(Auth::check() && Auth::user()->isSubscribedTo($video->user()))
+                                                <a href="{{ route('unsubscribe', $video->user()->id()) }}" style="width: 100%; background: #9DA27A; color: white; font-weight: normal; text-transform: uppercase; padding: 8px 13px 8px 13px" class="btn">Unsubscribe</a>
                                             @else
-                                                <a href="{{ route('subscribe', $video->user()->first()->id) }}" style="width: 100%; background: #9DA27A; color: white; font-weight: normal; text-transform: uppercase; padding: 8px 13px 8px 13px" class="btn">Subscribe</a>
+                                                <a href="{{ route('subscribe', $video->user()->id()) }}" style="width: 100%; background: #9DA27A; color: white; font-weight: normal; text-transform: uppercase; padding: 8px 13px 8px 13px" class="btn">Subscribe</a>
                                             @endif
                                         </div>
                                     </div>
@@ -213,13 +211,13 @@
                                     <div class="row justify-content-center">
                                         <div class="col-1 pt-2">
                                             <div style="height: 40px; width: 40px; font-size: 0.5em">
-                                                {!! $comment->user()->first()->profile_image() !!}
+                                                {!! $comment->user()->profile_image() !!}
                                             </div>
                                         </div>
                                         <div class="col-11 p-0 m-0">
                                             <div class="row p-0 m-0">
                                                 <div class="col-12 p-0 m-0">
-                                                    <p class="p-0 m-0" style="font-size: 0.9em; font-weight: 500">{{ $comment->user()->first()->username }} <span style="font-weight: 400">{{ $comment->created_at->diffForHumans() }}</span></p>
+                                                    <p class="p-0 m-0" style="font-size: 0.9em; font-weight: 500">{{ $comment->user()->username }} <span style="font-weight: 400">{{ $comment->created_at->diffForHumans() }}</span></p>
                                                 </div>
                                                 <div class="col-12 p-0 m-0">
                                                     <p class="p-0 m-0" style="font-size: 0.95em">{{ $comment->comment }}</p>
@@ -256,7 +254,7 @@
                                                                     @csrf
                                                                     <input type="hidden" name="previous_id" value="{{ $comment->id() }}">
                                                                     <label for="{{ 'reply_' . $comment->id() }}"></label>
-                                                                    <textarea id="{{ 'reply_' . $comment->id() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $comment->user()->first()->username }}">{{ old('reply') }}</textarea>
+                                                                    <textarea id="{{ 'reply_' . $comment->id() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $comment->user()->username }}">{{ old('reply') }}</textarea>
                                                                     <div class="row justify-content-end p-0 m-0">
                                                                         <div class="col-auto">
                                                                             <button onclick="answer('{{ 'reply_form_' . $comment->id() }}', false)" type="button" class="btn btn-text-blue">BACK</button>
@@ -280,13 +278,13 @@
                                             <div class="row justify-content-center px-2">
                                                 <div class="col-1 pt-2">
                                                     <div style="height: 40px; width: 40px; font-size: 0.5em">
-                                                        {!! $reply->user()->first()->profile_image() !!}
+                                                        {!! $reply->user()->profile_image() !!}
                                                     </div>
                                                 </div>
                                                 <div class="col-10 p-0 m-0">
                                                     <div class="row p-0 m-0">
                                                         <div class="col-12 p-0 m-0">
-                                                            <p class="p-0 m-0" style="font-size: 0.9em; font-weight: 500">{{ $reply->user()->first()->username }} • {{ $reply->created_at->diffForHumans() }}</p>
+                                                            <p class="p-0 m-0" style="font-size: 0.9em; font-weight: 500">{{ $reply->user()->username }} • {{ $reply->created_at->diffForHumans() }}</p>
                                                         </div>
                                                         <div class="col-12 p-0 m-0">
                                                             <p class="p-0 m-0" style="font-size: 0.8em">{{ $reply->comment }}</p>
@@ -319,7 +317,7 @@
                                                                         @csrf
                                                                         <input type="hidden" name="previous_id" value="{{ $comment->id() }}">
                                                                         <label for="{{ 'reply_' . $reply->id() }}"></label>
-                                                                        <textarea id="{{ 'reply_' . $reply->id() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $reply->user()->first()->username }}">{{ old('reply') }}</textarea>
+                                                                        <textarea id="{{ 'reply_' . $reply->id() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $reply->user()->username }}">{{ old('reply') }}</textarea>
                                                                         <div class="row justify-content-end p-0 m-0">
                                                                             <div class="col-auto">
                                                                                 <button onclick="answer('{{ 'reply_form_' . $reply->id() }}', false)" type="button" class="btn btn-text-blue">BACK</button>

@@ -44,7 +44,7 @@
                 <td>{{ $video->views()->get()->count() }}</td>
                 <td>{{ $video->comments()->get()->count() }}</td>
                 <td>{{ $video->likes()->get()->count() > 0 ? $video->likes()->get()->count() / ($video->likes()->get()->count() + $video->dislikes()->get()->count()) * 100 : 0}}%</td>
-                <td><div style="height: 45px; width: 45px; font-size: 0.6em">{!! $video->user()->get()->first()->profile_image() !!}</div></td>
+                <td><div style="height: 45px; width: 45px; font-size: 0.6em">{!! $video->user()->profile_image() !!}</div></td>
             </tr>
         @endforeach
         </tbody>

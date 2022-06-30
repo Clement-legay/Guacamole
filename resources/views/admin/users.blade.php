@@ -27,14 +27,6 @@
             last_name.value = user.last_name;
             username.value = user.username;
             email.value = user.email;
-
-
-        }
-
-        function openRoleMaker() {
-            let roleMaker = document.getElementById('role-maker')
-
-            roleMaker.style.display === "none" ? roleMaker.style.display = "flex" : roleMaker.style.display = "none"
         }
     </script>
 

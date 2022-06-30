@@ -9,7 +9,7 @@
                 <div class="card p-4 rounded">
                     <div class="row justify-content-around">
                         <div class="col-auto">
-                            <h1 style="text-decoration: underline #9DA27A">Login</h1>
+                            <h1 class="font-bold underline" style="text-decoration: underline #9DA27A">Login</h1>
                         </div>
                         <div class="col-auto">
                             <a href="{{route('register')}}" class="modal-title text-black-50" style="font-size: 2em; text-decoration: none">Register</a>

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\HasApiTokens;
 use phpDocumentor\Reflection\DocBlock\Tags\Return_;
@@ -121,8 +122,10 @@ class User extends Authenticatable
 
     public function history()
     {
-        // returns only the first of each video_id
-        return $this->hasMany(View::class);
+        return $this->hasManyThrough(Video::class, View::class, 'user_id', 'id', 'id', 'video_id')
+            ->selectRaw('videos.*, views.id as view_id, views.time_watched as time_watched, views.updated_at as view_updated_at')
+            ->orderBy('views.updated_at', 'desc')
+            ->groupBy('video_id');
     }
 
     public function likes()
@@ -131,7 +134,7 @@ class User extends Authenticatable
     }
 
     public function role() {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(Role::class)->first();
     }
 
     public function dislikes()
@@ -153,12 +156,67 @@ class User extends Authenticatable
     }
 
     public function hasView($id) {
-        return $this->history()->orderBy('created_at', 'desc')->where('video_id', $id)->first();
+        return $this->history()->orderBy('updated_at', 'desc')->where('video_id', $id)->first();
     }
 
     public function suggestions($limit)
     {
-        return View::countViewsAll(now()->subWeek(), $limit);
+        $lastViews = $this->history()->limit(10)->get();
+
+//        dd($this->mostViewedCategory(10)->get());
+
+
+        $statsFromLastViews = [
+            'mostUsedTag' => [],
+            'mostUsedCategory' => [],
+            'mostUsedChannel' => [],
+        ];
+
+
+
+        return $lastViews;
+    }
+
+    public function mostViewedCategory($limit)
+    {
+        return Category::selectRaw('categories.*')
+            ->withCount('views', function ($query) {
+                    $query->groupByRaw('videos.id')
+                        ->join('videos', 'videos.category_id', '=', 'categories.id')
+                        ->join('views', 'views.video_id', '=', 'videos.id')
+                        ->where('views.user_id', $this->id);
+                }
+            )
+            ->orderBy('views_from_count', 'desc');
+    }
+
+    public function mostViewedChannel($limit)
+    {
+        return User::selectRaw('users.*')
+            ->withCount(array(
+                'viewsFrom' => function ($query) {
+                    $query->where('views.user_id', $this->id);
+                }
+            ))
+            ->orderBy('views_from_count', 'desc')
+            ->limit($limit);
+    }
+
+    public function mostViewedTag($limit)
+    {
+        return Tag::selectRaw('tags.*')
+            ->withCount(array(
+                'viewsFrom' => function ($query) {
+                    $query->where('views.user_id', $this->id);
+                }
+            ))
+            ->orderBy('views_from_count', 'desc')
+            ->limit($limit);
+    }
+
+    public function viewsFrom()
+    {
+        return $this->hasManyThrough(View::class, Video::class);
     }
 
     public function hasLikedVideo($videoId)
@@ -179,5 +237,12 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->is_admin == 1;
+    }
+
+    public function likedVideos()
+    {
+        return $this->hasManyThrough(Video::class, Like::class, 'user_id', 'id', 'id', 'video_id')
+            ->selectRaw('videos.*, likes.id as like_id, likes.is_liked as is_liked, likes.updated_at as like_updated_at')
+            ->orderBy('likes.created_at', 'desc');
     }
 }
