@@ -17,7 +17,7 @@
 <div class="row p-0 m-0">
     <div class="col-2" id="sidebar">
         @if(Agent::isMobile())
-            @component('layouts.sidebarAlternative)
+            @component('layouts.sidebarAlternative')
             @endcomponent
         @elseif(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'profile.'))
             @component('layouts.sidebarProfile')
