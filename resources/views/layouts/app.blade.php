@@ -26,7 +26,7 @@
             @component('layouts.sidebarAdmin')
             @endcomponent
         @else
-            @if(!Agent::isMobile())
+            @if(Agent::isMobile())
                 <div id="darkener" class="modal-backdrop fade" onclick="openNav()" style="display: none"></div>
                 @component('layouts.sidebarAlternative')
                 @endcomponent
@@ -36,7 +36,7 @@
             @endif
         @endif
     </div>
-    @if(!Agent::isMobile())
+    @if(Agent::isMobile())
     <div class="col-12 p-0" id="content">
     @else
     <div class="col-10 p-0" id="content">
