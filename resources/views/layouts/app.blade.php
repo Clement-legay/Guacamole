@@ -16,10 +16,7 @@
 
 <div class="row p-0 m-0">
     <div class="col-2" id="sidebar">
-        @if(Agent::isMobile())
-            @component('layouts.sidebarAlternative')
-            @endcomponent
-        @elseif(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'profile.'))
+        @if(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'profile.'))
             @component('layouts.sidebarProfile')
             @endcomponent
         @elseif(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'video.'))
@@ -29,11 +26,21 @@
             @component('layouts.sidebarAdmin')
             @endcomponent
         @else
-            @component('layouts.sidebar')
-            @endcomponent
+            @if(!Agent::isMobile())
+                <div id="darkener" class="modal-backdrop fade" onclick="openNav()" style="display: none"></div>
+                @component('layouts.sidebarAlternative')
+                @endcomponent
+            @else
+                @component('layouts.sidebar')
+                @endcomponent
+            @endif
         @endif
     </div>
+    @if(!Agent::isMobile())
+    <div class="col-12 p-0" id="content">
+    @else
     <div class="col-10 p-0" id="content">
+    @endif
         <div class="@yield('background')" style="margin-top: 60px;">
             {{--                min-height: 92--}}
             @yield('content')
