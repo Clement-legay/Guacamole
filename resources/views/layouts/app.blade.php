@@ -16,7 +16,9 @@
 
 <div class="row p-0 m-0">
     <div class="col-2" id="sidebar">
-        @if(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'profile.'))
+        @if($agent::isMobile())
+            @include('layouts.sidebarVideo')
+        @elseif(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'profile.'))
             @component('layouts.sidebarProfile')
             @endcomponent
         @elseif(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'video.'))

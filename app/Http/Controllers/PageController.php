@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Video;
 use App\Models\View;
 use Illuminate\Http\Request;
+use Jenssegers\Agent\Agent;
 
 class PageController extends Controller
 {
