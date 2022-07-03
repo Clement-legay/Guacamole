@@ -343,8 +343,9 @@
                 </div>
             </div>
         </div>
-        <div class="dropdown-divider my-4"></div>
+
         <div class="col-lg-4 col-sm-12">
+            <div class="dropdown-divider my-4 d-none"></div>
             <div class="flex-row d-flex justify-content-center">
                 <div class="flex-column col-12">
                     @auth
