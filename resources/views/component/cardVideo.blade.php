@@ -1,4 +1,4 @@
-<div class="col-3">
+<div class="col-lg-3 col-sm-12">
     <a style="text-decoration: none;" href="{{ route('watch', base64_encode($video->id)) }}">
         <div class="mb-4 p-0">
             <div class="row">

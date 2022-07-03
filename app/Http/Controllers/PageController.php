@@ -12,7 +12,7 @@ class PageController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::limit(10)->get();
         if (isset($_GET['category'])) {
             $categorySelected = Category::find($_GET['category']);
 
