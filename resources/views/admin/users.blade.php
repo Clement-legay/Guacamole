@@ -36,7 +36,6 @@
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">#</th>
             <th scope="col">User</th>
             <th scope="col"></th>
             <th scope="col">Role</th>
@@ -48,7 +47,6 @@
         <tbody>
         @foreach($users as $user)
             <tr onclick="doNav('{{ route('admin.user.select', $user->id()) }}')" class="user_row">
-                <th scope="row">{{ $user->id }}</th>
                 <td>
                     <div style="width: 45px; height: 45px; font-size: 0.6em">
                         {!! $user->profile_image() !!}
@@ -120,25 +118,19 @@
                                 </div>
                                 <div class="col-6">
                                     <label for="role">Role</label>
-                                    <div class="flex-row d-flex align-items-center">
-                                        <div class="col-10 flex-column">
-                                            <select type="role" class="form-control @error('role') is-invalid @enderror" id="role" name="role">
-                                                <option value="" @if($userSelected->role()->first() == null) selected @endif>No attribution</option>
-                                                @foreach($roles as $role)
-                                                    <option value="{{ $role->id }}" @if($userSelected->role()->first() && $userSelected->role()->first()-> id == $role->id) selected @endif>{{ $role->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('role')
-                                                <div class="invalid-feedback">
-                                                    {{ $errors->first('role') }}
-                                                </div>
-                                            @enderror
+                                    <select type="role" class="form-control @error('role') is-invalid @enderror" id="role" name="role">
+                                        <option value="" @if($userSelected->role()->first() == null) selected @endif>No attribution</option>
+                                        @foreach($roles as $role)
+                                            <option value="{{ $role->id }}" @if($userSelected->role()->first() && $userSelected->role()->first()-> id == $role->id) selected @endif>{{ $role->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('role')
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('role') }}
                                         </div>
-                                        <div class="col-2 flex-column ps-1">
-                                            <btn class="btn btn-primary" style="background-color: black; border: black" type="button" onclick="openRoleMaker()"><i class="bi bi-plus-circle"></i></btn>
-                                        </div>
-                                    </div>
+                                    @enderror
                                 </div>
+
                                 <div class="col-12">
                                     <label for="email">Email</label>
                                     <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') ?? $userSelected->email }}">

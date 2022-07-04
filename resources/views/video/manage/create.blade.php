@@ -5,6 +5,8 @@
 @section('head')
     <link rel="stylesheet" href="{{ asset('css/styleVideoForm.css') }}">
     <script src="{{ asset('js/scriptVideoForm.js') }}"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.0.0-rc.1/cropper.min.js"></script>
 @endsection
 
 @section('background', 'p-lg-4 me-lg-5 pe-lg-5 px-3 pt-2')
@@ -53,7 +55,7 @@
                         <button class="btn btn-primary m-0 text-white">UPLOAD</button>
                     </div>
                     <div class="col-auto m-0 p-0 me-3">
-                        <button type="button" class="btn m-0"><i class="bi bi-three-dots"></i></button>
+                        <button type="button" class="btn m-0"><i class="bi bi-three-dots-vertical"></i></button>
                     </div>
                 </div>
             </div>
@@ -66,7 +68,7 @@
                             <label for="title" id="text-counter" class="counter">0/100</label>
                             <textarea type="text" oninput="count('title', 'text-counter', 100)" rows="2" class="form-control text-input @error('title') is-invalid @enderror" id="title" name="title" placeholder="Titre (mandatory)">{{ old('title') }}</textarea>
                             @error('title')
-                                <span class="invalid-feedback" role="alert">
+                            <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
@@ -77,7 +79,7 @@
                             <label id="desc-counter" for="description" class="counter">0/191</label>
                             <textarea oninput="count('description', 'desc-counter', 191)" class="form-control @error('description') is-invalid @enderror" id="description" name="description" placeholder="Description" rows="8">{{ old('description') }}</textarea>
                             @error('description')
-                                <span class="invalid-feedback" role="alert">
+                            <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
@@ -129,16 +131,16 @@
                                             <label for="video" id="videoOpener" class="btn btn-file" ><i class="bi bi-upload"></i> Upload a file</label>
                                             <input type="file" onchange="selectItem(video)" style="display: none" class=" @error('video') is-invalid @enderror" id="video" name="video" accept="video/*">
                                             @error('video')
-                                                <span class="invalid-feedback" role="alert">
+                                            <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
                                         </div>
                                     </div>
-{{--                                    <div class="col-12 mb-3">--}}
-{{--                                        <p class="p-0 m-0 title-prop">Video link</p>--}}
-{{--                                        <p id="link" class="p-0 m-0 prop-link">Unknown</p>--}}
-{{--                                    </div>--}}
+                                    {{--                                    <div class="col-12 mb-3">--}}
+                                    {{--                                        <p class="p-0 m-0 title-prop">Video link</p>--}}
+                                    {{--                                        <p id="link" class="p-0 m-0 prop-link">Unknown</p>--}}
+                                    {{--                                    </div>--}}
                                     <div class="col-12 mb-3">
                                         <p class="p-0 m-0 title-prop">Video name</p>
                                         <p id="name" class="p-0 m-0 prop">Unknown</p>
@@ -160,12 +162,25 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="thumbnail" id="thumbnailOpener" class="btn btn-file"><i class="bi bi-upload"></i> Upload a thumbnail</label>
-                                                    <input type="file" onchange="selectItem(thumbnail)" style="display: none" class=" @error('thumbnail') is-invalid @enderror" id="thumbnail" name="thumbnail" accept="image/gif, image/jpeg, image/png">
+                                                    <input type="file" style="display: none" class=" @error('thumbnail') is-invalid @enderror" id="thumbnail" name="thumbnail" accept="image/gif, image/jpeg, image/png">
                                                     @error('thumbnail')
                                                     <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
-                                                        </span>
+                                                    </span>
                                                     @enderror
+                                                    <div class="modal fade remove-modal" tabindex="-1" role="dialog" id="cropperModal">
+                                                        <div class="modal-dialog modal-lg" role="document">
+                                                            <div class="modal-content text-center">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                <div class="modal-positioner">
+                                                                    <h1>Crop Photo</h1>
+                                                                    <hr>
+                                                                    <img alt="cropped" style="width: 1920px; height: 1080px;" class="js-thumbnail-preview" src="">
+                                                                    <button class="btn btn-primary js-save-cropped-thumbnail">Save</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-12 px-5 my-3">

@@ -8,7 +8,7 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @endsection
 
-@section('background', 'p-4 me-5 pe-5')
+@section('background', 'p-lg-4 me-lg-5 pe-lg-5 px-3 pt-2')
 
 @section('content')
     <script>
@@ -82,28 +82,23 @@
     <form action="{{ route('video.update', $video->id()) }}" method="POST" enctype="multipart/form-data">
         @method('PUT')
         @csrf
-        <div class="flex-row pe-5 mb-2">
-            <div class="d-flex align-items-center justify-content-between">
-                <div class="col-auto flex-column">
-                    <h3>Edit your video</h3>
-                </div>
-                <div class="col-5 flex-column">
-                    <div class="flex-row d-flex justify-content-end">
-                        <div class="col-auto m-0 p-0 flex-column">
-                            <button type="button" class="btn btn-link m-0">CANCEL CHANGES</button>
-                        </div>
-                        <div class="col-auto p-0 m-0 flex-column me-2">
-                            <button class="btn btn-primary m-0">UPLOAD</button>
-                        </div>
-                        <div class="col-auto flex-column p-0 m-0 me-2">
-                            <div class="dropdown">
-                                <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu p-0 m-0" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item" href="{{ route('video.delete', $video->id()) }}">Delete <i class="bi bi-trash-fill"></i></a></li>
-                                </ul>
-                            </div>
+        <div class="row justify-content-between pe-lg-5 mb-2">
+            <div class="col-lg-auto col-6">
+                <h3 style="font-size: 1.1em">Edit your video</h3>
+            </div>
+            <div class="col-lg-5 col-6">
+                <div class="row justify-content-end">
+                    <div class="col-auto p-0 m-0">
+                        <button class="btn btn-primary m-0 text-white">UPLOAD</button>
+                    </div>
+                    <div class="col-auto m-0 p-0 me-3">
+                        <div class="dropdown">
+                            <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu p-0 m-0" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="{{ route('video.delete', $video->id()) }}">Delete <i class="bi bi-trash-fill"></i></a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -111,7 +106,7 @@
         </div>
 
         <div class="row justify-content-between">
-            <div class="col-7">
+            <div class="col-lg-7 col-12">
                 <div class="row">
                     <div class="col-12 mb-4">
                         <div class="form-group" style="position: relative">
@@ -162,7 +157,7 @@
                         <div class="form-group">
                             <input type="text" value="{{ $video->tagsName() }}" aria-label="tags" oninput="checkMatch('tags')" class="form-control @error('tags') is-invalid @enderror" id="tags" name="tags" placeholder="Tags">
                             @error('tags')
-                                <span class="invalid-feedback" role="alert">
+                            <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
@@ -170,8 +165,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-5">
-                <div class="row justify-content-between align-content-center pe-5">
+            <div class="col-lg-5 col-12 pt-4 pt-lg-0">
+                <div class="row justify-content-between align-content-center pe-lg-5">
                     <div class="col-12 mb-3">
                         <div class="card bg-light">
                             <div class="card-body">
