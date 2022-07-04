@@ -37,6 +37,7 @@ class registerController extends Controller
             'color' => $request->color,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role_id' => $role->id,
         ]);
 
         $user->sendEmailVerificationNotification();
@@ -55,6 +56,8 @@ class registerController extends Controller
             'password' => 'required|confirmed'
         ]);
 
+        $role = Role::firstOrCreate(['name' => 'default']);
+
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -62,6 +65,7 @@ class registerController extends Controller
             'color' => $request->color,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role_id' => $role->id,
         ]);
 
         $user->sendEmailVerificationNotification();
