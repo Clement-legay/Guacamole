@@ -34,6 +34,33 @@
         window.location.href = url;
     }
     /* Set the width of the sidebar to 250px and the left margin of the page content to 250px */
+    // function openNav() {
+    //     if (document.getElementById("mySidebar").style.width === "250px") {
+    //         document.getElementById("mySidebar").style.width = "125px";
+    //         document.getElementById("sidebar").classList.remove("col-2");
+    //         document.getElementById("sidebar").classList.add("col-1");
+    //         document.getElementById("content").classList.remove("col-10");
+    //         document.getElementById("content").classList.add("col-11");
+    //
+    //         let linkNames = document.getElementsByClassName("link-name")
+    //         for (let i = 0; i < linkNames.length; i++) {
+    //             linkNames[i].style.display = "none";
+    //         }
+    //     } else {
+    //         document.getElementById("mySidebar").style.width = "250px";
+    //         document.getElementById("sidebar").classList.remove("col-1");
+    //         document.getElementById("sidebar").classList.add("col-2");
+    //         document.getElementById("content").classList.remove("col-11");
+    //         document.getElementById("content").classList.add("col-10");
+    //
+    //         let linkNames = document.getElementsByClassName("link-name")
+    //         for (let i = 0; i < linkNames.length; i++) {
+    //             linkNames[i].style.display = "unset";
+    //
+    //         }
+    //     }
+    // }
+
     function openNav() {
         if (document.getElementById("mySidebar").style.width === "250px") {
             document.getElementById("mySidebar").style.width = "125px";
@@ -41,7 +68,13 @@
             document.getElementById("sidebar").classList.add("col-1");
             document.getElementById("content").classList.remove("col-10");
             document.getElementById("content").classList.add("col-11");
-
+            if (document.getElementById("avatar")) {
+                document.getElementById("avatar").style.height = "40px";
+                document.getElementById("avatar").style.width = "40px";
+                document.getElementById("avatar").style.fontSize = "0.5em";
+                document.getElementById("avatar-row").classList.remove("justify-content-center");
+                document.getElementById("avatar-row").classList.add("justify-content-start");
+            }
             let linkNames = document.getElementsByClassName("link-name")
             for (let i = 0; i < linkNames.length; i++) {
                 linkNames[i].style.display = "none";
@@ -52,89 +85,26 @@
             document.getElementById("sidebar").classList.add("col-2");
             document.getElementById("content").classList.remove("col-11");
             document.getElementById("content").classList.add("col-10");
-
-            let linkNames = document.getElementsByClassName("link-name")
-            for (let i = 0; i < linkNames.length; i++) {
-                linkNames[i].style.display = "unset";
-
+            if (document.getElementById("avatar")) {
+                document.getElementById("avatar").style.height = "100px";
+                document.getElementById("avatar").style.width = "100px";
+                document.getElementById("avatar").style.fontSize = "1.2em";
+                document.getElementById("avatar-row").classList.remove("justify-content-start");
+                document.getElementById("avatar-row").classList.add("justify-content-center");
+                let linkNames = document.getElementsByClassName("link-name")
+                for (let i = 0; i < linkNames.length; i++) {
+                    linkNames[i].style.display = "flex";
+                }
+            } else {
+                let linkNames = document.getElementsByClassName("link-name")
+                for (let i = 0; i < linkNames.length; i++) {
+                    linkNames[i].style.display = "unset";
+                }
             }
         }
     }
 </script>
 
 <div id="mySidebar" style="width: 250px; border-right: grey 2px" class="sidebar">
-        <div class="row justify-content-between align-content-center p-3">
-            <div onclick="doNav('{{ route('home') }}')" class="col-12 profile_pages">
-                <div class="row justify-content-center align-content-center">
-                    <div class="col-3">
-                        <div class="row justify-content-center align-content-center">
-                            @if(route('home') == url()->current())
-                                <i style="font-size: 1.5em" class="bi bi-house-fill"></i>
-                            @else
-                                <i style="font-size: 1.5em" class="bi bi-house"></i>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="col-8">
-                        <div class="row justify-content-start pt-1">
-                            <span class="card-title link-name" style="text-transform: capitalize; font-size: 1.2em; font-weight: normal">Home</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div onclick="doNav('{{ route('explore') }}')" class="col-12 profile_pages">
-                <div class="row justify-content-center align-content-center">
-                    <div class="col-3">
-                        <div class="row justify-content-center align-content-center">
-                            @if(route('explore') == url()->current())
-                                <i style="font-size: 1.5em" class="bi bi-compass-fill"></i>
-                            @else
-                                <i style="font-size: 1.5em" class="bi bi-compass"></i>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="col-8">
-                        <div class="row justify-content-start pt-1">
-                            <span class="card-title link-name" style="text-transform: capitalize; font-size: 1.2em; font-weight: normal">Explore</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div onclick="doNav('{{ route('likedVideos') }}')" class="col-12 profile_pages">
-                <div class="row justify-content-center align-content-center">
-                    <div class="col-3">
-                        <div class="row justify-content-center align-content-center">
-                            @if(route('likedVideos') == url()->current())
-                                <i style="font-size: 1.5em" class="bi bi-hand-thumbs-up-fill"></i>
-                            @else
-                                <i style="font-size: 1.5em" class="bi bi-hand-thumbs-up"></i>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="col-8">
-                        <div class="row justify-content-start pt-1">
-                            <span class="card-title link-name" style="text-transform: capitalize; font-size: 1.2em; font-weight: normal">Liked Videos</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div onclick="doNav('{{ route('history') }}')" class="col-12 profile_pages">
-                <div class="row justify-content-center align-content-center">
-                    <div class="col-3">
-                        <div class="row justify-content-center align-content-center">
-                            @if(route('history') == url()->current())
-                                <i style="font-size: 1.5em" class="bi bi-clock-fill"></i>
-                            @else
-                                <i style="font-size: 1.5em" class="bi bi-clock-history"></i>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="col-8">
-                        <div class="row justify-content-start pt-1">
-                            <span class="card-title link-name" style="text-transform: capitalize; font-size: 1.2em; font-weight: normal">History</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    @yield('sidebar')
 </div>

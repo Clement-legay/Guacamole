@@ -16,11 +16,10 @@
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">#</th>
             <th scope="col">Video</th>
             <th scope="col"></th>
             <th scope="col">Visibility</th>
-            <th scope="col">Date</th>
+            <th scope="col ">Date</th>
             <th scope="col">Views</th>
             <th scope="col">Comments</th>
             <th scope="col">% Likes</th>
@@ -29,7 +28,6 @@
         <tbody>
             @foreach(auth()->user()->videos()->orderBy('created_at', 'desc')->get() as $video)
             <tr onclick="doNav('{{ route('video.details', base64_encode($video->id)) }}')" class="video_row">
-                <th scope="row">{{ $video->id }}</th>
                 <td>
                     <img width="150" height="84" src="{{ asset($video->thumbnail) }}" alt="{{ $video->title }}">
                 </td>

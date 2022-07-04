@@ -13,7 +13,7 @@
 <body>
 <div id="darkener" class="modal-backdrop fade" onclick="openNav()" style="display: none"></div>
 @extends('layouts.nav')
-@component('layouts.sidebarAlternative')
+@component('layouts.sidebarMainAlt')
 @endcomponent
 
     <div class="row p-0 m-0">

@@ -26,14 +26,8 @@
             @component('layouts.sidebarAdmin')
             @endcomponent
         @else
-            @if(Agent::isMobile())
-                <div id="darkener" class="modal-backdrop fade" onclick="openNav()" style="display: none"></div>
-                @component('layouts.sidebarAlternative')
-                @endcomponent
-            @else
-                @component('layouts.sidebar')
-                @endcomponent
-            @endif
+            @component('layouts.sidebarMain')
+            @endcomponent
         @endif
     </div>
     @if(Agent::isMobile())

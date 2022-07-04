@@ -8,7 +8,7 @@
     <h3 class="mb-3">Contenu de la chaîne</h3>
 
     <div class="row">
-        <div class="col-4">
+        <div class="col-lg-4 col-sm-12 mb-4">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Chanel's analytics data</h5>
@@ -83,7 +83,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-lg-4 col-sm-12 mb-4">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title p-0 m-0">Last subscribers</h5>
@@ -113,7 +113,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-lg-4 col-sm-12 mb-5">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title p-0 m-0">Under Coding</h5>
