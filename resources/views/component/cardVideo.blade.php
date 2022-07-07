@@ -3,7 +3,7 @@
         <div class="mb-4 p-0">
             <div class="row">
                 <div class="col-12">
-                    <img class="card-img-top" src="{{ $video->thumbnail }}" alt="{{ $video->name }}">
+                    <img class="card-img-top" style="width: 100%; aspect-ratio: 16/9" src="{{ $video->thumbnail }}" alt="{{ $video->name }}">
                 </div>
                 <div class="col-12">
                     <div class="row justify-content-between p-3 align-content-center">

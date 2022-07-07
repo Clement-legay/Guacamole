@@ -4,9 +4,9 @@
 
 @section('head')
     <link rel="stylesheet" href="{{ asset('css/styleVideoForm.css') }}">
-    <script src="{{ asset('js/scriptVideoForm.js') }}"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.0.0-rc.1/cropper.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css" integrity="sha256-jKV9n9bkk/CTP8zbtEtnKaKf+ehRovOYeKoyfthwbC8=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.js" integrity="sha256-CgvH7sz3tHhkiVKh05kSUgG97YtzYNnWt6OXcmYzqHY=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 @endsection
 
 @section('background', 'p-lg-4 me-lg-5 pe-lg-5 px-3 pt-2')
@@ -162,29 +162,36 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="thumbnail" id="thumbnailOpener" class="btn btn-file"><i class="bi bi-upload"></i> Upload a thumbnail</label>
-                                                    <input type="file" style="display: none" class=" @error('thumbnail') is-invalid @enderror" id="thumbnail" name="thumbnail" accept="image/gif, image/jpeg, image/png">
-                                                    @error('thumbnail')
+                                                    <input type="file" style="display: none" class=" @error('thumbnail_cropped') is-invalid @enderror" id="thumbnail" name="thumbnail" accept="image/gif, image/jpeg, image/png">
+                                                    <input type="hidden" name="thumbnail_cropped" id="thumbnail_cropped">
+                                                    @error('thumbnail_cropped')
                                                     <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
                                                     </span>
                                                     @enderror
-                                                    <div class="modal fade remove-modal" tabindex="-1" role="dialog" id="cropperModal">
-                                                        <div class="modal-dialog modal-lg" role="document">
-                                                            <div class="modal-content text-center">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                <div class="modal-positioner">
-                                                                    <h1>Crop Photo</h1>
-                                                                    <hr>
-                                                                    <img alt="cropped" style="width: 1920px; height: 1080px;" class="js-thumbnail-preview" src="">
-                                                                    <button class="btn btn-primary js-save-cropped-thumbnail">Save</button>
+                                                </div>
+
+
+                                                <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-body px-0">
+                                                                <div class="row justify-content-center px-0">
+                                                                    <div class="col-11 px-0">
+                                                                        <img style="max-height: 500px" id="image" src="#" alt="tre">
+                                                                    </div>
                                                                 </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" id="cancelModal">Cancel</button>
+                                                                <button type="button" class="btn btn-primary" id="crop">Crop</button>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-12 px-5 my-3">
-                                                <img src="https://via.placeholder.com/1920x1080" id="thumbnail-picture" alt="Thumbnail" class="img-fluid">
+                                                <img src="https://via.placeholder.com/1920x1080" id="thumbnail-picture" alt="Thumbnail" style="width: 100%; aspect-ratio: 16 / 9">
                                             </div>
                                         </div>
                                     </div>
@@ -196,4 +203,5 @@
             </div>
         </div>
     </form>
+    <script src="{{ asset('js/scriptVideoForm.js') }}"></script>
 @endsection

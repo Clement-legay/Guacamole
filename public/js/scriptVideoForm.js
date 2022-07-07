@@ -3,31 +3,8 @@ function selectItem(item) {
         document.getElementById('name').innerText = item.files[0].name.split('.')[0];
         document.getElementById('size').innerText = Math.round(item.files[0].size / 1024 / 1024) + " MB";
     } else {
-        let photo = item.files[0]
-        let reader = new FileReader();
-        reader.onload = function(event) {
-            let image = $('.js-thumbnail-preview')[0];
-            image.src = event.target.result;
-
-            cropper = new Cropper(image, {
-                viewMode: 1,
-                aspectRatio: 1,
-                minContainerWidth: 400,
-                minContainerHeight: 400,
-                minCropBoxWidth: 1920,
-                minCropBoxHeight: 1080,
-                movable: true,
-                zoomable: true,
-                ready: function () {
-                    console.log('ready');
-                    console.log(cropper.ready);
-                }
-            });
-
-            $(cropperModalId).modal();
-        };
-        reader.readAsDataURL(photo);
-        document.getElementById('thumbnail-picture').src = URL.createObjectURL(item.files[0]);
+        let thumbnail = document.getElementById('thumbnail-picture')
+        thumbnail.src = URL.createObjectURL(item.files[0])
     }
 }
 
@@ -65,60 +42,79 @@ function selectCategory(item, name, autocomplete) {
     document.getElementById(autocomplete).innerHTML = ""
 }
 
-
+let $modal = $('#modal');
+let image = document.getElementById('image');
 let cropper;
-let cropperModalId = '#cropperModal';
 
-let $jsPhotoUploadInput = $('#thumbnail');
-console.log($jsPhotoUploadInput);
-$jsPhotoUploadInput.on('change', function() {
-    let files = this.files;
-    if (files.length > 0) {
-        let photo = files[0];
+$("body").on("change", "#thumbnail", function(e){
+    let files = e.target.files;
+    let done = function (url) {
+        image.src = url;
+        $modal.modal('show');
+    };
+    let reader;
+    let file;
+    let url;
 
-        let reader = new FileReader();
-        reader.onload = function(event) {
-            let image = $('.js-thumbnail-preview')[0];
-            image.src = event.target.result;
+    if (files && files.length > 0) {
+        file = files[0];
 
-            cropper = new Cropper(image, {
-                viewMode: 1,
-                aspectRatio: 1,
-                minContainerWidth: 400,
-                minContainerHeight: 400,
-                minCropBoxWidth: 271,
-                minCropBoxHeight: 271,
-                movable: true,
-                ready: function () {
-                    console.log('ready');
-                    console.log(cropper.ready);
-                }
-            });
-
-            $(cropperModalId).modal();
-        };
-        reader.readAsDataURL(photo);
+        if (URL) {
+            done(URL.createObjectURL(file));
+        } else if (FileReader) {
+            reader = new FileReader();
+            reader.onload = function (e) {
+                done(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
     }
 });
 
-$('.js-save-cropped-thumbnail').on('click', function(event) {
-    event.preventDefault();
-
-    console.log(cropper.ready);
-
-    let $button = $(this);
-    $button.text('uploading...');
-    $button.prop('disabled', true);
-
-    const canvas = cropper.getCroppedCanvas({
-        width: 1920,
-        height: 1080,
-        fillColor: '#000',
-        imageSmoothingEnabled: false,
+$modal.on('shown.bs.modal', function () {
+    cropper = new Cropper(image, {
+        aspectRatio: 16 / 9,
+        viewMode: 1,
+        dragMode: 'move',
+        scalable: true,
+        zoomable: true,
+        touchDragZoom: true,
     });
-    const base64encodedImage = canvas.toDataURL();
-    $('#thumbnail-picture').attr('src', base64encodedImage);
-    $(cropperModalId).modal('hide');
+}).on('hidden.bs.modal', function () {
+    cropper.destroy();
+    cropper = null;
 });
+
+$("#cancelModal").click(function(){
+    $modal.modal('hide');
+});
+
+$("#crop").click(function(){
+    const formTarget = document.getElementById('thumbnail_cropped');
+    canvas = cropper.getCroppedCanvas({
+        fillColor: '#fff',
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: 'high',
+        backgroundColor: '#fff',
+        minWidth: 300,
+        minHeight: 200,
+    });
+
+    canvas.toBlob(function(blob) {
+        url = URL.createObjectURL(blob);
+        let reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = function() {
+          const pictureRender = document.getElementById('thumbnail-picture');
+            pictureRender.src = reader.result;
+            console.log(formTarget)
+            formTarget.value = reader.result;
+            console.log(formTarget.value)
+            $modal.modal('hide');
+        }
+    });
+})
+
+
 
 

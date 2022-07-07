@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use ProtoneMedia\LaravelFFMpeg\Exporters\HLSVideoFilters;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
@@ -43,8 +44,12 @@ class videoController extends Controller
     public function search(Request $request)
     {
         $search = $request->input('search');
-        $videos = Video::where('title', 'like', '%' . $search . '%')
-            ->orWhere('description', 'like', '%' . $search . '%')
+        $videos = Video::where(function ($query) use ($search) {
+            $query->where('title', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%');
+        })
+            ->where('type', 'public')
+            ->where('status', 'online')
             ->get();
 
         return view('video.search', compact('videos', 'search'));
@@ -100,10 +105,24 @@ class videoController extends Controller
             'title' => 'required|max:191',
             'description' => 'required|max:191',
             'video' => 'required|mimes:mp4,mov,ogg,qt',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'thumbnail_cropped' => 'required',
             'type' => 'required',
             'category' => 'required',
         ]);
+
+        $image_64 = $request->input('thumbnail_cropped');
+
+        $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+
+        $replace = substr($image_64, 0, strpos($image_64, ',')+1);
+
+        $image = str_replace($replace, '', $image_64);
+
+        $image = str_replace(' ', '+', $image);
+
+        $imageName = 'thumbnails/' . Str::random(35) . '.' . $extension;
+
+        Storage::disk('public')->put($imageName, base64_decode($image));
 
         $category = Category::firstOrCreate(['category_name' => $request->category]);
 
@@ -122,7 +141,7 @@ class videoController extends Controller
         if ($request->hasFile('thumbnail')) {
             $return = $request->file('thumbnail')->store('public/thumbnails');
             if ($return) {
-                $thumbnail = 'storage/thumbnails/' . $request->file('thumbnail')->hashName();
+                $thumbnail = 'storage/' . $imageName;
             } else {
                 return redirect()->back()->with('error', 'Error uploading thumbnail');
             }

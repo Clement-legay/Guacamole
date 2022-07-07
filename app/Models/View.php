@@ -29,6 +29,8 @@ class View extends Model
         return Video::withCount('views')
             ->orderBy('views_count', 'desc')
             ->limit($limit)
+            ->where('type', 'public')
+            ->where('status', 'online')
             ->get();
     }
 
@@ -38,6 +40,8 @@ class View extends Model
             ->where('category_id', $category->id)
             ->orderBy('views_count', 'desc')
             ->limit($limit)
+            ->where('type', 'public')
+            ->where('status', 'online')
             ->get();
     }
 }

@@ -1,7 +1,7 @@
 <div class="row mb-4">
     <div class="col-lg-5 col-sm-12 p-0 m-0">
         <a href="{{ route('watch', $video->id()) }}">
-            <img width="100%" class="img-fluid" src="{{ asset($video->thumbnail) }}" alt="{{ $video->name }}">
+            <img width="100%" class="img-fluid" style="width: 100%; aspect-ratio: 16/9" src="{{ asset($video->thumbnail) }}" alt="{{ $video->name }}">
         </a>
     </div>
     <div class="col-2 d-flex d-lg-none mt-2">

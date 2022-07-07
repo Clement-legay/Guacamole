@@ -32,6 +32,7 @@ class User extends Authenticatable
         'color',
         'profile_image',
         'banner_image',
+        'role_id',
     ];
 
     /**
@@ -151,7 +152,7 @@ class User extends Authenticatable
         if ($this->profile_image) {
             return "<img width='100%' height='100%' src='" . asset('storage/PI/' . $this->profile_image) . "' alt='Profile Image' class='img-fluid'>";
         } else {
-            return "<div style='border-radius: 50%; background: " . $this->color . "; color: white; width: 100%; height: 100%; padding-top: 17%; text-align: center; text-transform: uppercase; font-size: 2em'>" . substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1) . "</div>";
+            return "<div id='avatarBadge' style='border-radius: 50%; background: " . $this->color . "; color: white; width: 100%; height: 100%; padding-top: 17%; text-align: center; text-transform: uppercase; font-size: 2em'>" . substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1) . "</div>";
         }
     }
 

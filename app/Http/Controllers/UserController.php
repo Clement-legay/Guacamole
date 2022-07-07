@@ -85,7 +85,7 @@ class UserController extends Controller
 
     public function profile()
     {
-        return view('user.profile.content');
+        return view('user.profile.account');
     }
 
     public function dashboard()
@@ -219,7 +219,7 @@ class UserController extends Controller
                 'user_id' => $user->id,
                 'video_id' => $video->id,
             ]);
-        
+
         return response()->json([
             'hasView' => $view
         ]);

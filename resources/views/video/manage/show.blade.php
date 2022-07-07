@@ -5,7 +5,6 @@
 @section('head')
     <link rel="stylesheet" href="{{ asset('css/styleVideoForm.css') }}">
     <script src="{{ asset('js/scriptVideoForm.js') }}"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @endsection
 
 @section('background', 'p-lg-4 me-lg-5 pe-lg-5 px-3 pt-2')
