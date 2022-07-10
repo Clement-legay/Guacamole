@@ -56,7 +56,7 @@
                     <p class="p-0 m-0">{{ $user->first_name . ' ' . $user->last_name }}</p>
                     <p class="p-0 m-0">{{ $user->username }}</p>
                 </td>
-                <td>{{ $user->role()->first()->name ?? "No attribution" }}</td>
+                <td>{{ $user->role()->name ?? "No attribution" }}</td>
                 <td>{{ $user->subscribers()->get()->count() }}</td>
                 <td>{{ $user->created_at->format('d F Y') }}</td>
                 <td>
@@ -119,9 +119,9 @@
                                 <div class="col-6">
                                     <label for="role">Role</label>
                                     <select type="role" class="form-control @error('role') is-invalid @enderror" id="role" name="role">
-                                        <option value="" @if($userSelected->role()->first() == null) selected @endif>No attribution</option>
+                                        <option value="" @if($userSelected->role() == null) selected @endif>No attribution</option>
                                         @foreach($roles as $role)
-                                            <option value="{{ $role->id }}" @if($userSelected->role()->first() && $userSelected->role()->first()-> id == $role->id) selected @endif>{{ $role->name }}</option>
+                                            <option value="{{ $role->id }}" @if($userSelected->role() && $userSelected->role()-> id == $role->id) selected @endif>{{ $role->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('role')
