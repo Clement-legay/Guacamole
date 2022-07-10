@@ -147,12 +147,20 @@ class User extends Authenticatable
         return $this->hasMany(View::class)->where('video_id', $id)->orderBy('created_at', 'desc')->first();
     }
 
-    public function profile_image()
+    public function profile_image($id=null)
     {
         if ($this->profile_image) {
-            return "<img width='100%' height='100%' src='" . asset('storage/PI/' . $this->profile_image) . "' alt='Profile Image' class='img-fluid'>";
+            if ($id) {
+                return "<img id='" . $id . "' width='100%' height='100%' style='border-radius: 50%' src='" . asset($this->profile_image) . "' alt='Profile Image' class='img-fluid'>";
+            } else {
+                return "<img width='100%' height='100%' style='border-radius: 50%' src='" . asset($this->profile_image) . "' alt='Profile Image' class='img-fluid'>";
+            }
         } else {
-            return "<div id='avatarBadge' style='border-radius: 50%; background: " . $this->color . "; color: white; width: 100%; height: 100%; padding-top: 17%; text-align: center; text-transform: uppercase; font-size: 2em'>" . substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1) . "</div>";
+            if ($id) {
+                return "<div id='" . $id . "' style='border-radius: 50%; background: " . $this->color . "; color: white; width: 100%; height: 100%; padding-top: 17%; text-align: center; text-transform: uppercase; font-size: 2em'>" . substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1) . "</div>";
+            } else {
+                return "<div style='border-radius: 50%; background: " . $this->color . "; color: white; width: 100%; height: 100%; padding-top: 17%; text-align: center; text-transform: uppercase; font-size: 2em'>" . substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1) . "</div>";
+            }
         }
     }
 

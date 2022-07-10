@@ -5,7 +5,7 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-4">
+            <div class="col-12 col-md-6 col-lg-5 col-xl-4">
                 <div class="card p-4 rounded">
                     <div class="row justify-content-around">
                         <div class="col-auto">

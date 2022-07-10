@@ -122,8 +122,6 @@ class videoController extends Controller
 
         $imageName = 'thumbnails/' . Str::random(35) . '.' . $extension;
 
-        Storage::disk('public')->put($imageName, base64_decode($image));
-
         $category = Category::firstOrCreate(['category_name' => $request->category]);
 
         if ($request->hasFile('video')) {
@@ -139,7 +137,7 @@ class videoController extends Controller
 //        $link = $this->encryptHLS($request->file('video')->hashName());
 
         if ($request->hasFile('thumbnail')) {
-            $return = $request->file('thumbnail')->store('public/thumbnails');
+            $return = Storage::disk('public')->put($imageName, base64_decode($image));
             if ($return) {
                 $thumbnail = 'storage/' . $imageName;
             } else {
@@ -194,16 +192,24 @@ class videoController extends Controller
             'title' => 'required|max:191',
             'description' => 'required|max:191',
             'thumbnail' => 'image|mimes:jpeg,png,jpg,gif,svg',
+            'thumbnail_cropped' => 'required',
             'type' => 'required',
             'category' => 'required',
         ]);
 
+        $image_64 = $request->input('thumbnail_cropped');
+        $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+        $replace = substr($image_64, 0, strpos($image_64, ',')+1);
+        $image = str_replace($replace, '', $image_64);
+        $image = str_replace(' ', '+', $image);
+        $imageName = 'thumbnails/' . Str::random(35) . '.' . $extension;
+
         $category = Category::firstOrCreate(['category_name' => $request->category]);
 
         if ($request->hasFile('thumbnail')) {
-            $return = $request->file('thumbnail')->store('public/thumbnails');
+            $return = Storage::disk('public')->put($imageName, base64_decode($image));
             if ($return) {
-                $thumbnail = 'storage/thumbnails/' . $request->file('thumbnail')->hashName();
+                $thumbnail = 'storage/' . $imageName;
             } else {
                 return redirect()->back()->with('error', 'Error uploading thumbnail');
             }

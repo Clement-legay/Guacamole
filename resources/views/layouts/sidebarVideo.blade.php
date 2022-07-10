@@ -43,14 +43,14 @@
         </div>
 
         @if((url()->current() == route('video.create')) == false)
-        <div onclick="doNav('{{ route('video.details', base64_encode($video->id)) }}')" class="col-12 profile_pages mt-3">
+        <div onclick="doNav('{{ route('video.details', $video->id()) }}')" class="col-12 profile_pages mt-3">
         @else
         <div class="col-12 mt-3 disabled">
         @endif
             <div class="row justify-content-center align-content-center">
                 <div class="col-3">
                     <div class="row justify-content-center align-content-center">
-                        @if((url()->current() == route('video.create')) == false && route('video.details', base64_encode($video->id)) == url()->current())
+                        @if((url()->current() == route('video.create')) == false && route('video.details', $video->id()) == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-pen-fill"></i>
                         @else
                             <i style="font-size: 1.5em" class="bi bi-pen"></i>
@@ -65,14 +65,14 @@
             </div>
         </div>
         @if((url()->current() == route('video.create')) == false)
-        <div onclick="doNav('{{ route('video.dashboard', base64_encode($video->id)) }}')" class="col-12 profile_pages mt-3">
+        <div onclick="doNav('{{ route('video.dashboard', $video->id()) }}')" class="col-12 profile_pages mt-3">
         @else
         <div class="col-12 mt-3 disabled">
         @endif
             <div class="row justify-content-center align-content-center">
                 <div class="col-3">
                     <div class="row justify-content-center align-content-center">
-                        @if((url()->current() == route('video.create')) == false && route('video.dashboard', base64_encode($video->id)) == url()->current())
+                        @if((url()->current() == route('video.create')) == false && route('video.dashboard', $video->id()) == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-menu-app-fill"></i>
                         @else
                             <i style="font-size: 1.5em" class="bi bi-menu-app"></i>
@@ -88,14 +88,14 @@
         </div>
 
         @if((url()->current() == route('video.create')) == false)
-        <div onclick="doNav('{{ route('video.comments', base64_encode($video->id)) }}')" class="col-12 profile_pages mt-3">
+        <div onclick="doNav('{{ route('video.comments', $video->id()) }}')" class="col-12 profile_pages mt-3">
         @else
         <div class="col-12 mt-3 disabled">
         @endif
             <div class="row justify-content-center align-content-center">
                 <div class="col-3">
                     <div class="row justify-content-center align-content-center">
-                        @if((url()->current() == route('video.create')) == false && route('video.comments', base64_encode($video->id)) == url()->current())
+                        @if((url()->current() == route('video.create')) == false && route('video.comments', $video->id()) == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-chat-left-dots-fill"></i>
                         @else
                             <i style="font-size: 1.5em" class="bi bi-chat-left-dots"></i>

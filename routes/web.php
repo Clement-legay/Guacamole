@@ -36,7 +36,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/deleteOpinion/{video}', [LikeController::class, 'deleteOpinion'])->name('deleteOpinion');
 
     Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
-        Route::get('/content', [UserController::class, 'profile'])->name('content');
+        Route::get('/content', [UserController::class, 'content'])->name('content');
 
         Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
         Route::get('/comments', [UserController::class, 'comments'])->name('comments');
@@ -44,11 +44,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/account', [UserController::class, 'profile'])->name('account');
         Route::put('/account/{user}', [UserController::class, 'update'])->name('update');
-
-        Route::get('/video/{video}', [VideoController::class, 'update'])->name('videoUpdate');
-        Route::put('/video/{video}', [VideoController::class, 'updateIt'])->name('update');
-        Route::delete('/video/{video}', [VideoController::class, 'delete'])->name('videoDelete');
-
+        Route::get('/account/{user}/avatar/delete', [UserController::class, 'deleteAvatar'])->name('updateAvatarDelete');
+        Route::get('/account/{user}/banner/delete', [UserController::class, 'deleteBanner'])->name('updateBannerDelete');
     });
 
     Route::group(['prefix' => 'video', 'as' => 'video.'], function () {

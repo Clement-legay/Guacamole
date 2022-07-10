@@ -7,7 +7,7 @@
                 <div class="col-auto">
                     <a style="text-decoration: none" href="{{ route('channel', auth()->user()->id()) }}">
                         <div id="avatar" style="width: 100px; height: 100px; font-size: 1.2em">
-                            {!! auth()->user()->profile_image() !!}
+                            {!! auth()->user()->profile_image('sidebarBadge') !!}
                         </div>
                     </a>
                 </div>

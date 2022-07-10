@@ -7,7 +7,7 @@
 @if($user->banner_image)
     <div class="row">
         <div class="col-12">
-            <img width="100%" src="{{ $user->banner_image }}" alt="{{ $user->username }}" class="img-fluid">
+            <img width="100%" src="{{ asset($user->banner_image) }}" alt="{{ $user->username }}" class="img-fluid">
         </div>
     </div>
 @endif

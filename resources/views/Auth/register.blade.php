@@ -11,10 +11,14 @@
             if (state) {
                 x.style.animation = "slideBack 0.5s forwards";
                 y.style.animation = "slideBack2 0.5s forwards";
+                x.style.display = "block";
+                y.style.display = "none";
                 state = false
             } else {
                 x.style.animation = "slide 0.5s forwards";
                 y.style.animation = "slide2 0.5s forwards";
+                y.style.display = "block";
+                x.style.display = "none";
                 state = true
             }
         }
@@ -27,36 +31,35 @@
         function changeAvatar() {
             let lastnameLetter = document.getElementById("last_name").value.charAt(0).toUpperCase()
             let firstnameLetter = document.getElementById("first_name").value.charAt(0).toUpperCase()
-            let avatar = firstnameLetter + lastnameLetter
-            console.log(avatar)
-            document.getElementById("avatar").innerText = avatar
-
-
+            document.getElementById("avatar").innerText = firstnameLetter + lastnameLetter
         }
     </script>
     <style>
-
         @keyframes slide2 {
             100% {
-                left: 200px;
+                top: 50%;
+                left: 50%;
                 opacity: 100%;
             }
         }
         @keyframes slide {
             100% {
-                left: -200px;
+                top: 50%;
+                left: 0;
                 opacity: 0;
             }
         }
         @keyframes slideBack2 {
             100% {
-                right: 200px;
+                left: 50%;
+                top: 50%;
                 opacity: 0;
             }
         }
         @keyframes slideBack {
             100% {
-                right: -200px;
+                left: 50%;
+                top: 50%;
                 opacity: 100%;
             }
         }
@@ -70,12 +73,13 @@
         }
         #stepTwo {
             position: absolute;
-            left: 150%;
+            left: 100%;
             height: 100px;
             top: 50%; /* à 50%/50% du parent référent */
             transform: translate(-50%, -50%); /* décalage de 50% de sa propre taille */
             width: 70%;
             opacity: 0;
+            display: none;
         }
         #registerCard {
             height: 450px;
@@ -84,7 +88,7 @@
 
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-4">
+            <div class="col-12 col-md-6 col-lg-5 col-xl-4">
                 <div id="registerCard" class="card p-4 rounded">
                     <div class="row justify-content-around">
                         <div class="col-auto">

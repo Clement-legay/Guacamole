@@ -8,6 +8,8 @@ use App\Models\Video;
 use App\Models\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -88,6 +90,11 @@ class UserController extends Controller
         return view('user.profile.account');
     }
 
+    public function content()
+    {
+        return view('user.profile.content');
+    }
+
     public function dashboard()
     {
         return view('user.profile.dashboard');
@@ -109,25 +116,29 @@ class UserController extends Controller
         $user = User::find(base64_decode($user));
 
         $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'username' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'color' => 'required',
-            'profile_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'banner_image' =>  'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'first_name' => 'max:191',
+            'last_name' => 'max:191',
+            'username' => 'max:191|unique:users',
+            'banner_image' =>  'image|mimes:jpeg,png,jpg,gif,svg',
+            'banner_cropped' => 'required',
         ]);
+
+        $image_64 = $request->input('banner_cropped');
+        $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+        $replace = substr($image_64, 0, strpos($image_64, ',')+1);
+        $image = str_replace($replace, '', $image_64);
+        $image = str_replace(' ', '+', $image);
+        $imageName = 'profileBanner/' . Str::random(35) . '.' . $extension;
+        Storage::disk('public')->put($imageName, base64_decode($image));
 
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->username = $request->username;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->color = $request->color;
-        $user->profile_image = $request->profile_image;
-        $user->banner_image = $request->banner_image;
-        $user->role = $request->role;
+
+        if ($request->color) {
+            $user->color = $request->color;
+        }
+        $user->banner_image = 'storage/' . $imageName;
         $user->save();
 
         return redirect()->back();
@@ -234,5 +245,45 @@ class UserController extends Controller
         return response()->json([
             'history' => $user->history()->orderBy('created_at', 'desc')->groupBy('video_id')->forPage($page, $limit)->get()
         ]);
+    }
+
+    public function updateAvatar(Request $request, $user)
+    {
+        $user = User::find(base64_decode($user));
+
+        $image_64 = $request->input('profile_picture');
+        $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+        $replace = substr($image_64, 0, strpos($image_64, ',')+1);
+        $image = str_replace($replace, '', $image_64);
+        $image = str_replace(' ', '+', $image);
+        $imageName = 'profilePicture/' . Str::random(35) . '.' . $extension;
+        Storage::disk('public')->put($imageName, base64_decode($image));
+
+        $user->profile_image = 'storage/' . $imageName;
+        $user->save();
+    }
+
+    public function deleteAvatar($user)
+    {
+        $user = User::find(base64_decode($user));
+
+        unlink(public_path($user->profile_image));
+
+        $user->profile_image = null;
+        $user->save();
+
+        return redirect()->back();
+    }
+
+    public function deleteBanner($user)
+    {
+        $user = User::find(base64_decode($user));
+
+        unlink(public_path($user->banner_image));
+
+        $user->banner_image = null;
+        $user->save();
+
+        return redirect()->back();
     }
 }

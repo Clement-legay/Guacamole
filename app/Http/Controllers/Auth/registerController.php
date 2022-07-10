@@ -22,7 +22,7 @@ class registerController extends Controller
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
-            'username' => 'required',
+            'username' => 'required|unique:users',
             'color' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed'

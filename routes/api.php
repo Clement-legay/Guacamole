@@ -54,6 +54,7 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
     Route::get('/{user}/subscriptions', [UserController::class, 'getUserSubscriptions'])->name('API_user_subscriptions');
     Route::get('/{user}/view/{video}', [UserController::class, 'getUserHasView'])->name('API_user_has_view');
     Route::get('/{user}/history', [UserController::class, 'getUserHistory'])->name('API_user_history');
+    Route::post('/{user}/profile_picture/update', [UserController::class, 'updateAvatar'])->name('API_user_update_avatar');
 
     Route::post('/{user}/subscribe/{channel}', [SubscribeController::class, 'sendSubscribe'])->name('API_subscribe');
     Route::delete('/{user}/unsubscribe/{channel}', [SubscribeController::class, 'sendUnsubscribe'])->name('API_unsubscribe');
