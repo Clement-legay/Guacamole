@@ -27,7 +27,7 @@
         </thead>
         <tbody>
             @foreach(auth()->user()->videos()->orderBy('created_at', 'desc')->get() as $video)
-            <tr onclick="doNav('{{ route('video.details', $video->id()) }}')" class="video_row">
+            <tr onclick="doNav('{{ route('video.details', $video->id64()) }}')" class="video_row">
                 <td>
                     <img width="150" height="84" src="{{ asset($video->thumbnail) }}" alt="{{ $video->title }}">
                 </td>

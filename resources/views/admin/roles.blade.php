@@ -17,7 +17,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ $role->name }}</h5>
 
-                        <a href="{{ route('admin.role.select', $role->id()) }}" class="btn btn-primary" onclick="doNav('{{ route('admin.role.select', $role->id()) }}')">Edit</a>
+                        <a href="{{ route('admin.role.select', $role->id64()) }}" class="btn btn-primary" onclick="doNav('{{ route('admin.role.select', $role->id64()) }}')">Edit</a>
                     </div>
                 </div>
             </div>

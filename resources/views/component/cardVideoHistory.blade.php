@@ -2,7 +2,7 @@
     <div class="mb-4 p-0">
         <div class="row">
             <div class="col-4">
-                <a href="{{ route('watch', $video->id()) }}">
+                <a href="{{ route('watch', $video->id64()) }}">
                     <img class="card-img-top" style="width: 100%; aspect-ratio: 16/9" src="{{ asset($video->thumbnail) }}" alt="{{ $video->name }}">
                 </a>
             </div>

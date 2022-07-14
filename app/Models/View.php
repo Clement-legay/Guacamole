@@ -14,7 +14,7 @@ class View extends Model
         'time_watched'
     ];
 
-    public function id() {
+    public function id64() {
         return base64_encode($this->id);
     }
 
@@ -43,5 +43,15 @@ class View extends Model
             ->where('type', 'public')
             ->where('status', 'online')
             ->get();
+    }
+
+    public function video()
+    {
+        return $this->belongsTo(Video::class)->first();
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class)->first();
     }
 }

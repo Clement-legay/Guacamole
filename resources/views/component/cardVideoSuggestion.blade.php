@@ -1,6 +1,6 @@
 <div class="row mb-4">
     <div class="col-lg-5 col-sm-12 p-0 m-0">
-        <a href="{{ route('watch', $video->id()) }}">
+        <a href="{{ route('watch', $video->id64()) }}">
             <img width="100%" class="img-fluid" style="width: 100%; aspect-ratio: 16/9" src="{{ asset($video->thumbnail) }}" alt="{{ $video->name }}">
         </a>
     </div>
@@ -15,7 +15,7 @@
                 <p class="card-subtitle" style="font-size: 1em; font-weight: 600">{{ $video->title }}</p>
             </div>
             <div class="col-lg-12 d-none d-lg-flex">
-                <a style="text-decoration: none" href="{{ route('channel', $video->user()->id()) }}">
+                <a style="text-decoration: none" href="{{ route('channel', $video->user()->id64()) }}">
                     <p class="card-text text-black-50 text-body" style="font-size: 0.8em">{{ $video->user()->username }}</p>
                 </a>
             </div>

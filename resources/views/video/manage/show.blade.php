@@ -47,7 +47,7 @@
         {{--    'poll' : function() {--}}
         {{--        $.ajax({--}}
         {{--            type: "GET",--}}
-        {{--            url: '{{ route('video.API_video', $video->id()) }}',--}}
+        {{--            url: '{{ route('video.API_video', $video->id64()) }}',--}}
         {{--            async:true,--}}
         {{--            success:function(response){--}}
         {{--                clearTimeout(pollTimeout);--}}
@@ -80,7 +80,7 @@
         {{--});--}}
     </script>
 
-    <form action="{{ route('video.update', $video->id()) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('video.update', $video->id64()) }}" method="POST" enctype="multipart/form-data">
         @method('PUT')
         @csrf
         <div class="row justify-content-between pe-lg-5 mb-2">
@@ -98,7 +98,7 @@
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu p-0 m-0" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="{{ route('video.delete', $video->id()) }}">Delete <i class="bi bi-trash-fill"></i></a></li>
+                                <li><a class="dropdown-item" href="{{ route('video.delete', $video->id64()) }}">Delete <i class="bi bi-trash-fill"></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -185,7 +185,7 @@
                                         </div>
                                         <div class="col-12 mb-3">
                                             <p class="p-0 m-0 title-prop">Video link</p>
-                                            <a href="{{ route('watch', $video->id()) }}" style="text-decoration: none" id="link" class="p-0 m-0 prop-link">{{ route('watch', $video->id()) }}</a>
+                                            <a href="{{ route('watch', $video->id64()) }}" style="text-decoration: none" id="link" class="p-0 m-0 prop-link">{{ route('watch', $video->id64()) }}</a>
                                         </div>
                                         <div class="col-12">
                                             <p class="p-0 m-0 title-prop">Video name</p>

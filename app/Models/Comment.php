@@ -30,7 +30,7 @@ class Comment extends Model
         return $this->hasMany(Comment::class, 'previous_id');
     }
 
-    public function id() {
+    public function id64() {
         return base64_encode($this->id);
     }
 }

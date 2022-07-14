@@ -20,6 +20,26 @@ class Category extends Model
 
     public function viewsFrom()
     {
-        return $this->hasManyThrough(View::class, Video::class, 'category_id', 'video_id', 'id', 'video_id');
+        return $this->hasManyThrough(View::class, Video::class, 'category_id', 'video_id', 'id', 'id');
+    }
+
+    public function id64()
+    {
+        return base64_encode($this->id);
+    }
+
+    static function mostViewed()
+    {
+        return Category::withCount(array(
+            'views' => function ($query) {
+                $query->whereBetween('views.updated_at', [now()->subDay(2), now()]);
+            }
+        ))
+            ->orderBy('views_count', 'desc');
+    }
+
+    public function views()
+    {
+        return $this->hasManyThrough(View::class, Video::class);
     }
 }

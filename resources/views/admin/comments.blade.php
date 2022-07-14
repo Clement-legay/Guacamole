@@ -100,8 +100,8 @@
                                 <p class="p-0 m-0" style="font-size: 0.8em">{{ $comment->comment }}</p>
                             </div>
                             <div class="col-12 p-0 m-0">
-                                <button class="btn btn-text me-3" onclick="answer('{{ 'reply_form_' . $comment->id() }}')" style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</button>
-                                <button onclick="replies('{{ 'replies_' . $comment->id() }}')" class="btn btn-text-bis pb-1 me-3"><span style="font-size: 0.8em">{{ $comment->replies()->orderBy('created_at', 'desc')->get()->count() }} replies <i style="font-size: 0.8em" class="bi bi-chevron-down"></i></span></button>
+                                <button class="btn btn-text me-3" onclick="answer('{{ 'reply_form_' . $comment->id64() }}')" style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</button>
+                                <button onclick="replies('{{ 'replies_' . $comment->id64() }}')" class="btn btn-text-bis pb-1 me-3"><span style="font-size: 0.8em">{{ $comment->replies()->orderBy('created_at', 'desc')->get()->count() }} replies <i style="font-size: 0.8em" class="bi bi-chevron-down"></i></span></button>
                                 <button class="btn btn-text-bis"><i class="bi bi-three-dots"></i></button>
                             </div>
                         </div>
@@ -119,7 +119,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="{{ 'reply_form_' . $comment->id() }}" style="display: none" class="col-10 p-0 m-0">
+                    <div id="{{ 'reply_form_' . $comment->id64() }}" style="display: none" class="col-10 p-0 m-0">
                         <div class="row justify-content-start p-0 m-0">
                             <div class="col-7">
                                 <div class="row justify-content-center p-0 m-0">
@@ -132,12 +132,12 @@
                                         <form action="{{ route('comment.create') }}" method="post">
                                             @method('POST')
                                             @csrf
-                                            <input type="hidden" name="previous_id" value="{{ $comment->id() }}">
-                                            <label for="{{ 'reply_' . $comment->id() }}"></label>
-                                            <textarea id="{{ 'reply_' . $comment->id() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $comment->user()->username }}">{{ old('reply') }}</textarea>
+                                            <input type="hidden" name="previous_id" value="{{ $comment->id64() }}">
+                                            <label for="{{ 'reply_' . $comment->id64() }}"></label>
+                                            <textarea id="{{ 'reply_' . $comment->id64() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $comment->user()->username }}">{{ old('reply') }}</textarea>
                                             <div class="row justify-content-end p-0 m-0">
                                                 <div class="col-auto">
-                                                    <button onclick="answer('{{ 'reply_form_' . $comment->id() }}', false)" type="button" class="btn btn-text-blue">BACK</button>
+                                                    <button onclick="answer('{{ 'reply_form_' . $comment->id64() }}', false)" type="button" class="btn btn-text-blue">BACK</button>
                                                 </div>
                                                 <div class="col-auto">
                                                     <button class="btn btn-text" type="submit">SEND</button>
@@ -151,7 +151,7 @@
                     </div>
                 </div>
             </div>
-            <div id="{{ 'replies_' . $comment->id() }}" style="display: none">
+            <div id="{{ 'replies_' . $comment->id64() }}" style="display: none">
                 @foreach($comment->replies()->orderBy('created_at', 'asc')->get() as $reply)
                     <div class="col-12 comment_row py-2 px-5">
                         <div class="row justify-content-center px-2">
@@ -169,13 +169,13 @@
                                         <p class="p-0 m-0" style="font-size: 0.8em">{{ $reply->comment }}</p>
                                     </div>
                                     <div class="col-12 p-0 m-0">
-                                        <button class="btn btn-text me-3" onclick="answer('{{ 'reply_form_' . $reply->id() }}')" style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</button>
+                                        <button class="btn btn-text me-3" onclick="answer('{{ 'reply_form_' . $reply->id64() }}')" style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</button>
                                         <button class="btn btn-text-bis"><i class="bi bi-three-dots"></i></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div id="{{ 'reply_form_' . $reply->id() }}" style="display: none" class="col-10 p-0 m-0 mt-3">
+                        <div id="{{ 'reply_form_' . $reply->id64() }}" style="display: none" class="col-10 p-0 m-0 mt-3">
                             <div class="row justify-content-center p-0 m-0">
                                 <div class="col-12 ms-1 px-3">
                                     <div class="row justify-content-center p-0 m-0">
@@ -188,12 +188,12 @@
                                             <form action="{{ route('comment.create') }}" method="post">
                                                 @method('POST')
                                                 @csrf
-                                                <input type="hidden" name="previous_id" value="{{ $comment->id() }}">
-                                                <label for="{{ 'reply_' . $reply->id() }}"></label>
-                                                <textarea id="{{ 'reply_' . $reply->id() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $reply->user()->username }}">{{ old('reply') }}</textarea>
+                                                <input type="hidden" name="previous_id" value="{{ $comment->id64() }}">
+                                                <label for="{{ 'reply_' . $reply->id64() }}"></label>
+                                                <textarea id="{{ 'reply_' . $reply->id64() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $reply->user()->username }}">{{ old('reply') }}</textarea>
                                                 <div class="row justify-content-end p-0 m-0">
                                                     <div class="col-auto">
-                                                        <button onclick="answer('{{ 'reply_form_' . $reply->id() }}', false)" type="button" class="btn btn-text-blue">BACK</button>
+                                                        <button onclick="answer('{{ 'reply_form_' . $reply->id64() }}', false)" type="button" class="btn btn-text-blue">BACK</button>
                                                     </div>
                                                     <div class="col-auto">
                                                         <button class="btn btn-text" type="submit">SEND</button>

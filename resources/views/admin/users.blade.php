@@ -46,7 +46,7 @@
         </thead>
         <tbody>
         @foreach($users as $user)
-            <tr onclick="doNav('{{ route('admin.user.select', $user->id()) }}')" class="user_row">
+            <tr onclick="doNav('{{ route('admin.user.select', $user->id64()) }}')" class="user_row">
                 <td>
                     <div style="width: 45px; height: 45px; font-size: 0.6em">
                         {!! $user->profile_image() !!}

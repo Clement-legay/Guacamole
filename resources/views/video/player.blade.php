@@ -66,48 +66,6 @@
         }
     </style>
 
-    <script>
-        function setTimeWatchedPlayer(time) {
-            player.currentTime(time);
-            player.posterImage.hide();
-        }
-
-        function setTimeWatchedDB(url) {
-            let xml = new XMLHttpRequest();
-            xml.open('PUT', url + '?time=' + player.currentTime(), true);
-            xml.send();
-        }
-
-        function getTimeWatched() {
-            return player.currentTime();
-        }
-
-        setTimeout(() => {
-            if ({{ $view->time_watched }} > 0) {
-                setTimeWatchedPlayer({{ $view->time_watched }});
-            }
-
-            window.addEventListener('beforeunload', function() {
-                setTimeWatchedDB('{{ route('API_views', $view->id()) }}');
-            });
-        }, 500)
-
-        function answer(id, open=true) {
-            console.log(document.getElementById(id).style.display);
-            if(open) {
-                document.getElementById(id).style.display = 'block';
-            } else {
-                document.getElementById(id).style.display = 'none';
-            }
-        }
-
-        function replies(id) {
-            if (document.getElementById(id).style.display === 'none') document.getElementById(id).style.display = 'block';
-            else document.getElementById(id).style.display = 'none';
-
-        }
-    </script>
-
     <div>
         <div class="row justify-content-center p-0 m-0 px-lg-5 pt-lg-4">
             <div class="col-lg-8 col-12">
@@ -134,20 +92,20 @@
                     <div class="col-lg-6 col-12">
                         <div class="row align-items-center justify-content-lg-start justify-content-center">
                             <div class="col-auto">
-                                @if(Auth::check() && Auth::user()->hasLikedVideo($video->id))
-                                    <a class="btn" href="{{ route('deleteOpinion', base64_encode($video->id)) }}"><i class="bi bi-hand-thumbs-up-fill" style="font-size: 1.5em"></i></a>
+                                @if(Auth::check() && Auth::user()->hasLikedVideo($video->id64()))
+                                    <a class="btn" href="{{ route('deleteOpinion', $video->id64()) }}"><i class="bi bi-hand-thumbs-up-fill" style="font-size: 1.5em"></i></a>
                                     <span>{{ $video->likes()->get()->count() >= 1000 ? number_format($video->likes()->get()->count() / 1000, 0, ',', ' ') . 'k' : $video->likes()->get()->count()}}</span>
                                 @else
-                                    <a class="btn" href="{{ route('like', base64_encode($video->id)) }}"><i class="bi bi-hand-thumbs-up" style="font-size: 1.5em"></i></a>
+                                    <a class="btn" href="{{ route('like', $video->id64()) }}"><i class="bi bi-hand-thumbs-up" style="font-size: 1.5em"></i></a>
                                     <span>{{ $video->likes()->get()->count() >= 1000 ? number_format($video->likes()->get()->count() / 1000, 0, ',', ' ') . 'k' : $video->likes()->get()->count()}}</span>
                                 @endif
                             </div>
                             <div class="col-auto">
-                                @if(Auth::check() && Auth::user()->hasDislikedVideo($video->id))
-                                    <a class="btn" href="{{ route('deleteOpinion', base64_encode($video->id)) }}"><i class="bi bi-hand-thumbs-down-fill" style="font-size: 1.5em"></i></a>
+                                @if(Auth::check() && Auth::user()->hasDislikedVideo($video->id64()))
+                                    <a class="btn" href="{{ route('deleteOpinion', $video->id64()) }}"><i class="bi bi-hand-thumbs-down-fill" style="font-size: 1.5em"></i></a>
                                     <span>I don't like</span>
                                 @else
-                                    <a class="btn" href="{{ route('dislike', base64_encode($video->id)) }}"><i class="bi bi-hand-thumbs-down" style="font-size: 1.5em"></i></a>
+                                    <a class="btn" href="{{ route('dislike', $video->id64()) }}"><i class="bi bi-hand-thumbs-down" style="font-size: 1.5em"></i></a>
                                     <span>I don't like</span>
                                 @endif
                             </div>
@@ -159,7 +117,7 @@
                                 <div class="col-6">
                                     <div class="row align-items-center justify-content-between p-0 m-0">
                                         <div class="col-4 p-0 m-0">
-                                            <a href="{{ route('channel', base64_encode($video->user()->id)) }}" style="text-decoration: none">
+                                            <a href="{{ route('channel', $video->user()->id64()) }}" style="text-decoration: none">
                                                 <div style="height: 40px; width: 40px; font-size: 0.55em">
                                                     {!! $video->user()->profile_image() !!}
                                                 </div>
@@ -179,9 +137,9 @@
                                 </div>
                                 <div class="col-5">
                                     @if(Auth::check() && Auth::user()->isSubscribedTo($video->user()))
-                                        <a href="{{ route('unsubscribe', $video->user()->id()) }}" style="width: 100%; background: #9DA27A; color: white; font-weight: normal; text-transform: uppercase; padding: 8px 13px 8px 13px" class="btn">Unsubscribe</a>
+                                        <a href="{{ route('unsubscribe', $video->user()->id64()) }}" style="width: 100%; background: #9DA27A; color: white; font-weight: normal; text-transform: uppercase; padding: 8px 13px 8px 13px" class="btn">Unsubscribe</a>
                                     @else
-                                        <a href="{{ route('subscribe', $video->user()->id()) }}" style="width: 100%; background: #9DA27A; color: white; font-weight: normal; text-transform: uppercase; padding: 8px 13px 8px 13px" class="btn">Subscribe</a>
+                                        <a href="{{ route('subscribe', $video->user()->id64()) }}" style="width: 100%; background: #9DA27A; color: white; font-weight: normal; text-transform: uppercase; padding: 8px 13px 8px 13px" class="btn">Subscribe</a>
                                     @endif
                                 </div>
                             </div>
@@ -204,9 +162,9 @@
                             <form action="{{ route('comment.create') }}" method="post">
                                 @method('POST')
                                 @csrf
-                                <input type="hidden" name="video_id" value="{{ $video->id() }}">
-                                <label for="{{ 'comment_' . $video->id() }}"></label>
-                                <textarea id="{{ 'comment_' . $video->id() }}" rows="2" name="comment" class="reply" placeholder="Comment {{ $video->title }}">{{ old('comment') }}</textarea>
+                                <input type="hidden" name="video_id" value="{{ $video->id64() }}">
+                                <label for="{{ 'comment_' . $video->id64() }}"></label>
+                                <textarea id="{{ 'comment_' . $video->id64() }}" rows="2" name="comment" class="reply" placeholder="Comment {{ $video->title }}">{{ old('comment') }}</textarea>
                                 <div class="row justify-content-end p-0 m-0 pe-lg-5">
                                     <div class="col-auto">
                                         <button class="btn btn-text" type="submit">SEND</button>
@@ -233,14 +191,14 @@
                             <div class="row p-0 m-0">
                                 <div class="col-auto p-0 m-0">
                                     @auth
-                                        <button class="btn btn-text me-3" onclick="answer('{{ 'reply_form_' . $comment->id() }}')" style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</button>
+                                        <button class="btn btn-text me-3" onclick="answer('{{ 'reply_form_' . $comment->id64() }}')" style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</button>
                                     @endauth
                                     @guest
                                         <a class="btn btn-text me-3" href="{{ route('login') }}" style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</a>
                                     @endguest
                                 </div>
                                 <div class="col-auto p-0 m-0">
-                                    <button onclick="replies('{{ 'replies_' . $comment->id() }}')" class="btn btn-text-bis pb-1 me-3">
+                                    <button onclick="replies('{{ 'replies_' . $comment->id64() }}')" class="btn btn-text-bis pb-1 me-3">
                                             <span style="font-size: 0.8em; color: #065fd4;">{{ $comment->replies()->orderBy('created_at', 'desc')->get()->count() > 1 ? $comment->replies()->orderBy('created_at', 'desc')->get()->count() . ' replies' : $comment->replies()->orderBy('created_at', 'desc')->get()->count() . ' reply' }}
                                                 <i style="font-size: 0.8em" class="bi bi-chevron-down"></i>
                                             </span>
@@ -253,7 +211,7 @@
                         </div>
                     </div>
                     @auth
-                        <div id="{{ 'reply_form_' . $comment->id() }}" style="display: none">
+                        <div id="{{ 'reply_form_' . $comment->id64() }}" style="display: none">
                             <div class="row justify-content-center p-0 m-0 mt-2">
                                 <div class="col-9">
                                     <div class="row justify-content-center p-0 m-0">
@@ -266,12 +224,12 @@
                                             <form action="{{ route('comment.create') }}" method="post">
                                                 @method('POST')
                                                 @csrf
-                                                <input type="hidden" name="previous_id" value="{{ $comment->id() }}">
-                                                <label for="{{ 'reply_' . $comment->id() }}"></label>
-                                                <textarea id="{{ 'reply_' . $comment->id() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $comment->user()->username }}">{{ old('reply') }}</textarea>
+                                                <input type="hidden" name="previous_id" value="{{ $comment->id64() }}">
+                                                <label for="{{ 'reply_' . $comment->id64() }}"></label>
+                                                <textarea id="{{ 'reply_' . $comment->id64() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $comment->user()->username }}">{{ old('reply') }}</textarea>
                                                 <div class="row justify-content-end p-0 m-0">
                                                     <div class="col-auto mx-1">
-                                                        <button onclick="answer('{{ 'reply_form_' . $comment->id() }}', false)" type="button" class="btn btn-text-blue">BACK</button>
+                                                        <button onclick="answer('{{ 'reply_form_' . $comment->id64() }}', false)" type="button" class="btn btn-text-blue">BACK</button>
                                                     </div>
                                                     <div class="col-auto mx-1">
                                                         <button class="btn btn-text" type="submit">SEND</button>
@@ -284,7 +242,7 @@
                             </div>
                         </div>
                     @endauth
-                    <div id="{{ 'replies_' . $comment->id() }}" style="display: none">
+                    <div id="{{ 'replies_' . $comment->id64() }}" style="display: none">
                         @foreach($comment->replies()->orderBy('created_at', 'asc')->get() as $reply)
                             <div class="row justify-content-center py-2 px-5 comment_row">
                                 <div class="col-lg-1 col-3 pt-2">
@@ -301,7 +259,7 @@
                                     </div>
                                     <div class="col-12 p-0 m-0">
                                         @auth
-                                            <button class="btn btn-text me-3" onclick="answer('{{ 'reply_form_' . $reply->id() }}')" style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</button>
+                                            <button class="btn btn-text me-3" onclick="answer('{{ 'reply_form_' . $reply->id64() }}')" style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</button>
                                         @endauth
                                         @guest
                                             <a class="btn btn-text me-3" href="{{ route('login') }}" style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</a>
@@ -311,7 +269,7 @@
                                 </div>
                             </div>
                             @auth
-                                <div id="{{ 'reply_form_' . $reply->id() }}" style="display: none">
+                                <div id="{{ 'reply_form_' . $reply->id64() }}" style="display: none">
                                     <div class="row justify-content-center py-2 px-5">
                                         <div class="col-lg-1 col-3 pt-2">
                                             <div style="height: 40px; width: 40px; font-size: 0.5em">
@@ -322,12 +280,12 @@
                                             <form action="{{ route('comment.create') }}" method="post">
                                                 @method('POST')
                                                 @csrf
-                                                <input type="hidden" name="previous_id" value="{{ $comment->id() }}">
-                                                <label for="{{ 'reply_' . $reply->id() }}"></label>
-                                                <textarea id="{{ 'reply_' . $reply->id() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $reply->user()->username }}">{{ old('reply') }}</textarea>
+                                                <input type="hidden" name="previous_id" value="{{ $comment->id64() }}">
+                                                <label for="{{ 'reply_' . $reply->id64() }}"></label>
+                                                <textarea id="{{ 'reply_' . $reply->id64() }}" rows="2" class="reply" name="comment" id="comment" placeholder="Reply to {{ $reply->user()->username }}">{{ old('reply') }}</textarea>
                                                 <div class="flex-row d-flex justify-content-end p-0 m-0">
                                                     <div class="flex-column col-auto mx-1">
-                                                        <button onclick="answer('{{ 'reply_form_' . $reply->id() }}', false)" type="button" class="btn btn-text-blue">BACK</button>
+                                                        <button onclick="answer('{{ 'reply_form_' . $reply->id64() }}', false)" type="button" class="btn btn-text-blue">BACK</button>
                                                     </div>
                                                     <div class="flex-column col-auto mx-1">
                                                         <button class="btn btn-text" type="submit">SEND</button>
@@ -347,7 +305,7 @@
                 <div class="row justify-content-center">
                     <div class="col-12">
                         @auth
-                            @foreach(auth()->user()->suggestions(20) as $video)
+                            @foreach(auth()->user()->suggestedVideos(20) as $video)
                                 @component('component.cardVideoSuggestion', ['video' => $video])
                                 @endcomponent
                             @endforeach
@@ -363,4 +321,49 @@
             </div>
         </div>
     </div>
+    <script>
+        function setTimeWatchedPlayer(time) {
+            player.currentTime(time);
+            player.posterImage.hide();
+        }
+
+        function setTimeWatchedDB(url) {
+            $.ajax({
+                url: url,
+                type: 'PUT',
+                data: {
+                    time: player.currentTime()
+                },
+            });
+        }
+
+        function getTimeWatched() {
+            return player.currentTime();
+        }
+
+        $('body').ready(function () {
+            if ({{ $view->time_watched }} > 0) {
+                setTimeWatchedPlayer({{ $view->time_watched }});
+            }
+
+            window.addEventListener('beforeunload', function() {
+                setTimeWatchedDB('{{ route('API_views', $view->id64()) }}');
+            });
+        });
+
+        function answer(id, open=true) {
+            console.log(document.getElementById(id).style.display);
+            if(open) {
+                document.getElementById(id).style.display = 'block';
+            } else {
+                document.getElementById(id).style.display = 'none';
+            }
+        }
+
+        function replies(id) {
+            if (document.getElementById(id).style.display === 'none') document.getElementById(id).style.display = 'block';
+            else document.getElementById(id).style.display = 'none';
+
+        }
+    </script>
 @endsection

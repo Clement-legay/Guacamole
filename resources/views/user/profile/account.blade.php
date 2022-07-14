@@ -54,7 +54,7 @@
         }
     </script>
 
-    <form action="{{ route('profile.update', auth()->user()->id()) }}" method="POST">
+    <form action="{{ route('profile.update', auth()->user()->id64()) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="row justify-content-center p-0 m-0">
@@ -70,7 +70,7 @@
                 <div class="row d-flex justify-content-center align-items-center">
                     @if(auth()->user()->profile_image)
                         <div class="col-2 col-lg-1 mb-3">
-                            <a class="btn" href="{{ route('profile.updateAvatarDelete', auth()->user()->id()) }}"><i class="bi bi-trash3-fill"></i></a>
+                            <a class="btn" href="{{ route('profile.updateAvatarDelete', auth()->user()->id64()) }}"><i class="bi bi-trash3-fill"></i></a>
                         </div>
                     @else
                         <div class="col-2 col-lg-1 mb-3">
@@ -81,7 +81,7 @@
                         <div id="avatarForm" onclick="PP.click()" style="width: 100px; height: 100px; font-size: 1.35em" class="@error('thumbnail_cropped') is-invalid @enderror">
                             {!! auth()->user()->profile_image('avatarUpdate') !!}
                         </div>
-                        <input type="hidden" id="url-avatar" value="{{ route('user.API_user_update_avatar', Auth::user()->id()) }}">
+                        <input type="hidden" id="url-avatar" value="{{ route('user.API_user_update_avatar', Auth::user()->id64()) }}">
                         <input type="file" style="display: none" id="PP" name="PP" accept="image/gif, image/jpeg, image/png">
                         <input type="hidden" id="PP_cropped" name="profile_image" value="">
                         <div class="modal fade" id="modalPP" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
@@ -178,7 +178,7 @@
                                             <div class="col-12 my-3">
                                                 <div class="row justify-content-end">
                                                     <div class="col-auto">
-                                                        <a href="{{ route('profile.updateBannerDelete', auth()->user()->id()) }}" class="btn btn-danger" id="deleteBanner">Delete</a>
+                                                        <a href="{{ route('profile.updateBannerDelete', auth()->user()->id64()) }}" class="btn btn-danger" id="deleteBanner">Delete</a>
                                                     </div>
                                                 </div>
                                             </div>

@@ -118,7 +118,7 @@ class UserController extends Controller
         $request->validate([
             'first_name' => 'max:191',
             'last_name' => 'max:191',
-            'username' => 'max:191|unique:users',
+            'username' => 'max:191|unique:users,username,' . $user->id,
             'banner_image' =>  'image|mimes:jpeg,png,jpg,gif,svg',
             'banner_cropped' => 'required',
         ]);

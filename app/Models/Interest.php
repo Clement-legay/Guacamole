@@ -4,18 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
-class TagAssignment extends Model
+class Interest extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'video_id',
-        'tag_id',
+        'user_id',
+        'interest'
     ];
-
-    static function videos()
-    {
-
-    }
 }

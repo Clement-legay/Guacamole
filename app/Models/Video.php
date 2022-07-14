@@ -45,7 +45,7 @@ class Video extends Model
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class)->first();
     }
 
     public function sinceWhen()
@@ -63,7 +63,7 @@ class Video extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function id()
+    public function id64()
     {
         return base64_encode($this->id);
     }

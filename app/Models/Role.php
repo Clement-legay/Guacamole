@@ -46,7 +46,7 @@ class Role extends Model
         return $this->canUpdate + $this->canCreate + $this->canComment + $this->canDeleteVid + $this->canDeleteCom + $this->CanBanUser;
     }
 
-    public function id() {
+    public function id64() {
         return base64_encode($this->id);
     }
 }

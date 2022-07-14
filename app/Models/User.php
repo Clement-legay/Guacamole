@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -99,19 +100,17 @@ class User extends Authenticatable
 
     public function getChanelViews($betweenFirst, $betweenLast)
     {
-        $count = 0;
-        foreach ($this->videos()->get() as $video) {
-            $count += $video->viewCountById($betweenFirst, $betweenLast);
-        }
-        return $count;
+        return $this->hasManyThrough(View::class, Video::class)->whereBetween('views.updated_at', [$betweenFirst, $betweenLast])->count();
+    }
+
+    public function chanelViews()
+    {
+        return $this->hasManyThrough(View::class, Video::class);
     }
 
     public function getChanelTimeWatched($betweenFirst, $betweenLast)
     {
-        $duration = 0;
-        foreach ($this->videos()->get() as $video) {
-            $duration += $video->viewTimeWatched($betweenFirst, $betweenLast);
-        }
+        $duration = $this->hasManyThrough(View::class, Video::class)->whereBetween('views.updated_at', [$betweenFirst, $betweenLast])->selectRaw('SUM(time_watched) as duration')->get()->first()->duration;
 
         if ($duration / 3600 < 24) {
             return floor($duration / 3600) . ' hours and ' . floor($duration % 3600 / 60) . ' minutes';
@@ -168,77 +167,145 @@ class User extends Authenticatable
         return $this->history()->orderBy('updated_at', 'desc')->where('video_id', $id)->first();
     }
 
-    public function suggestions($limit)
+    public function interest($selected=null)
     {
-        $lastViews = $this->history()->limit(10)->get();
+        if ($this->hasOne(Interest::class)->first()) {
+            $interest = $this->hasOne(Interest::class)->first();
+            $interest->interest = json_decode($interest->interest);
 
-//        dd($this->mostViewedCategory(10)->get());
-
-
-        $statsFromLastViews = [
-            'mostUsedTag' => [],
-            'mostUsedCategory' => [],
-            'mostUsedChannel' => [],
-        ];
-
-
-
-        return $lastViews;
+            if ($selected) {
+                return $interest->interest->$selected;
+            } else {
+                return $interest->interest;
+            }
+        }
+        return null;
     }
 
-    public function mostViewedCategory($limit)
+    public function interestCategories($limit=20)
     {
-        return Category::selectRaw('categories.*')
-            ->withCount('views', function ($query) {
-                    $query->groupByRaw('videos.id')
-                        ->join('videos', 'videos.category_id', '=', 'categories.id')
-                        ->join('views', 'views.video_id', '=', 'videos.id')
-                        ->where('views.user_id', $this->id);
+        $categoriesIds = [];
+        if ($this->interest('tags')) {
+            foreach ($this->interest('categories') as $key => $value) {
+                $categoriesIds[] = $key;
+                if (count($categoriesIds) == $limit) {
+                    break;
                 }
-            )
-            ->orderBy('views_from_count', 'desc');
+            }
+        }
+
+        $suggestedCategories = Category::whereIn('id', $categoriesIds)->withcount('views');
+        if ($suggestedCategories->count() < $limit) {
+            $fillCategories = Category::mostViewed()
+                ->whereNotIn('id', $categoriesIds)
+                ->limit($limit - $suggestedCategories->count());
+            $suggestedCategories = $suggestedCategories->union($fillCategories);
+        }
+
+        return $suggestedCategories;
     }
 
-    public function mostViewedChannel($limit)
+    public function interestTags($limit=20)
     {
-        return User::selectRaw('users.*')
-            ->withCount(array(
-                'viewsFrom' => function ($query) {
-                    $query->where('views.user_id', $this->id);
+        $tagsIds = [];
+        if ($this->interest('tags')) {
+            foreach ($this->interest('tags') as $key => $value) {
+                $tagsIds[] = $key;
+                if (count($tagsIds) == $limit) {
+                    break;
                 }
-            ))
-            ->orderBy('views_from_count', 'desc')
-            ->limit($limit);
+            }
+        }
+
+        $suggestedTags = Tag::whereIn('id', $tagsIds)->withcount('views');
+
+
+        if ($suggestedTags->count() < $limit) {
+            $fillTags = Tag::mostViewed()
+                ->whereNotIn('id', $tagsIds)
+                ->limit($limit - $suggestedTags->count());
+
+            $suggestedTags = $suggestedTags->union($fillTags);
+        }
+
+        return $suggestedTags;
     }
 
-    public function mostViewedTag($limit)
+    public function interestChannel($limit=20)
     {
-        return Tag::selectRaw('tags.*')
-            ->withCount(array(
-                'viewsFrom' => function ($query) {
-                    $query->where('views.user_id', $this->id);
+        $channelsIds = [];
+        if ($this->interest('channels')) {
+            foreach ($this->interest('channels') as $key => $value) {
+                $channelsIds[] = $key;
+                if (count($channelsIds) == $limit) {
+                    break;
                 }
-            ))
-            ->orderBy('views_from_count', 'desc')
-            ->limit($limit);
+            }
+        }
+
+        $suggestedChannels = User::whereIn('id', $channelsIds)->withcount('chanelViews');
+        if ($suggestedChannels->count() < $limit) {
+            $fillChannels = User::mostViewed()
+                ->whereNotIn('id', $channelsIds)
+                ->limit($limit - $suggestedChannels->count());
+            $suggestedChannels = $suggestedChannels->union($fillChannels);
+        }
+
+        return $suggestedChannels;
     }
 
-    public function viewsFrom()
+    public function suggestedVideos($limit)
     {
-        return $this->hasManyThrough(View::class, Video::class);
+//        $ids = [];
+//        if ($this->interest()) {
+//            foreach ($this->interest() as $key => $value) {
+//                foreach ($value as $k => $v) {
+//                    $ids[$key][] = $k;
+//                    if (count($ids[$key]) == $limit) {
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//
+////        dd($ids);
+//
+//        // select all video not seen by user
+//        $suggestedVideos = Video::join('views', 'views.video_id', '=', 'videos.id')
+//            ->whereNotIn('videos.id', function ($query) {
+//                if ($this->hasView($query->id)->time_watched) {
+//                    $query->select('video_id')->from('views')->where('user_id', $this->id);
+//                }
+//            })
+//            ->selectRaw('videos.*, views.id as view_id, views.time_watched as time_watched, views.updated_at as view_updated_at')
+//            ->when(!empty($ids), function ($query) use ($ids) {
+//                foreach ($query->get() as $key => $value) {
+//                    if (isset($ids['categories'][$value->category_id])) {
+//                        if (in_array($value->id, $ids[$value->category_id])) {
+//                            $query->offsetUnset($key);
+//                        }
+//                    }
+//                }
+//            })
+//            ->orderBy('views.updated_at', 'desc')
+//            ->groupBy('video_id');
+//
+//        dd($suggestedVideos->get());
+
+        return Video::withCount('views')->orderBy('views_count', 'desc')->whereNotIn('videos.id', $this->history()->pluck('id'))->limit($limit)->get();
     }
 
     public function hasLikedVideo($videoId)
     {
-        return $this->likes()->where('video_id', $videoId)->exists();
+        return $this->likes()->where('video_id', base64_decode($videoId))->exists();
     }
 
     public function hasDislikedVideo($videoId)
     {
-        return $this->dislikes()->where('video_id', $videoId)->exists();
+        return $this->dislikes()->where('video_id', base64_decode($videoId))->exists();
     }
 
-    public function id()
+    public function id64()
     {
         return base64_encode($this->id);
     }
@@ -253,5 +320,15 @@ class User extends Authenticatable
         return $this->hasManyThrough(Video::class, Like::class, 'user_id', 'id', 'id', 'video_id')
             ->selectRaw('videos.*, likes.id as like_id, likes.is_liked as is_liked, likes.updated_at as like_updated_at')
             ->orderBy('likes.created_at', 'desc');
+    }
+
+    static function mostViewed()
+    {
+        return User::withCount(array(
+            'chanelViews' => function ($query) {
+                $query->whereBetween('views.updated_at', [now()->subDay(2), now()]);
+            }
+        ))
+            ->orderBy('chanel_views_count', 'desc');
     }
 }
