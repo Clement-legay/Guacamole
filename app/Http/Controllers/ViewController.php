@@ -37,7 +37,6 @@ class ViewController extends Controller
                 $userInterest['channels'][$video->user()->id] = 0;
             }
 
-
             foreach ($userInterest as $key => $value) {
                 if ($key == 'categories') {
                     foreach ($value as $keyCat => $category) {
@@ -52,7 +51,7 @@ class ViewController extends Controller
                     arsort($userInterest[$key]);
                 } else if ($key == 'tags') {
                     foreach ($value as $keyTag => $tag) {
-                        if (in_array($keyTag, $tags)) {
+                        if (array_key_exists($keyTag, $userInterest['tags'])) {
                             $userInterest[$key][$keyTag] += $percentInterest;
                             if ($userInterest[$key][$keyTag] > 100) $userInterest[$key][$keyTag] = 100;
                         } else {

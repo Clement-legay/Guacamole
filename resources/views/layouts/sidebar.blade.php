@@ -19,6 +19,7 @@
 
     .profile_pages:hover {
         background-color: #f5f5f5;
+        width: 100%;
         cursor: pointer;
     }
 

@@ -2,6 +2,7 @@
 
 @section('title', 'GuacaTube | ' . $search)
 @section('search', $search)
+@section('background', 'bg-light')
 
 @section('content')
     <style>
@@ -11,14 +12,14 @@
     </style>
 
     <div class="row justify-content-center mx-0">
-        <div class="col-lg-11">
+        <div class="col-lg-7 col-12">
             @if(isset($chanel))
                 <div class="dropdown-divider"></div>
                 <div onclick="doNav('{{ route('channel', $chanel->id64()) }}')" class="row justify-content-center channel_row">
-                    <div class="col-10">
+                    <div class="col-12">
                         <div class="row d-flex align-items-center my-4">
                             <div class="col-5 col-lg-2">
-                                <div style="width: 120px; height: 120px; font-size: 1.5em">
+                                <div style="width: 90px; height: 90px; font-size: 1.2em">
                                     {!! $chanel->profile_image() !!}
                                 </div>
                             </div>
@@ -27,11 +28,21 @@
                                     <div class="col-12">
                                         <p class="m-0" style="font-size: 1em; font-weight: 500">{{ $chanel->username }}</p>
                                     </div>
-                                    <div class="col-12 m-0">
-                                        <p class="m-0" style="font-size: 0.9em; font-weight: 400">{{ $chanel->videos()->count() }} video(s)</p>
+                                    <div class="col-12 d-none d-lg-flex">
+                                        <p class="m-0" style="font-size: 0.9em; font-weight: 400">{{ $chanel->videos()->count() }} video{{ $chanel->videos()->count() > 1 ? 's' : ''}}</p>
                                     </div>
-                                    <div class="col-12">
-                                        <p class="m-0" style="font-size: 0.9em; font-weight: 400">{{ $chanel->subscribers()->count() }} subscriber(s)</p>
+                                    <div class="col-12 d-none d-lg-flex">
+                                        <p class="m-0" style="font-size: 0.9em; font-weight: 400">{{ $chanel->subscribers()->count() }} subscriber{{ $chanel->subscribers()->count() > 1 ? 's' : '' }}</p>
+                                    </div>
+                                    <div class="col-12 d-flex d-lg-none">
+                                        <p class="m-0" style="font-size: 0.9em; font-weight: 400">{{ $chanel->subscribers()->count() }} subscriber{{ $chanel->subscribers()->count() > 1 ? 's' : '' }} - {{ $chanel->videos()->count() }} video{{ $chanel->videos()->count() > 1 ? 's' : ''}}</p>
+                                    </div>
+                                    <div class="d-flex d-lg-none col-12 m-0">
+                                        @if(Auth::check() && Auth::user()->isSubscribedTo($chanel))
+                                            <a href="{{ route('unsubscribe', $chanel->id64()) }}" class="btn p-0 m-0">SUBSCRIBED</a>
+                                        @else
+                                            <a href="{{ route('subscribe', $chanel->id64()) }}" class="btn p-0 m-0">SUBSCRIBE</a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -49,7 +60,7 @@
             @endif
             @if($videos->count() == 0)
                 <div class="flex-row d-flex justify-content-center align-items-center" style="height: 60vh; overflow: auto;">
-                    <div class="col-6">
+                    <div class="col-lg-8 col-6">
                         <div class="row justify-content-center">
                             <div class="col-auto">
                                 <i class="bi bi-search" style="font-size: 2em"></i>
@@ -68,4 +79,5 @@
                 @endforeach
             @endif
         </div>
+    </div>
 @endsection

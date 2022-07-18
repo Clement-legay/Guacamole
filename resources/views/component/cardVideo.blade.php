@@ -1,9 +1,9 @@
-<div class="col-lg-3 col-sm-12">
-    <a style="text-decoration: none;" href="{{ route('watch', base64_encode($video->id)) }}">
+<div class="col-lg-3 col-12 col-xl-2 px-2">
+    <a style="text-decoration: none;" href="{{ route('watch', ['video' => $video->id64()])}}">
         <div class="mb-4 p-0">
             <div class="row">
-                <div class="col-12">
-                    <img class="card-img-top" style="width: 100%; aspect-ratio: 16/9" src="{{ $video->thumbnail }}" alt="{{ $video->name }}">
+                <div class="col-12" id="video_player{{ $video->id }}">
+                    <img class="card-img-top" style="width: 100%; aspect-ratio: 16/9" src="{{ asset($video->thumbnail) }}" alt="{{ $video->name }}">
                 </div>
                 <div class="col-12">
                     <div class="row justify-content-between p-3 align-content-center">
@@ -34,3 +34,39 @@
         </div>
     </a>
 </div>
+
+
+{{--<script defer>--}}
+{{--    let player{{ $video->id }} = null--}}
+{{--    $('#video_player{{ $video->id }}').on({--}}
+{{--        "mouseenter" : function() {--}}
+
+{{--            let video = document.getElementById('video_player{{ $video->id }}');--}}
+{{--            let img = video.getElementsByTagName('img');--}}
+
+{{--            img[0].style.display = 'none';--}}
+{{--            video.innerHTML = "<video id='hls{{ $video->id }}' class='video-js vjs-big-play-centered vjs-16-9' data-setup=\"{'fluid': true, 'mute': true}\" controls preload='true' poster='{{ asset($video->thumbnail) }}'> <source type='application/x-mpegURL' src='{{ asset($video->video) }}'> </video>"--}}
+{{--            player{{ $video->id }} = videojs('hls{{ $video->id }}', {aspectRatio: '16:9', autoplay: true})--}}
+
+{{--            player{{ $video->id }}.ready(function() {--}}
+{{--                    let promise = player.play();--}}
+
+{{--                    if (promise !== undefined) {--}}
+{{--                        promise.then(function() {--}}
+{{--                            // Autoplay started!--}}
+{{--                        }).catch(function(error) {--}}
+{{--                            // Autoplay was prevented.--}}
+{{--                        });--}}
+{{--                    }--}}
+{{--                },--}}
+{{--            )},--}}
+{{--        "mouseleave" : function() {--}}
+{{--            player{{ $video->id }}.dispose();--}}
+{{--            let video = document.getElementById('video_player{{ $video->id }}');--}}
+{{--            let img = video.getElementsByTagName('img')--}}
+{{--            video.innerHTML = "";--}}
+{{--            video.innerHTML = "<img class='card-img-top' style='width: 100%; aspect-ratio: 16/9' src='{{ asset($video->thumbnail) }}' alt='{{ $video->name }}'>";--}}
+{{--            img[0].style.display = 'flex';--}}
+{{--        }--}}
+{{--    });--}}
+{{--</script>--}}

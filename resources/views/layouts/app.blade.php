@@ -17,7 +17,7 @@
 @extends('layouts.nav')
 
 <div class="row p-0 m-0">
-    <div class="col-2" id="sidebar">
+    <div class="col-2 col-xl-1" id="sidebar">
         @if(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'profile.'))
             @component('layouts.sidebarProfile')
             @endcomponent
@@ -35,9 +35,9 @@
     @if(Agent::isMobile())
     <div class="col-12 p-0" id="content">
     @else
-    <div class="col-10 p-0" id="content">
+    <div class="col-10 col-xl-11 p-0" id="content">
     @endif
-        <div class="@yield('background')" style="margin-top: 60px;">
+        <div class="@yield('background')" style="margin-top: 60px; min-height: 96vh">
             {{--                min-height: 92--}}
             @yield('content')
         </div>

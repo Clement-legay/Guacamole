@@ -67,6 +67,7 @@
     </style>
 
     <div>
+        <button id="test">test</button>
         <div class="row justify-content-center p-0 m-0 px-lg-5 pt-lg-4">
             <div class="col-lg-8 col-12">
                 <div class="row justify-content-center">
@@ -334,6 +335,12 @@
                 data: {
                     time: player.currentTime()
                 },
+                success: function(data) {
+                    console.log(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
             });
         }
 
@@ -342,13 +349,29 @@
         }
 
         $('body').ready(function () {
-            if ({{ $view->time_watched }} > 0) {
-                setTimeWatchedPlayer({{ $view->time_watched }});
-            }
+            player.ready(function() {
+                if ({{ $view->time_watched }} > 0) {
+                    setTimeWatchedPlayer({{ $view->time_watched }});
+                }
+                    let promise = player.play();
+
+                    if (promise !== undefined) {
+                        promise.then(function() {
+                            // Autoplay started!
+                        }).catch(function(error) {
+                            // Autoplay was prevented.
+                        });
+                    }
+                },
+            )
 
             window.addEventListener('beforeunload', function() {
                 setTimeWatchedDB('{{ route('API_views', $view->id64()) }}');
             });
+        });
+
+        $('#test').click(function () {
+            setTimeWatchedDB('{{ route('API_views', $view->id64()) }}');
         });
 
         function answer(id, open=true) {

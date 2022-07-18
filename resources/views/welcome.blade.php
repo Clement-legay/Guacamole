@@ -2,7 +2,7 @@
 
 @section('title', 'GuacaTube')
 
-@section('background', 'bg-light')
+@section('background', 'bg-light p-lg-3')
 
 @section('content')
     <style>
@@ -16,6 +16,7 @@
             right: -15px;
         }
     </style>
+
 
     <div class="">
         <div class="row">
@@ -84,11 +85,15 @@
             </div>
         </div>
     </div>
+
+{{--    <script src='https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.14.1/videojs-contrib-hls.js'></script>--}}
+{{--    <script src='https://vjs.zencdn.net/7.2.3/video.js'></script>--}}
+{{--    <link href='https://vjs.zencdn.net/7.2.3/video-js.css' rel='stylesheet'>--}}
+
     <div class="row justify-content-start">
         @foreach($mostViewedThisWeek as $video)
             @component('component.cardVideo', ['video' => $video])
             @endcomponent
         @endforeach
-    </div>
     </div>
 @endsection
