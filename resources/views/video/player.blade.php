@@ -67,7 +67,6 @@
     </style>
 
     <div>
-        <button id="test">test</button>
         <div class="row justify-content-center p-0 m-0 px-lg-5 pt-lg-4">
             <div class="col-lg-8 col-12">
                 <div class="row justify-content-center">
@@ -368,10 +367,6 @@
             window.addEventListener('beforeunload', function() {
                 setTimeWatchedDB('{{ route('API_views', $view->id64()) }}');
             });
-        });
-
-        $('#test').click(function () {
-            setTimeWatchedDB('{{ route('API_views', $view->id64()) }}');
         });
 
         function answer(id, open=true) {
