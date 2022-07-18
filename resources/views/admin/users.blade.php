@@ -85,7 +85,7 @@
                                 </div>
                             </div>
                         </div>
-                        <form action="{{ route('admin.user.update', $userSelected->id()) }}" method="POST">
+                        <form action="{{ route('admin.user.update', $userSelected->id64()) }}" method="POST">
                             @csrf
                             @method('PUT')
                             <div class="row form-group">
@@ -121,7 +121,7 @@
                                     <select type="role" class="form-control @error('role') is-invalid @enderror" id="role" name="role">
                                         <option value="" @if($userSelected->role() == null) selected @endif>No attribution</option>
                                         @foreach($roles as $role)
-                                            <option value="{{ $role->id }}" @if($userSelected->role() && $userSelected->role()-> id == $role->id) selected @endif>{{ $role->name }}</option>
+                                            <option value="{{ $role->id }}" @if($userSelected->role() && $userSelected->role()->id == $role->id) selected @endif>{{ $role->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('role')
@@ -148,7 +148,7 @@
                                 <div class="col-auto">
                                     <div class="row justify-content-end">
                                         <div class="col-auto">
-                                            <a type="button" class="btn btn-danger" href="{{ route('admin.user.delete', $userSelected->id()) }}">Delete</a>
+                                            <a type="button" class="btn btn-danger" href="{{ route('admin.user.delete', $userSelected->id64()) }}">Delete</a>
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn" style="border: #3b6532; background-color: #3b6532 ; color: white">Update</button>

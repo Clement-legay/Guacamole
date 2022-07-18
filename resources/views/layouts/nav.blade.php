@@ -50,8 +50,7 @@
             </div>
         </div>
         <div class="flex-column col-lg-5 col-sm-4">
-            <form class="input-group search-input" action="{{ route('search') }}" method="post">
-                @csrf
+            <form class="input-group search-input" action="{{ route('search') }}" method="get">
                 <input type="search" value="@yield('search')" name="search" class="form-control" placeholder="Search" aria-label="Search" />
                 <button class="btn btn-outline-success btn-search" type="submit" data-mdb-ripple-color="dark">
                     Search

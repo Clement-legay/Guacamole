@@ -110,8 +110,7 @@ Route::get('/logout', [loginController::class, 'logout'])->name('logout');
 Route::get('/', [PageController::class, 'index'])->name('home');
 Route::get('/explore', [PageController::class, 'index'])->name('explore');
 
-Route::post('/search', [videoController::class, 'search'])->name('search');
-Route::get('/search', [videoController::class, 'find'])->name('search');
+Route::get('/search', [videoController::class, 'search'])->name('search');
 
 Route::get('/hashtag/{tag}', [videoController::class, 'hashtag'])->name('hashtag');
 

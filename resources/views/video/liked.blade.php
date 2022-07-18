@@ -7,7 +7,7 @@
 @section('content')
     <div class="row justify-content-center mx-0">
         <div class="col-lg-7 col-12">
-            @foreach($historyVideos as $video)
+            @foreach($likedVideos as $video)
                 @component('component.cardVideoLiked', ['video' => $video])@endcomponent
             @endforeach
         </div>
