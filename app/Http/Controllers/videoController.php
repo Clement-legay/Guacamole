@@ -323,7 +323,7 @@ class videoController extends Controller
         $page = request('page') ?? 1;
         $limit = request('limit') ?? 10;
 
-        $comments = $video->comments()->orderBy('created_at', 'desc')->forPage($page, $limit)->get();
+        $comments = $video->comments()->orderBy('created_at', 'desc')->join('users', 'users.id', '=', 'comments.user_id')->select('comments.*', 'users.*')->forPage($page, $limit)->get();
 
         return response()->json([
             'comments' => $comments
@@ -342,5 +342,80 @@ class videoController extends Controller
         $likedVideos = Auth::user()->likedVideos()->get();
 
         return view('video.liked', compact('likedVideos'));
+    }
+
+    public function uploadVideoAPI(Request $request, $user)
+    {
+        $user = User::find(base64_decode($user));
+
+        $request->validate([
+            'title' => 'required|max:191',
+            'description' => 'required|max:191',
+            'video' => 'required|mimes:mp4,mov,ogg,qt',
+            'type' => 'required',
+            'category' => 'required',
+        ]);
+
+//        $image_64 = $request->input('thumbnail_cropped');
+//
+//        $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+//
+//        $replace = substr($image_64, 0, strpos($image_64, ',')+1);
+//
+//        $image = str_replace($replace, '', $image_64);
+//
+//        $image = str_replace(' ', '+', $image);
+//
+//        $imageName = 'thumbnails/' . Str::random(35) . '.' . $extension;
+//
+        $category = Category::firstOrCreate(['category_name' => $request->category]);
+
+        if ($request->hasFile('video')) {
+            $return = $request->file('video')->store('public/uploads');
+            if ($return) {
+                $video = $request->file('video')->hashName();
+            } else {
+                return redirect()->back()->with('error', 'Error uploading video');
+            }
+        }
+
+        $duration = FFMpeg::open('public/uploads/' . $request->file('video')->hashName())->getDurationInSeconds();
+//        $link = $this->encryptHLS($request->file('video')->hashName());
+
+//        if ($request->hasFile('thumbnail')) {
+//            $return = Storage::disk('public')->put($imageName, base64_decode($image));
+//            if ($return) {
+//                $thumbnail = 'storage/' . $imageName;
+//            } else {
+//                return redirect()->back()->with('error', 'Error uploading thumbnail');
+//            }
+//        } else {
+//            $thumbnail = $this->generateThumbnail($request->file('video')->hashName());
+//        }
+
+        $video = Video::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'video' => $video,
+            'thumbnail' => 'https://i.ytimg.com/',
+            'type' => $request->type,
+            'user_id' => $user->id,
+            'status' => 'processing',
+            'category_id' => $category->id,
+            'duration' => $duration,
+        ]);
+
+        foreach (explode(' ', $request->tags) as $tag) {
+            $tag = Tag::firstOrCreate(['name' => $tag]);
+            TagAssignment::create([
+                'video_id' => $video->id,
+                'tag_id' => $tag->id,
+            ]);
+        }
+
+        // create job to process video
+        ProcessVideo::dispatch($video)->delay(now()->addSeconds(5));
+
+        return redirect()->route('video.details', base64_encode($video->id));
     }
 }

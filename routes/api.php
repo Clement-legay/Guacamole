@@ -66,6 +66,9 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
     Route::post('/{user}/comment/{video}', [CommentController::class, 'commentAPI'])->name('API_comment');
     Route::post('/{user}/reply/{comment}', [CommentController::class, 'replyAPI'])->name('API_reply');
     Route::delete('/{user}/deleteComment/{comment}', [CommentController::class, 'deleteAPI'])->name('API_deleteComment');
+
+    Route::post('{user}/video/upload', [videoController::class, 'uploadVideoAPI'])->name('API_upload_video');
+    Route::post('{user}/video/{video}/edit', [videoController::class, 'editVideoAPI'])->name('API_upload_video');
 });
 
 Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
