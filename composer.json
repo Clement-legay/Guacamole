@@ -16,7 +16,8 @@
         "livewire/livewire": "^2.10",
         "pbmedia/laravel-ffmpeg": "^8.1",
         "pda/pheanstalk": "^4.0",
-        "predis/predis": "^2.0"
+        "predis/predis": "^2.0",
+        "tymon/jwt-auth": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
