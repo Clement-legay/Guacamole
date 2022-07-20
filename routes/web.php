@@ -78,13 +78,16 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/videos', [AdminController::class, 'videos'])->name('videos');
         Route::get('/videos/{video}', [AdminController::class, 'video'])->name('video');
-        Route::put('/videos/{video}', [AdminController::class, 'update'])->name('update');
+        Route::put('/videos/{video}/update', [VideoController::class, 'adminUpdate'])->name('video.update');
+        Route::get('/videos/{video}/delete', [VideoController::class, 'adminDelete'])->name('video.delete');
 
         Route::get('/comments', [AdminController::class, 'comments'])->name('comments');
         Route::get('/comments/{comment}', [AdminController::class, 'comment'])->name('comment');
-        Route::put('/comments/{comment}', [AdminController::class, 'update'])->name('update');
+        Route::put('/comments/{comment}/update', [CommentController::class, 'adminUpdate'])->name('comment.update');
+        Route::get('/comments/{comment}/delete', [CommentController::class, 'adminDelete'])->name('comment.delete');
 
         Route::get('/roles', [AdminController::class, 'roles'])->name('roles');
+        Route::get('/roles/create', [AdminController::class, 'roles'])->name('role.create');
         Route::post('/roles/create', [RoleController::class, 'create'])->name('role.create');
         Route::get('/roles/{role}', [AdminController::class, 'role'])->name('role.select');
         Route::put('/roles/{role}/update', [RoleController::class, 'update'])->name('role.update');

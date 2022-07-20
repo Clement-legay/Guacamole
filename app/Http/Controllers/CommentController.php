@@ -101,4 +101,21 @@ class CommentController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function adminDelete($comment)
+    {
+        $comment = Comment::find(base64_decode($comment));
+        $comment->delete();
+
+        return redirect()->back();
+    }
+
+    public function adminUpdate($comment, Request $request)
+    {
+        $comment = Comment::find(base64_decode($comment));
+        $comment->comment = $request->comment;
+        $comment->save();
+
+        return redirect()->back();
+    }
 }

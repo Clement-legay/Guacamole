@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -34,7 +35,12 @@ class AdminController extends Controller
     {
         $roles = Role::all();
         $roleSelected = Role::find(base64_decode($id));
-        return view('admin.roles', compact('roleSelected', 'roles'));
+
+        if (Auth::user()->role()->id == $roleSelected->id) {
+            return redirect()->route('admin.roles')->withErrors('You can not edit your own role!');
+        } else {
+            return view('admin.roles', compact('roleSelected', 'roles'));
+        }
     }
 
     public function videos()

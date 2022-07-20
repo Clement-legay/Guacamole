@@ -55,7 +55,7 @@ class loginController extends Controller
         if (Auth::attempt($credentials)) {
             $id = Auth::user()->id;
             if (Auth::user()->email_verified_at) {
-                return response()->json(['success' => true, 'id' => $id]);
+                return response()->json(['success' => true, 'id' => $id, 'user' => Auth::user()]);
             } else {
                 Auth::logout();
                 return response()->json(['success' => false, 'error' => 'Email not verified']);

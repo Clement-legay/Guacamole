@@ -17,7 +17,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->role()->canViewUsers && $user->role()->is_admin;
+        return $user->role()->canViewUsers && $user->role()->isAdmin;
     }
 
     /**
@@ -28,7 +28,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return $user->role()->canCreateUser && $user->role()->is_admin;
+        return $user->role()->canCreateUser && $user->role()->isAdmin;
     }
 
     /**
@@ -40,7 +40,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        if ($user->role()->is_admin) {
+        if ($user->role()->isAdmin) {
             return true;
         } else if ($user->id == $model->id) {
             return $user->role()->canUpdateUserSelf;
@@ -58,7 +58,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        if ($user->role()->is_admin) {
+        if ($user->role()->isAdmin) {
             return true;
         } else if ($user->id == $model->id) {
             return $user->role()->canDeleteUserSelf;
@@ -74,6 +74,6 @@ class UserPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function roleUpdate(User $user) {
-        return $user->role()->canUpdateUserRole;
+        return $user->role()->canUpdateUserRole && $user->role()->isAdmin;
     }
 }

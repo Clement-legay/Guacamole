@@ -21,7 +21,7 @@
     <div class="">
         <div class="row">
             <div class="col-12">
-                <div id="carouselExampleControls" class="carousel carousel-dark slide mt-2 mb-3" data-bs-ride="false" data-bs-target="false">
+                <div id="carouselExampleControls" class="carousel carousel-dark slide mb-3" data-bs-ride="false" data-bs-target="false">
                     <div class="carousel-inner">
                         <div class="carousel-item active px-3">
                             <div class="row justify-content-center">

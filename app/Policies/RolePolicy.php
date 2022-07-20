@@ -11,28 +11,13 @@ class RolePolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewAny(User $user)
-    {
-        return $user->role()->canViewRoles && $user->role()->is_admin;
-    }
-
-    /**
      * Determine whether the user can view models.
      *
      * @param  \App\Models\User  $user
-     * @param \App\Models\Role  $role
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Role $role) {
-        if ($user->role()->level() >= $role->level()) {
-            return $user->role()->canViewRoles && $user->role()->is_admin;
-        }
-        return false;
+    public function view(User $user) {
+        return $user->role()->canViewRoles && $user->role()->isAdmin;
     }
 
     /**
@@ -43,7 +28,7 @@ class RolePolicy
      */
     public function create(User $user)
     {
-        return $user->role()->canCreateRole && $user->role()->is_admin;
+        return $user->role()->canCreateRole && $user->role()->isAdmin;
     }
 
     /**
@@ -55,9 +40,7 @@ class RolePolicy
      */
     public function update(User $user, Role $role)
     {
-
-        return $user->role()->canUpdateRole && $user->role()->is_admin;
-
+        return $user->role()->canUpdateRole && $user->role()->isAdmin;
     }
 
     /**
@@ -69,6 +52,6 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        return $user->role()->canDeleteRole && $user->role()->is_admin;
+        return $user->role()->canDeleteRole && $user->role()->isAdmin;
     }
 }

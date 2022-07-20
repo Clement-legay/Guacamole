@@ -16,9 +16,9 @@ class CommentPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function view(User $user)
     {
-        return $user->role()->canViewComments && $user->role()->is_admin;
+        return $user->role()->canViewComments && $user->role()->isAdmin;
     }
 
     /**
@@ -41,12 +41,12 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment)
     {
-        if ($user->role()->is_admin) {
+        if ($user->role()->isAdmin && $user->role()->canUpdateCommentOther) {
             return true;
         } else if ($user->id == $comment->user_id) {
             return $user->role()->canUpdateCommentSelf;
         } else {
-            return $user->role()->canUpdateCommentOther;
+            return false;
         }
     }
 
@@ -59,12 +59,12 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment)
     {
-        if ($user->role()->is_admin) {
+        if ($user->role()->isAdmin && $user->role()->canDeleteCommentOther) {
             return true;
         } else if ($user->id == $comment->user_id) {
             return $user->role()->canDeleteCommentSelf;
         } else {
-            return $user->role()->canDeleteCommentOther;
+            return false;
         }
     }
 }

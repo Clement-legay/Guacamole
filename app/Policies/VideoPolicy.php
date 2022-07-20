@@ -19,7 +19,7 @@ class VideoPolicy
      */
     public function watch(User $user, Video $video)
     {
-        if ($user->role()->is_admin) {
+        if ($user->role()->isAdmin) {
             return true;
         } else if ($user->role()->canWatchVideos) {
             if ($video->type == 'private') {
@@ -55,7 +55,7 @@ class VideoPolicy
         if ($video->user_id == $user->id) {
             return $user->role()->canUpdateVideo;
         } else {
-            return $user->role()->canUpdateOthersVideo;
+            return $user->role()->canUpdateOthersVideo && $user->role()->isAdmin;
         }
     }
 
@@ -71,7 +71,7 @@ class VideoPolicy
         if ($video->user_id == $user->id) {
             return $user->role()->canDeleteVideo;
         } else {
-            return $user->role()->canDeleteOthersVideo;
+            return $user->role()->canDeleteOthersVideo && $user->role()->isAdmin;
         }
     }
 }
