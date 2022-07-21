@@ -9,8 +9,8 @@
                     <div class="row justify-content-between p-3 align-content-center">
                         <div class="col-3">
                             <a href="{{ route('channel', base64_encode($video->user()->id)) }}" style="text-decoration: none">
-                                <div style="border-radius: 50%; background: {{ $video->user()->color }}; color: white; width: 40px; height: 40px; text-align: center; padding-top: 6px;">
-                                    {{ substr($video->user()->first_name, 0, 1) . substr($video->user()->last_name, 0, 1) }}
+                                <div style="width: 40px; height: 40px; font-size: 0.55em">
+                                    {!! $video->user()->profile_image() !!}
                                 </div>
                             </a>
                         </div>
