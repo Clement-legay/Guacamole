@@ -30,6 +30,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/categories', [CategoryController::class, 'searchCategory'])->name('API_categories');
 Route::put('/views/{id}', [ViewController::class, 'update'])->name('API_views');
 
+
+Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
+    Route::post('/{user}/profile_picture/update', [UserController::class, 'updateAvatar'])->name('API_user_update_avatar');
+    Route::post('/{user}/subscribe/{channel}', [SubscribeController::class, 'sendSubscribe'])->name('API_subscribe');
+    Route::delete('/{user}/unsubscribe/{channel}', [SubscribeController::class, 'sendUnsubscribe'])->name('API_unsubscribe');
+    Route::delete('/{user}/deleteOpinion/{video}', [LikeController::class, 'deleteOpinion'])->name('API_deleteOpinion');
+    Route::post('/{user}/comment/{video}', [CommentController::class, 'commentAPI'])->name('API_comment');
+    Route::post('/{user}/reply/{comment}', [CommentController::class, 'replyAPI'])->name('API_reply');
+    Route::delete('/{user}/deleteComment/{comment}', [CommentController::class, 'deleteAPI'])->name('API_deleteComment');
+    Route::post('{user}/video/upload', [videoController::class, 'uploadVideoAPI'])->name('API_upload_video');
+    Route::post('{user}/video/{video}/edit', [videoController::class, 'editVideoAPI'])->name('API_upload_video');
+});
+
+Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
+    Route::post('/register', [registerController::class, 'registerAPI'])->name('API_register');
+    Route::post('/login', [loginController::class, 'loginAPI'])->name('API_login');
+});
+
+
 Route::group(['middleware' => 'authorization'], function () {
     Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
         Route::get('/all', [CategoryController::class, 'getCategories'])->name('API_categories');
@@ -55,27 +74,14 @@ Route::group(['middleware' => 'authorization'], function () {
         Route::get('/{user}/subscriptions', [UserController::class, 'getUserSubscriptions'])->name('API_user_subscriptions');
         Route::get('/{user}/view/{video}', [UserController::class, 'getUserHasView'])->name('API_user_has_view');
         Route::get('/{user}/history', [UserController::class, 'getUserHistory'])->name('API_user_history');
-        Route::post('/{user}/profile_picture/update', [UserController::class, 'updateAvatar'])->name('API_user_update_avatar');
 
-        Route::post('/{user}/subscribe/{channel}', [SubscribeController::class, 'sendSubscribe'])->name('API_subscribe');
-        Route::delete('/{user}/unsubscribe/{channel}', [SubscribeController::class, 'sendUnsubscribe'])->name('API_unsubscribe');
 
         Route::get('/{user}/like/{video}', [LikeController::class, 'like'])->name('API_like');
         Route::get('/{user}/dislike/{video}', [LikeController::class, 'dislike'])->name('API_dislike');
-        Route::delete('/{user}/deleteOpinion/{video}', [LikeController::class, 'deleteOpinion'])->name('API_deleteOpinion');
 
-        Route::post('/{user}/comment/{video}', [CommentController::class, 'commentAPI'])->name('API_comment');
-        Route::post('/{user}/reply/{comment}', [CommentController::class, 'replyAPI'])->name('API_reply');
-        Route::delete('/{user}/deleteComment/{comment}', [CommentController::class, 'deleteAPI'])->name('API_deleteComment');
 
-        Route::post('{user}/video/upload', [videoController::class, 'uploadVideoAPI'])->name('API_upload_video');
-        Route::post('{user}/video/{video}/edit', [videoController::class, 'editVideoAPI'])->name('API_upload_video');
     });
 
-    Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
-        Route::post('/register', [registerController::class, 'registerAPI'])->name('API_register');
-        Route::post('/login', [loginController::class, 'loginAPI'])->name('API_login');
-    });
 });
 
 
