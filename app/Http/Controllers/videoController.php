@@ -351,10 +351,12 @@ class videoController extends Controller
         $request->validate([
             'title' => 'required|max:191',
             'description' => 'required|max:191',
-            'video' => 'required|mimes:mp4,mov,ogg,qt',
+            'video' => 'required',
             'type' => 'required',
             'category' => 'required',
         ]);
+
+
 
 //        $image_64 = $request->input('thumbnail_cropped');
 //

@@ -86,7 +86,7 @@
         <div class="col-12 col-lg-8">
             @can('view', \App\Comment::class)
                 @foreach($comments as $comment)
-
+                    @component('component.comment', ['comment' => $comment])@endcomponent
                 @endforeach
             @else
                 <div class="col-12 p-0 m-0">
