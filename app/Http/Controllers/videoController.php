@@ -273,7 +273,7 @@ class videoController extends Controller
         $page = request('page') ?? 1;
         $limit = request('limit') ?? 10;
 
-        $videos = Video::all()->sortBy('created_at', 'desc')->forPage($page, $limit);
+        $videos = Video::all()->sortByDesc('created_at')->forPage($page, $limit);
 
         return response()->json([
             'videos' => $videos,

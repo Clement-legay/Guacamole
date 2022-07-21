@@ -74,6 +74,24 @@
                 </div>
             </div>
         </div>
+        <div onclick="doNav('{{ route('admin.token') }}')" class="col-12 profile_pages">
+            <div class="row justify-content-center align-content-center">
+                <div class="col-3">
+                    <div class="row justify-content-center align-content-center">
+                        @if(route('admin.token') == url()->current())
+                            <i style="font-size: 1.5em" class="bi bi-key-fill"></i>
+                        @else
+                            <i style="font-size: 1.5em" class="bi bi-key"></i>
+                        @endif
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div class="row justify-content-start pt-1">
+                        <span class="card-title link-name" style="text-transform: capitalize; font-size: 1.2em; font-weight: normal">API Key</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="bottom-full">
             <div class="dropdown-divider"></div>
             <div onclick="doNav('{{ route('home') }}')" class="col-12 profile_pages">

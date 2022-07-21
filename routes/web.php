@@ -92,6 +92,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/roles/{role}', [AdminController::class, 'role'])->name('role.select');
         Route::put('/roles/{role}/update', [RoleController::class, 'update'])->name('role.update');
         Route::get('/roles/{role}/delete', [RoleController::class, 'delete'])->name('role.delete');
+
+        Route::get('/token', [AdminController::class, 'token'])->name('token');
+        Route::get('/token/generate', [AdminController::class, 'tokenGenerate'])->name('token.generate');
+        Route::post('/token/generate', [AdminController::class, 'tokenGeneration'])->name('token.generate');
+        Route::get('/token/delete', [AdminController::class, 'tokenDelete'])->name('token.delete');
     });
 });
 

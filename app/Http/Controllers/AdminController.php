@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Apikey;
 use App\Models\Comment;
 use App\Models\Role;
 use App\Models\User;
@@ -53,5 +54,37 @@ class AdminController extends Controller
     {
         $comments = Comment::whereNotNull('video_id')->get();
         return view('admin.comments', compact('comments'));
+    }
+
+    public function token()
+    {
+        return view('admin.headerGenerator');
+    }
+
+    public function tokenGenerate()
+    {
+        return view('admin.headerGenerator');
+    }
+
+    public function tokenGeneration(Request $request)
+    {
+        $request->validate([
+            // regex only allows letters and caps
+            'key' => 'required|string|max:191|regex:/^[a-zA-Z]+$/',
+        ]);
+
+        Apikey::create([
+            'key' => $request->key,
+            'user_id' => Auth::id(),
+        ]);
+
+        return redirect()->route('admin.token');
+    }
+
+    public function tokenDelete()
+    {
+        Auth::user()->apikey()->delete();
+
+        return redirect()->route('admin.token');
     }
 }

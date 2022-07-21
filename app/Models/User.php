@@ -331,4 +331,9 @@ class User extends Authenticatable
         ))
             ->orderBy('chanel_views_count', 'desc');
     }
+
+    public function apikey()
+    {
+        return $this->hasOne(Apikey::class)->first();
+    }
 }
