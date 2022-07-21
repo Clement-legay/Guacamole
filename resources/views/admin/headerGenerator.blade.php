@@ -6,28 +6,6 @@
 
 @section('content')
 
-    <script>
-        $('body').ready(function() {
-            $.ajax({
-                url: '{{ route('video.API_videos') }}',
-                type: 'GET',
-                headers: {
-                    'Authorization': 'Basic UmFjZVB1dGluZTpibGFibGFibGE='
-                },
-                params: {
-                    'page': 1,
-                    'limit': 10
-                },
-                success: function(data) {
-                    console.log(data);
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            });
-        });
-    </script>
-
 <div class="row justify-content-center">
     <div class="col-12 col-xl-8">
         <div class="row justify-content-center">
