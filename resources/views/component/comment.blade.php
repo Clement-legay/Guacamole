@@ -32,7 +32,23 @@
                 </button>
             </div>
             <div class="col-auto p-0 m-0">
-                <button class="btn btn-text-bis"><i class="bi bi-three-dots"></i></button>
+                <div class="dropdown">
+                    <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-three-dots"></i>
+                    </button>
+                    <ul class="dropdown-menu p-0 m-0" aria-labelledby="dropdownMenuButton1">
+                        @can('delete', $comment)
+                        <li><a class="dropdown-item" href="{{ route('admin.comment.delete', $comment->id64()) }}">Delete <i class="bi bi-trash-fill"></i></a></li>
+                        @else
+                            <li><button disabled class="dropdown-item">Delete <i class="bi bi-trash-fill"></i></button></li>
+                        @endcan
+                        @can('update', $comment)
+                        <li><a class="dropdown-item" href="#">Edit <i class="bi bi-pencil"></i></a></li>
+                        @else
+                            <li><button disabled class="dropdown-item">Edit <i class="bi bi-pencil"></i></button></li>
+                        @endcan
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -87,17 +103,39 @@
                     <p class="p-0 m-0" style="font-size: 0.8em">{{ $reply->comment }}</p>
                 </div>
                 <div class="col-12 p-0 m-0">
-                    @auth
-                        @can('create', App\Comment::class)
-                            <button class="btn btn-text me-3" onclick="answer('{{ 'reply_form_' . $reply->id64() }}')" style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</button>
-                        @else
-                            <button class="btn btn-text me-3" disabled style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</button>
-                        @endcan
-                    @endauth
-                    @guest
-                        <a class="btn btn-text me-3" href="{{ route('login') }}" style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</a>
-                    @endguest
-                    <button class="btn btn-text-bis"><i class="bi bi-three-dots"></i></button>
+                    <div class="row">
+                        <div class="col-auto">
+                            @auth
+                                @can('create', App\Comment::class)
+                                    <button class="btn btn-text me-3" onclick="answer('{{ 'reply_form_' . $reply->id64() }}')" style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</button>
+                                @else
+                                    <button class="btn btn-text me-3" disabled style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</button>
+                                @endcan
+                            @endauth
+                            @guest
+                                <a class="btn btn-text me-3" href="{{ route('login') }}" style="border: none; background: none; font-size: 0.8em; letter-spacing: -1px">ANSWER</a>
+                            @endguest
+                        </div>
+                        <div class="col-auto p-0 m-0">
+                            <div class="dropdown">
+                                <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                                <ul class="dropdown-menu p-0 m-0" aria-labelledby="dropdownMenuButton1">
+                                    @can('delete', $reply)
+                                        <li><a class="dropdown-item" href="{{ route('admin.comment.delete', $reply->id64()) }}">Delete <i class="bi bi-trash-fill"></i></a></li>
+                                    @else
+                                        <li><button disabled class="dropdown-item">Delete <i class="bi bi-trash-fill"></i></button></li>
+                                    @endcan
+                                    @can('update', $reply)
+                                        <li><a class="dropdown-item" href="#">Edit <i class="bi bi-pencil"></i></a></li>
+                                    @else
+                                        <li><button disabled class="dropdown-item">Edit <i class="bi bi-pencil"></i></button></li>
+                                    @endcan
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
