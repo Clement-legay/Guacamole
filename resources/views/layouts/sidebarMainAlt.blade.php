@@ -4,7 +4,7 @@
     <div class="row justify-content-between align-content-center p-3">
         <div onclick="doNav('{{ route('home') }}')" class="col-12 profile_pages">
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if(route('home') == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-house-fill"></i>
@@ -22,7 +22,7 @@
         </div>
         <div onclick="doNav('{{ route('explore') }}')" class="col-12 profile_pages">
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if(route('explore') == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-compass-fill"></i>
@@ -40,7 +40,7 @@
         </div>
         <div onclick="doNav('{{ route('likedVideos') }}')" class="col-12 profile_pages">
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if(route('likedVideos') == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-hand-thumbs-up-fill"></i>
@@ -58,7 +58,7 @@
         </div>
         <div onclick="doNav('{{ route('history') }}')" class="col-12 profile_pages">
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if(route('history') == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-clock-fill"></i>

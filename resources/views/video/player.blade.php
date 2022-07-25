@@ -66,9 +66,10 @@
         }
     </style>
 
-    <div>
+<div class="row justify-content-center mx-0">
+    <div class="col-12 col-xl-9 p-0">
         <div class="row justify-content-center p-0 m-0 px-lg-5 pt-lg-4">
-            <div class="col-lg-8 col-12">
+            <div class="col-lg-8 col-xl-9 col-12 ps-xl-5 pe-xl-3">
                 <div class="row justify-content-center">
                     @component('component.playerJS', ['video' => $video])
                     @endcomponent
@@ -179,7 +180,7 @@
                 @endforeach
             </div>
             <div class="dropdown-divider m-0 my-3 p-0 d-flex d-lg-none"></div>
-            <div class="col-lg-4 col-12 ps-lg-4">
+            <div class="col-lg-4 col-xl-3 col-12 ps-lg-4">
                 <div class="row justify-content-center">
                     <div class="col-12">
                         @auth
@@ -199,6 +200,7 @@
             </div>
         </div>
     </div>
+</div>
     <script>
         function setTimeWatchedPlayer(time) {
             player.currentTime(time);

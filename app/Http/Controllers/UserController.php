@@ -119,17 +119,19 @@ class UserController extends Controller
             'first_name' => 'max:191',
             'last_name' => 'max:191',
             'username' => 'max:191|unique:users,username,' . $user->id,
-            'banner_image' =>  'image|mimes:jpeg,png,jpg,gif,svg',
-            'banner_cropped' => 'required',
+            'banner_image' =>  'image|regex:/^[a-zA-Z0-9\-_]+$/|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
-        $image_64 = $request->input('banner_cropped');
-        $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
-        $replace = substr($image_64, 0, strpos($image_64, ',')+1);
-        $image = str_replace($replace, '', $image_64);
-        $image = str_replace(' ', '+', $image);
-        $imageName = 'profileBanner/' . Str::random(35) . '.' . $extension;
-        Storage::disk('public')->put($imageName, base64_decode($image));
+        if ($request->input('banner_cropped') != null) {
+            $image_64 = $request->input('banner_cropped');
+            $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+            $replace = substr($image_64, 0, strpos($image_64, ',')+1);
+            $image = str_replace($replace, '', $image_64);
+            $image = str_replace(' ', '+', $image);
+            $imageName = 'profileBanner/' . Str::random(35) . '.' . $extension;
+            Storage::disk('public')->put($imageName, base64_decode($image));
+            $user->banner_image = 'storage/' . $imageName;
+        }
 
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
@@ -138,7 +140,6 @@ class UserController extends Controller
         if ($request->color) {
             $user->color = $request->color;
         }
-        $user->banner_image = 'storage/' . $imageName;
         $user->save();
 
         return redirect()->back();
@@ -174,7 +175,16 @@ class UserController extends Controller
         return redirect()->route('admin.users');
     }
 
-    public function getUser($user)
+    public function adminDeleteMany(Request $request, $user)
+    {
+        $user = User::find(base64_decode($user));
+
+        $user->delete();
+
+        return redirect()->route('admin.users');
+    }
+
+    public function  getUser($user)
     {
         $user = User::find(base64_decode($user));
 

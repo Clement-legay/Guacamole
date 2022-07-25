@@ -106,12 +106,12 @@ class videoController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'title' => 'required|max:191',
-            'description' => 'required|max:191',
+            'title' => 'required|max:191|regex:/^[a-zA-Z0-9\s\!#".,?\'&çéàù%:#êèôûâîïöüäë€_\-()œ$£]*$/u',
+            'description' => 'required|max:191|regex:/^[a-zA-Z0-9\s\!#".,?\'&çéàù%:#êèôûâîïöüäë€_\-()œ$£]*$/u',
             'video' => 'required|mimes:mp4,mov,ogg,qt',
             'thumbnail_cropped' => 'required',
             'type' => 'required',
-            'category' => 'required',
+            'category' => 'required|max:191|regex:/^[a-zA-Z0-9\-_]+$/',
         ]);
 
         $image_64 = $request->input('thumbnail_cropped');
@@ -193,11 +193,11 @@ class videoController extends Controller
         $video = Video::find(base64_decode($video));
 
         $request->validate([
-            'title' => 'required|max:191',
-            'description' => 'required|max:191',
+            'title' => 'required|max:191|regex:/^[a-zA-Z0-9\s\!#".,?\'&çéàù%:#êèôûâîïöüäë€_\-()œ$£]*$/u',
+            'description' => 'required|max:191|regex:/^[a-zA-Z0-9\s\!#".,?\'&çéàù%:#êèôûâîïöüäë€_\-()œ$£]*$/u',
             'thumbnail' => 'image|mimes:jpeg,png,jpg,gif,svg',
             'type' => 'required',
-            'category' => 'required',
+            'category' => 'required|string|max:191|regex:/^[a-zA-Z0-9\-_]+$/',
         ]);
 
         $category = Category::firstOrCreate(['category_name' => $request->category]);

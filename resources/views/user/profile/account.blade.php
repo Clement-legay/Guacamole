@@ -42,6 +42,11 @@
     </style>
 
     <script>
+        $('#color').on('change', function() {
+            $('#color').css('background-color', $(this).val());
+
+        });
+
         function changeColor(color) {
             document.getElementById("avatarBadge").style.background = color
             document.getElementById("color").style.background = color
@@ -74,7 +79,7 @@
                         </div>
                     @else
                         <div class="col-2 col-lg-1 mb-3">
-                            <input aria-label="color" id="color" value="{{ auth()->user()->color }}" style="background: {{ auth()->user()->color }}" type="color" onchange="changeColor(this.value)" class="form-control @error('color') is-invalid @enderror" name="color" required autofocus>
+                            <input aria-label="color" id="color" value="{{ auth()->user()->color }}" style="background: {{ auth()->user()->color }}" type="color" class="form-control @error('color') is-invalid @enderror" name="color" required autofocus>
                         </div>
                     @endif
                     <div class="col-auto mb-3">
@@ -144,10 +149,10 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="banner" id="bannerOpener" class="btn btn-file"><i class="bi bi-upload"></i> Upload a banner</label>
-                                                    <input type="file" style="display: none" class=" @error('thumbnail_cropped') is-invalid @enderror" id="banner" name="banner" accept="image/gif, image/jpeg, image/png">
+                                                    <input type="file" style="display: none" class=" @error('banner_cropped') is-invalid @enderror" id="banner" name="banner" accept="image/gif, image/jpeg, image/png">
                                                     <input type="hidden" name="banner_cropped" id="banner_cropped">
                                                     @error('banner_cropped')
-                                                    <span class="invalid-feedback" role="alert">
+                                                        <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
                                                         </span>
                                                     @enderror
@@ -175,13 +180,15 @@
                                             <div class="col-12 my-3">
                                                 <img src="{{ Auth::user()->banner_image ? asset(Auth::user()->banner_image) : 'https://via.placeholder.com/1920x325?text=16:3' }}" id="banner-picture" alt="Banner" style="width: 100%; aspect-ratio: 16 / 3">
                                             </div>
-                                            <div class="col-12 my-3">
-                                                <div class="row justify-content-end">
-                                                    <div class="col-auto">
-                                                        <a href="{{ route('profile.updateBannerDelete', auth()->user()->id64()) }}" class="btn btn-danger" id="deleteBanner">Delete</a>
+                                            @if(Auth::user()->banner_image)
+                                                <div class="col-12 my-3">
+                                                    <div class="row justify-content-end">
+                                                        <div class="col-auto">
+                                                            <a href="{{ route('profile.updateBannerDelete', auth()->user()->id64()) }}" class="btn btn-danger" id="deleteBanner">Delete</a>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

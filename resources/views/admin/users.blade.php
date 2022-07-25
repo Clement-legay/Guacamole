@@ -30,43 +30,72 @@
         }
     </script>
 
-    <h3>Users</h3>
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-8">
+            <form action="{{ route('admin.users.delete') }}" method="post">
+                @method('DELETE')
+                @csrf
+                <button type="submit""><i class="bi bi-trash-fill"></i></button>
+            </form>
+            <h3>Users</h3>
 
-
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">User</th>
-            <th scope="col"></th>
-            <th scope="col">Role</th>
-            <th scope="col">Subscribers</th>
-            <th scope="col">Creation Date</th>
-            <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($users as $user)
-            <tr onclick="doNav('{{ route('admin.user.select', $user->id64()) }}')" class="user_row">
-                <td>
-                    <div style="width: 45px; height: 45px; font-size: 0.6em">
-                        {!! $user->profile_image() !!}
+            <form method="get" action="{{ route('admin.users') }}">
+                <div class="row justify-content-center align-content-center">
+                    <div class="col-3">
+                        <select aria-label="role" class="form-control" name="role">
+                            <option value="">All Roles</option>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->id }}" {{ $role->id == $roleSelected ? 'selected' : '' }}>{{ $role->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                </td>
-                <td>
-                    <p class="p-0 m-0">{{ $user->first_name . ' ' . $user->last_name }}</p>
-                    <p class="p-0 m-0">{{ $user->username }}</p>
-                </td>
-                <td>{{ $user->role()->name ?? "No attribution" }}</td>
-                <td>{{ $user->subscribers()->get()->count() }}</td>
-                <td>{{ $user->created_at->format('d F Y') }}</td>
-                <td>
-                    <a href="#" class="btn"><i class="bi bi-pen-fill"></i></a>
-                </td>
+                    <div class="col-5">
+                        <input aria-label="search" type="text" class="form-control" id="searchUser" name="search" placeholder="Search a user" value="{{ $searchUser }}">
+                    </div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-primary text-white">Search</button>
+                    </div>
+                </div>
+            </form>
 
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" id="all" class="form-check-input" aria-label="all" name="all"></th>
+                    <th scope="col">User</th>
+                    <th scope="col"></th>
+                    <th class="d-none d-lg-flex" scope="col">Role</th>
+                    <th class="d-none d-lg-flex" scope="col">Subscribers</th>
+                    <th class="d-none d-lg-flex" scope="col">Creation Date</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($users as $user)
+                    <tr class="user_row">
+                        <td><input type="checkbox" class="form-check-input userCheckbox" aria-label="all" name="{{ $user->id }}"></td>
+                        <td>
+                            <div style="width: 45px; height: 45px; font-size: 0.6em">
+                                {!! $user->profile_image() !!}
+                            </div>
+                        </td>
+                        <td>
+                            <p class="p-0 m-0">{{ $user->first_name . ' ' . $user->last_name }}</p>
+                            <p class="p-0 m-0">{{ $user->username }}</p>
+                        </td>
+                        <td class="d-none d-lg-flex">{{ $user->role()->name ?? "No attribution" }}</td>
+                        <td class="d-none d-lg-flex">{{ $user->subscribers()->get()->count() }}</td>
+                        <td class="d-none d-lg-flex">{{ $user->created_at->format('d F Y') }}</td>
+                        <td>
+                            <button onclick="doNav('{{ route('admin.user.select', $user->id64()) }}')" class="btn"><i class="bi bi-pen-fill"></i></button>
+                        </td>
+
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     @if(isset($userSelected) && $userSelected != null)
 
@@ -125,9 +154,9 @@
                                         @endforeach
                                     </select>
                                     @error('role')
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('role') }}
-                                        </div>
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('role') }}
+                                    </div>
                                     @enderror
                                 </div>
 
@@ -135,7 +164,7 @@
                                     <label for="email">Email</label>
                                     <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') ?? $userSelected->email }}">
                                     @error('email')
-                                        <span class="invalid-feedback" role="alert">
+                                    <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('email') }}</strong>
                                         </span>
                                     @enderror
@@ -164,4 +193,15 @@
                 document.getElementById('openModal').click();
             </script>
     @endif
+
+    <script>
+        // on checkbox click, check all checkboxes
+        $('#all').click(function() {
+            if ($(this).is(':checked')) {
+                $('input[type="checkbox"]').prop('checked', true);
+            } else {
+                $('input[type="checkbox"]').prop('checked', false);
+            }
+        });
+    </script>
 @endsection

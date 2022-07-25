@@ -28,7 +28,7 @@
 
         <div onclick="doNav('{{ route('profile.dashboard') }}')" class="col-12 profile_pages mt-3">
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if(route('profile.dashboard') == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-menu-app-fill"></i>
@@ -46,7 +46,7 @@
         </div>
         <div onclick="doNav('{{ route('profile.content') }}')" class="col-12 profile_pages">
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if(route('profile.content') == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-play-btn-fill"></i>
@@ -64,7 +64,7 @@
         </div>
         <div onclick="doNav('{{ route('profile.comments') }}')" class="col-12 profile_pages">
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if(route('profile.comments') == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-chat-left-dots-fill"></i>
@@ -84,7 +84,7 @@
             <div class="dropdown-divider"></div>
             <div onclick="doNav('{{ route('profile.parameters') }}')" class="col-12 profile_pages">
                 <div class="row justify-content-center align-content-center">
-                    <div class="col-3">
+                    <div class="col-auto">
                         <div class="row justify-content-center align-content-center">
                             @if(route('profile.parameters') == url()->current())
                                 <i style="font-size: 1.5em" class="bi bi-gear-fill"></i>
@@ -102,7 +102,7 @@
             </div>
             <div onclick="doNav('{{ route('profile.account') }}')" class="col-12 profile_pages">
                 <div class="row justify-content-center align-content-center">
-                    <div class="col-3">
+                    <div class="col-auto">
                         <div class="row justify-content-center align-content-center">
                             @if(route('profile.account') == url()->current())
                                 <i style="font-size: 1.5em" class="bi bi-person-fill"></i>

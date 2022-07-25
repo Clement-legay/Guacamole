@@ -4,7 +4,7 @@
     <div class="row justify-content-between align-content-center p-3">
         <div onclick="doNav('{{ route('admin.users') }}')" class="col-12 profile_pages mt-3">
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if(route('admin.users') == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-person-fill"></i>
@@ -22,7 +22,7 @@
         </div>
         <div onclick="doNav('{{ route('admin.videos') }}')" class="col-12 profile_pages">
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if(route('admin.videos') == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-play-btn-fill"></i>
@@ -40,7 +40,7 @@
         </div>
         <div onclick="doNav('{{ route('admin.comments') }}')" class="col-12 profile_pages">
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if(route('admin.comments') == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-chat-left-dots-fill"></i>
@@ -58,7 +58,7 @@
         </div>
         <div onclick="doNav('{{ route('admin.roles') }}')" class="col-12 profile_pages">
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if(route('admin.roles') == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-person-badge-fill"></i>
@@ -76,7 +76,7 @@
         </div>
         <div onclick="doNav('{{ route('admin.token') }}')" class="col-12 profile_pages">
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if(route('admin.token') == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-key-fill"></i>
@@ -96,7 +96,7 @@
             <div class="dropdown-divider"></div>
             <div onclick="doNav('{{ route('home') }}')" class="col-12 profile_pages">
                 <div class="row justify-content-center align-content-center">
-                    <div class="col-3">
+                    <div class="col-auto">
                         <div class="row justify-content-center align-content-center">
                             <i style="font-size: 1.5em" class="bi bi-arrow-left"></i>
                         </div>

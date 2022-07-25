@@ -55,7 +55,15 @@ class Video extends Model
 
     public function getDuration()
     {
-        return gmdate("H:i:s", $this->duration);
+        $hours = gmdate('H', $this->duration) > 0 ? gmdate('H', $this->duration) : false;
+        $minutes = gmdate('i', $this->duration) > 0 ? gmdate('i', $this->duration) : 00;
+        $seconds = gmdate('s', $this->duration) > 0 ? gmdate('s', $this->duration) : 00;
+
+        if ($hours) {
+            return $hours . ':' . $minutes . ':' . $seconds;
+        } else {
+            return $minutes . ':' . $seconds;
+        }
     }
 
     public function comments()

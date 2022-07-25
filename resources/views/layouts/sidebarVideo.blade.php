@@ -4,7 +4,7 @@
     <div class="row justify-content-between align-content-center p-3">
         <div class="col-12">
             <div onclick="doNav('{{ route('profile.content') }}')" class="row justify-content-center align-content-center profile_pages">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         <i style="font-size: 1.5em" class="bi bi-arrow-left"></i>
                     </div>
@@ -48,7 +48,7 @@
         <div class="col-12 mt-3 disabled">
         @endif
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if((url()->current() == route('video.create')) == false && route('video.details', $video->id64()) == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-pen-fill"></i>
@@ -70,7 +70,7 @@
         <div class="col-12 mt-3 disabled">
         @endif
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if((url()->current() == route('video.create')) == false && route('video.dashboard', $video->id64()) == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-menu-app-fill"></i>
@@ -93,7 +93,7 @@
         <div class="col-12 mt-3 disabled">
         @endif
             <div class="row justify-content-center align-content-center">
-                <div class="col-3">
+                <div class="col-auto">
                     <div class="row justify-content-center align-content-center">
                         @if((url()->current() == route('video.create')) == false && route('video.comments', $video->id64()) == url()->current())
                             <i style="font-size: 1.5em" class="bi bi-chat-left-dots-fill"></i>
@@ -114,7 +114,7 @@
             <div class="dropdown-divider"></div>
             <div onclick="doNav('{{ route('profile.parameters') }}')" class="col-12 profile_pages">
                 <div class="row justify-content-center align-content-center">
-                    <div class="col-3">
+                    <div class="col-auto">
                         <div class="row justify-content-center align-content-center">
                             @if(route('profile.parameters') == url()->current())
                                 <i style="font-size: 1.5em" class="bi bi-gear-fill"></i>
@@ -132,7 +132,7 @@
             </div>
             <div onclick="doNav('{{ route('profile.account') }}')" class="col-12 profile_pages">
                 <div class="row justify-content-center align-content-center">
-                    <div class="col-3">
+                    <div class="col-auto">
                         <div class="row justify-content-center align-content-center">
                             @if(route('profile.account') == url()->current())
                                 <i style="font-size: 1.5em" class="bi bi-person-fill"></i>

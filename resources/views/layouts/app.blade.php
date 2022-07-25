@@ -16,33 +16,49 @@
 <body>
 @extends('layouts.nav')
 
-<div class="row p-0 m-0">
-    <div class="col-2 col-xl-1" id="sidebar">
-        @if(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'profile.'))
-            @component('layouts.sidebarProfile')
-            @endcomponent
-        @elseif(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'video.'))
-            @component('layouts.sidebarVideo', ['video' => $video ?? null])
-            @endcomponent
-        @elseif(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'admin.'))
-            @component('layouts.sidebarAdmin')
-            @endcomponent
-        @else
-            @component('layouts.sidebarMain')
-            @endcomponent
-        @endif
-    </div>
-    @if(Agent::isMobile())
-    <div class="col-12 p-0" id="content">
+<style>
+    @media screen and (min-width: 1921px) {
+        #containerGlobal {
+            padding-left: 8.33%; /* 250px width - change this with JavaScript */
+        }
+    }
+
+    @media screen and (max-width: 1921px) {
+        #containerGlobal {
+            padding-left: 16.7%; /* 250px width - change this with JavaScript */
+        }
+    }
+
+    @media screen and (max-width: 401px) {
+        #containerGlobal {
+            padding-left: 0;  /* 250px width - change this with JavaScript */
+        }
+    }
+</style>
+
+<div id="sidebar">
+    @if(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'profile.'))
+        @component('layouts.sidebarProfile')
+        @endcomponent
+    @elseif(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'video.'))
+        @component('layouts.sidebarVideo', ['video' => $video ?? null])
+        @endcomponent
+    @elseif(str_starts_with(\Illuminate\Support\Facades\Request::route()->getName(), 'admin.'))
+        @component('layouts.sidebarAdmin')
+        @endcomponent
     @else
-    <div class="col-10 col-xl-11 p-0" id="content">
+        @component('layouts.sidebarMain')
+        @endcomponent
     @endif
+</div>
+
+<div class="row m-0" id="containerGlobal">
+    <div class="col-12 p-0" id="content">
         <div class="@yield('background')" style="margin-top: 60px; min-height: 96vh">
             {{--                min-height: 92--}}
             @yield('content')
         </div>
     </div>
-</div>
 </div>
 </body>
 </html>

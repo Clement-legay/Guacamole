@@ -72,6 +72,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::redirect('/', '/admin/videos', 301);
 
         Route::get('/users', [AdminController::class, 'users'])->name('users');
+        Route::delete('/users/delete', [UserController::class, 'adminDeleteMany'])->name('users.delete');
         Route::get('/users/{user}', [AdminController::class, 'user'])->name('user.select');
         Route::put('/users/{user}/update', [UserController::class, 'adminUpdate'])->name('user.update');
         Route::get('/users/{user}/delete', [UserController::class, 'adminDelete'])->name('user.delete');
