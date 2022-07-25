@@ -32,16 +32,15 @@
 
     <div class="row justify-content-center">
         <div class="col-12 col-xl-8">
-            <form action="{{ route('admin.users.delete') }}" method="post">
-                @method('DELETE')
-                @csrf
-                <button type="submit""><i class="bi bi-trash-fill"></i></button>
-            </form>
-            <h3>Users</h3>
+{{--            <form action="{{ route('admin.users.delete') }}" method="post">--}}
+{{--                @method('DELETE')--}}
+{{--                @csrf--}}
+{{--                <button type="submit" class="btn"><i class="bi bi-trash-fill"></i></button>--}}
+{{--            </form>--}}
 
             <form method="get" action="{{ route('admin.users') }}">
-                <div class="row justify-content-center align-content-center">
-                    <div class="col-3">
+                <div class="row justify-content-center align-content-center px-3 my-2">
+                    <div class="col-6 col-lg-4">
                         <select aria-label="role" class="form-control" name="role">
                             <option value="">All Roles</option>
                             @foreach($roles as $role)
@@ -49,11 +48,11 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-5">
+                    <div class="col-6 col-lg-5">
                         <input aria-label="search" type="text" class="form-control" id="searchUser" name="search" placeholder="Search a user" value="{{ $searchUser }}">
                     </div>
-                    <div class="col-2">
-                        <button type="submit" class="btn btn-primary text-white">Search</button>
+                    <div class="col-12 col-lg-3 mt-2 mt-lg-0">
+                        <button type="submit" class="btn btn-primary w-100 text-white">Search</button>
                     </div>
                 </div>
             </form>
@@ -64,9 +63,9 @@
                     <th scope="col"><input type="checkbox" id="all" class="form-check-input" aria-label="all" name="all"></th>
                     <th scope="col">User</th>
                     <th scope="col"></th>
-                    <th class="d-none d-lg-flex" scope="col">Role</th>
-                    <th class="d-none d-lg-flex" scope="col">Subscribers</th>
-                    <th class="d-none d-lg-flex" scope="col">Creation Date</th>
+                    <th class="d-none d-lg-table-cell" scope="col">Role</th>
+                    <th class="d-none d-lg-table-cell" scope="col">Subscribers</th>
+                    <th class="d-none d-lg-table-cell" scope="col">Creation Date</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
@@ -83,9 +82,9 @@
                             <p class="p-0 m-0">{{ $user->first_name . ' ' . $user->last_name }}</p>
                             <p class="p-0 m-0">{{ $user->username }}</p>
                         </td>
-                        <td class="d-none d-lg-flex">{{ $user->role()->name ?? "No attribution" }}</td>
-                        <td class="d-none d-lg-flex">{{ $user->subscribers()->get()->count() }}</td>
-                        <td class="d-none d-lg-flex">{{ $user->created_at->format('d F Y') }}</td>
+                        <td class="d-none d-lg-table-cell">{{ $user->role()->name ?? "No attribution" }}</td>
+                        <td class="d-none d-lg-table-cell">{{ $user->subscribers()->get()->count() }}</td>
+                        <td class="d-none d-lg-table-cell">{{ $user->created_at->format('d F Y') }}</td>
                         <td>
                             <button onclick="doNav('{{ route('admin.user.select', $user->id64()) }}')" class="btn"><i class="bi bi-pen-fill"></i></button>
                         </td>
