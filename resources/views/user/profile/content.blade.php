@@ -361,10 +361,10 @@
                                     </div>
                                     <div class="col-lg-3">
                                         <label>
-                                            <input type="radio" name="thumbnail-radio" class="card-input-element" value="inputPic"/>
+                                            <input {{ $video->thumbnail ? 'checked' : ''}} type="radio" name="thumbnail-radio" class="card-input-element" value="inputPic"/>
                                         <div class="card bg-light card-input" style="position: relative">
                                             <div class="card-body p-0">
-                                                <div style="aspect-ratio: 16/9; width: 100%; background: #e8e8e8; background-size: contain" id="thumbnailOpener">
+                                                <div style="aspect-ratio: 16/9; width: 100%; background: #e8e8e8; background-size: contain; {{ $video->thumbnail ? 'background-image: url("' . $video->thumbnail() .'")' : '' }}" id="thumbnailOpener">
                                                     <input type="file" style="display: none" class=" @error('thumbnail_cropped') is-invalid @enderror" id="thumbnail" name="thumbnail" accept="image/gif, image/jpeg, image/png">
                                                     <input aria-label="file" type="hidden" name="thumbnail_cropped" id="thumbnail_cropped">
                                                     <div class="row d-flex justify-content-center align-items-center py-2 h-100">
@@ -406,7 +406,7 @@
                                     </div>
                                     <div class="col-lg-3">
                                         <label>
-                                            <input checked type="radio" name="thumbnail-radio" class="card-input-element" value="frame+0.25"/>
+                                            <input {{ $video->thumbnail ? '' : 'checked'}} type="radio" name="thumbnail-radio" class="card-input-element" value="frame+0.25"/>
                                         <div class="card bg-light card-input" style="position: relative">
                                             <div class="card-body p-0">
                                                 <div style="aspect-ratio: 16/9; width: 100%; background: #e8e8e8">

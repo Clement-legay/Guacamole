@@ -54,10 +54,6 @@ class ProcessVideo implements ShouldQueue
 
         unlink(storage_path('app/public/uploads/' . $this->video->video));
 
-        if ($video->ready()) {
-            $this->video->setDone('storage/videos/' . explode('.', $this->video->video)[0] . '/' . explode('.', $this->video->video)[0] . '.m3u8', 'online');
-        } else {
-            $this->video->setDone('storage/videos/' . explode('.', $this->video->video)[0] . '/' . explode('.', $this->video->video)[0] . '.m3u8', 'processed');
-        }
+        $this->video->setDone('storage/videos/' . explode('.', $this->video->video)[0] . '/' . explode('.', $this->video->video)[0] . '.m3u8', 'processed');
     }
 }
