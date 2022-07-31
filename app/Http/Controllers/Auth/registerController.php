@@ -20,8 +20,8 @@ class registerController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|regex:/^[a-zA-Z0-9\-_]+$/',
-            'last_name' => 'required|regex:/^[a-zA-Z0-9\-_]+$/',
+            'first_name' => 'required|regex:/^[a-zA-Z0-9\s\çéàùêèôûâîïöüäëœ]*$/u',
+            'last_name' => 'required|regex:/^[a-zA-Z0-9\s\çéàùêèôûâîïöüäëœ]*$/u',
             'username' => 'required|unique:users|regex:/^[a-zA-Z0-9\-_]+$/',
             'color' => 'required',
             'email' => 'required|email|unique:users',

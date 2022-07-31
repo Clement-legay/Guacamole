@@ -42,6 +42,12 @@ class videoController extends Controller
         return redirect()->route('profile.content');
     }
 
+    public function getVideoProgress($video)
+    {
+        $video = Video::find(base64_decode($video));
+        return response()->json(['progress' => $video->processState]);
+    }
+
     public function search(Request $request)
     {
         $search = $request->input('search');
@@ -57,6 +63,19 @@ class videoController extends Controller
             ->get();
 
         return view('video.search', compact('videos', 'search', 'chanel'));
+    }
+
+    public function getFrame($video)
+    {
+        $video = Video::find(base64_decode($video));
+        $timestamp = request('timestamp') ?? 0;
+
+        $frame = $video->getFrame($timestamp);
+
+        return response()->json([
+            'success' => true,
+            'frame' => $frame
+        ]);
     }
 
     public function watch($video)
@@ -103,6 +122,56 @@ class videoController extends Controller
         return view('video.manage.create');
     }
 
+    public function uploadVideoFile(Request $request, $user) {
+
+        $request->validate([
+            'title' => 'required|string',
+            'video' => 'required|mimes:mp4,mov,m4v,3gp,3g2,flv,webm,mkv,avi,wmv,ts,mpeg,mpg,mts,vob,asf,rm,rmvb',
+        ]);
+
+        $title = explode('.', $request->input('title'))[0];
+        $user = User::find(base64_decode($user));
+
+        if ($request->hasFile('video')) {
+            $return = $request->file('video')->store('public/uploads');
+            if ($return) {
+                $video = $request->file('video')->hashName();
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error uploading video'
+                ]);
+            }
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'No video file send'
+            ]);
+        }
+
+        $duration = FFMpeg::open('public/uploads/' . $request->file('video')->hashName())->getDurationInSeconds();
+        $quality = FFMpeg::open('public/uploads/' . $request->file('video')->hashName())->getVideoStream()->getDimensions();
+        $quality = $quality->getHeight() . 'x' . $quality->getWidth();
+
+        $video = Video::create([
+            'title' => $title,
+            'user_id' => $user->id,
+            'processState' => 0,
+            'video' => $video,
+            'duration' => $duration,
+            'type' => 'private',
+            'status' => 'pending',
+            'quality' => $quality
+        ]);
+
+        ProcessVideo::dispatch($video)->delay(now()->addSeconds(5));
+
+        return response()->json([
+            'success' => true,
+            'video_id' => $video->id,
+        ]);
+    }
+
     public function upload(Request $request)
     {
         $request->validate([
@@ -111,19 +180,14 @@ class videoController extends Controller
             'video' => 'required|mimes:mp4,mov,ogg,qt',
             'thumbnail_cropped' => 'required',
             'type' => 'required',
-            'category' => 'required|max:191|regex:/^[a-zA-Z0-9\-_]+$/',
+            'category' => 'required|max:191|regex:/^[a-zA-Z0-9\s\-_çéàùêèôûâîïöüäë]*$/',
         ]);
 
         $image_64 = $request->input('thumbnail_cropped');
-
         $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
-
         $replace = substr($image_64, 0, strpos($image_64, ',')+1);
-
         $image = str_replace($replace, '', $image_64);
-
         $image = str_replace(' ', '+', $image);
-
         $imageName = 'thumbnails/' . Str::random(35) . '.' . $extension;
 
         $category = Category::firstOrCreate(['category_name' => $request->category]);
@@ -177,16 +241,83 @@ class videoController extends Controller
         return redirect()->route('video.details', base64_encode($video->id));
     }
 
-    public function generateThumbnail($videoName)
-    {
-        $ffmpeg = FFMpeg::open('public/uploads/' . $videoName);
-        $ffmpeg->getFrameFromSeconds(1)
-            ->export()
-            ->toDisk('public')
-            ->save('/thumbnails/' . explode('.', $videoName)[0] . '.jpg');
+//    public function generateThumbnail($videoName)
+//    {
+//        $ffmpeg = FFMpeg::open('public/uploads/' . $videoName);
+//        $ffmpeg->getFrameFromSeconds(1)
+//            ->export()
+//            ->toDisk('public')
+//            ->save('/thumbnails/' . explode('.', $videoName)[0] . '.jpg');
+//
+//        return 'storage/thumbnails/' . explode('.', $videoName)[0];
+//    }
 
-        return 'storage/thumbnails/' . explode('.', $videoName)[0];
+    public function draftUpdate(Request $request, $video)
+    {
+        $video = Video::find(base64_decode($video));
+
+        if ($request->input('thumbnail-radio') == 'inputPic') {
+            $request->validate([
+                'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'thumbnail_cropped' => 'required',
+            ]);
+
+            $image_64 = $request->input('thumbnail_cropped');
+        } else {
+            $image_64 = $video->getFrameForHtml(explode('+', $request->input('thumbnail-radio'))[1]);
+        }
+
+        $request->validate([
+            'title' => 'max:191',
+            'description' => 'max:191',
+            'thumbnail' => 'image|mimes:jpeg,png,jpg,gif,svg',
+            'type' => '',
+            'category' => 'max:191',
+        ]);
+
+        if ($request->category) $category = Category::firstOrCreate(['category_name' => $request->category]);
+
+        $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+        $replace = substr($image_64, 0, strpos($image_64, ',')+1);
+        $image = str_replace($replace, '', $image_64);
+        $image = str_replace(' ', '+', $image);
+        $imageName = 'thumbnails/' . Str::random(35) . '.' . $extension;
+        $return = Storage::disk('public')->put($imageName, base64_decode($image));
+        if ($return) {
+            $thumbnail = 'storage/' . $imageName;
+        } else {
+            return redirect()->back()->with('error', 'Error uploading thumbnail');
+        }
+
+        $video->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'thumbnail' => $thumbnail,
+            'type' => $request->type,
+            'category_id' => isset($category) ? $category->id : null,
+        ]);
+
+        $video->tagsAssignments()->delete();
+
+        foreach (explode(' ', $request->tags) as $tag) {
+            $tag = Tag::firstOrCreate(['name' => $tag]);
+            $assignment = TagAssignment::create([
+                'tag_id' => $tag->id,
+                'video_id' => $video->id,
+            ]);
+
+            $assignment->save();
+        }
+
+        if ($video->ready() && $video->processState == 100) {
+            $video->update(['status' => 'online']);
+            $video->save();
+            return redirect()->route('video.details', base64_encode($video->id));
+        } else {
+            return redirect()->route('profile.draftEdit', base64_encode($video->id));
+        }
     }
+
 
     public function update(Request $request, $video)
     {
@@ -197,8 +328,9 @@ class videoController extends Controller
             'description' => 'required|max:191|regex:/^[a-zA-Z0-9\s\!#".,?\'&çéàù%:#êèôûâîïöüäë€_\-()œ$£]*$/u',
             'thumbnail' => 'image|mimes:jpeg,png,jpg,gif,svg',
             'type' => 'required',
-            'category' => 'required|string|max:191|regex:/^[a-zA-Z0-9\-_]+$/',
+            'category' => 'required|string|max:191|regex:/^[a-zA-Z0-9\s\-_çéàùêèôûâîïöüäë]*$/',
         ]);
+
 
         $category = Category::firstOrCreate(['category_name' => $request->category]);
 

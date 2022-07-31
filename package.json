@@ -27,6 +27,8 @@
         "jsdom": "^20.0.0",
         "node-loader": "^2.0.0",
         "node-sass": "^7.0.1",
-        "os-browserify": "^0.3.0"
+        "os-browserify": "^0.3.0",
+        "videojs-contrib-hls": "^5.15.0",
+        "videojs-hls-quality-selector": "^1.1.4"
     }
 }

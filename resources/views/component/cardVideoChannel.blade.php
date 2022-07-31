@@ -1,8 +1,11 @@
 <div class="col-12 col-lg-2 px-0 mx-lg-2 px-xl-2 px-lg-1 mx-lg-3 mb-4">
     <a style="text-decoration: none; color: black" href="{{ route('watch', base64_encode($video->id)) }}">
         <div class="row justify-content-start">
-            <div class="col-12 col-lg-12 px-0 px-lg-0">
-                <img class="card-img-top" style="width: 100%; aspect-ratio: 16/9" src="{{ asset($video->thumbnail) }}" alt="{{ $video->name }}">
+            <div class="col-12 col-lg-12 px-0 px-lg-0" style="position: relative">
+                <img class="card-img-top" style="width: 100%; aspect-ratio: 16/9" src="{{ $video->thumbnail() }}" alt="{{ $video->name }}">
+                <div class="pb-lg-2 pe-lg-2" style="position: absolute; top: 100%; right: 0; transform: translate(0,-100%)">
+                    <span style="color: white; font-size: 0.8em; background: black; padding: 0 2px 2px 2px;">{{ $video->getDuration() }}</span>
+                </div>
             </div>
             <div class="col-12">
                 <div class="row justify-content-between pt-2 align-content-center">

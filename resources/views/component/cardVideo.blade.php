@@ -2,8 +2,11 @@
     <a style="text-decoration: none;" href="{{ route('watch', ['video' => $video->id64()])}}">
         <div class="mb-4 p-0">
             <div class="row">
-                <div class="col-12" id="video_player{{ $video->id }}">
-                    <img class="card-img-top" style="width: 100%; aspect-ratio: 16/9" src="{{ asset($video->thumbnail) }}" alt="{{ $video->name }}">
+                <div class="col-12" id="video_player{{ $video->id }}" style="position: relative">
+                    <img class="card-img-top" style="width: 100%; aspect-ratio: 16/9" src="{{ $video->thumbnail() }}" alt="{{ $video->name }}">
+                    <div class="" style="position: absolute; top: 100%; right: 0; transform: translate(0,-100%)">
+                        <span style="color: white; font-size: 0.8em; background: black; padding: 0 2px 2px 2px;">{{ $video->getDuration() }}</span>
+                    </div>
                 </div>
                 <div class="col-12">
                     <div class="row justify-content-between p-3 align-content-center">
@@ -45,7 +48,7 @@
 {{--            let img = video.getElementsByTagName('img');--}}
 
 {{--            img[0].style.display = 'none';--}}
-{{--            video.innerHTML = "<video id='hls{{ $video->id }}' class='video-js vjs-big-play-centered vjs-16-9' data-setup=\"{'fluid': true, 'mute': true}\" controls preload='true' poster='{{ asset($video->thumbnail) }}'> <source type='application/x-mpegURL' src='{{ asset($video->video) }}'> </video>"--}}
+{{--            video.innerHTML = "<video id='hls{{ $video->id }}' class='video-js vjs-big-play-centered vjs-16-9' data-setup=\"{'fluid': true, 'mute': true}\" controls preload='true' poster='{{ $video->thumbnail() }}'> <source type='application/x-mpegURL' src='{{ asset($video->video) }}'> </video>"--}}
 {{--            player{{ $video->id }} = videojs('hls{{ $video->id }}', {aspectRatio: '16:9', autoplay: true})--}}
 
 {{--            player{{ $video->id }}.ready(function() {--}}
@@ -65,7 +68,7 @@
 {{--            let video = document.getElementById('video_player{{ $video->id }}');--}}
 {{--            let img = video.getElementsByTagName('img')--}}
 {{--            video.innerHTML = "";--}}
-{{--            video.innerHTML = "<img class='card-img-top' style='width: 100%; aspect-ratio: 16/9' src='{{ asset($video->thumbnail) }}' alt='{{ $video->name }}'>";--}}
+{{--            video.innerHTML = "<img class='card-img-top' style='width: 100%; aspect-ratio: 16/9' src='{{ $video->thumbnail() }}' alt='{{ $video->name }}'>";--}}
 {{--            img[0].style.display = 'flex';--}}
 {{--        }--}}
 {{--    });--}}

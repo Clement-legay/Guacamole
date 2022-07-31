@@ -292,7 +292,7 @@ class User extends Authenticatable
 //
 //        dd($suggestedVideos->get());
 
-        return Video::withCount('views')->orderBy('views_count', 'desc')->whereNotIn('videos.id', $this->history()->pluck('id'))->limit($limit)->get();
+        return Video::withCount('views')->where('videos.status', '=', 'online')->where('videos.type', '=', 'public')->orderBy('views_count', 'desc')->whereNotIn('videos.id', $this->history()->pluck('id'))->limit($limit)->get();
     }
 
     public function hasLikedVideo($videoId)

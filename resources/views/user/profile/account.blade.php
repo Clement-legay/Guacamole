@@ -89,7 +89,7 @@
                         <input type="hidden" id="url-avatar" value="{{ route('user.API_user_update_avatar', Auth::user()->id64()) }}">
                         <input type="file" style="display: none" id="PP" name="PP" accept="image/gif, image/jpeg, image/png">
                         <input type="hidden" id="PP_cropped" name="profile_image" value="">
-                        <div class="modal fade" id="modalPP" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                        <div class="modal fade" data-bs-backdrop="static" id="modalPP" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-body px-0">
@@ -159,7 +159,7 @@
                                                 </div>
 
 
-                                                <div class="modal fade" id="modalBanner" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                                                <div class="modal fade" data-bs-backdrop="static" id="modalBanner" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-body px-0">

@@ -37,6 +37,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
         Route::get('/content', [UserController::class, 'content'])->name('content');
+        Route::get('/upload', [UserController::class, 'upload'])->name('upload');
+        Route::get('/upload/success', [UserController::class, 'uploadSuccess'])->name('uploadSuccess');
+        Route::get('/upload/{video}', [UserController::class, 'draftEdit'])->name('draftEdit');
+        Route::put('/edit/{video}', [videoController::class, 'draftUpdate'])->name('draftUpdate');
+
 
         Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
         Route::get('/comments', [UserController::class, 'comments'])->name('comments');

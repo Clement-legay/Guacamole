@@ -25,9 +25,23 @@ class UserController extends Controller
         return view('user.channel', compact('user'));
     }
 
+    public function uploadSuccess()
+    {
+        $video = Video::find(base64_decode(request('video')));
+
+        return redirect()->route('profile.draftEdit', $video->id64());
+    }
+
+    public function draftEdit($video)
+    {
+        $video = Video::find(base64_decode($video));
+
+        return view('user.profile.content', ['draft' => $video]);
+    }
+
     public function upload()
     {
-        return view('user.profile.content', ['upload' => true]);
+        return view('user.profile.content', ['create' => true]);
     }
 
     public function verify($token)

@@ -3,8 +3,10 @@
         <div class="row">
             <div class="col-lg-5 col-12 p-0 p-lg-2" style="position: relative">
                 <a href="{{ route('watch', $video->id64()) }}">
-                    <img class="card-img-top" style="width: 100%; aspect-ratio: 16/9" src="{{ asset($video->thumbnail) }}" alt="{{ $video->name }}">
-                    <span style="position: absolute; bottom: 0; right: 0; color: white; background: black; padding: 0 2px 2px 2px; font-size: 0.8em; transform: translate(-100%,-100%)">{{ $video->getDuration() }}</span>
+                    <img class="card-img-top" style="width: 100%; aspect-ratio: 16/9" src="{{ $video->thumbnail() }}" alt="{{ $video->name }}">
+                    <div class="pb-lg-2 pe-lg-2" style="position: absolute; top: 100%; right: 0; transform: translate(0,-100%)">
+                        <span style="color: white; font-size: 0.8em; background: black; padding: 0 2px 2px 2px;">{{ $video->getDuration() }}</span>
+                    </div>
                 </a>
             </div>
             <div class="col-lg-7 col-12 p-0 p-lg-2">

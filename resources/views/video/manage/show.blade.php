@@ -171,28 +171,20 @@
                     <div class="col-12 mb-3">
                         <div class="card bg-light">
                             <div class="card-body">
-                                @if($video->status == 'pending' && $video->progress == 0)
-                                    <h5 class="card-title">Pending</h5>
-                                    <p class="card-text">Your video is pending for approval.</p>
-                                @elseif($video->status == 'pending' && $video->progress =! 0)
-                                    <h5 class="card-title">Your video is processing</h5>
-                                    <p class="card-text">Progress {{ $video->progress }}%</p>
-                                @elseif($video->status == 'online')
-                                    <div class="row justify-content-center">
-                                        <div class="form-group">
-                                            @component('component.playerJS', ['video' => $video])
-                                            @endcomponent
-                                        </div>
-                                        <div class="col-12 mb-3">
-                                            <p class="p-0 m-0 title-prop">Video link</p>
-                                            <a href="{{ route('watch', $video->id64()) }}" style="text-decoration: none" id="link" class="p-0 m-0 prop-link">{{ route('watch', $video->id64()) }}</a>
-                                        </div>
-                                        <div class="col-12">
-                                            <p class="p-0 m-0 title-prop">Video name</p>
-                                            <p id="name" class="p-0 m-0 prop">{{ $video->title }}</p>
-                                        </div>
+                                <div class="row justify-content-center">
+                                    <div class="form-group">
+                                        @component('component.playerJS', ['video' => $video])
+                                        @endcomponent
                                     </div>
-                                @endif
+                                    <div class="col-12 mb-3">
+                                        <p class="p-0 m-0 title-prop">Video link</p>
+                                        <a href="{{ route('watch', $video->id64()) }}" style="text-decoration: none" id="link" class="p-0 m-0 prop-link">{{ route('watch', $video->id64()) }}</a>
+                                    </div>
+                                    <div class="col-12">
+                                        <p class="p-0 m-0 title-prop">Video name</p>
+                                        <p id="name" class="p-0 m-0 prop">{{ $video->title }}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -210,12 +202,12 @@
                                                     @error('thumbnail_cropped')
                                                     <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
-                                                    </span>
+                                                        </span>
                                                     @enderror
                                                 </div>
 
 
-                                                <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                                                <div class="modal fade" data-bs-backdrop="static" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-body px-0">
@@ -234,7 +226,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-12 px-5 my-3">
-                                                <img src="{{ asset($video->thumbnail) }}" id="thumbnail-picture" alt="Thumbnail" style="width: 100%; aspect-ratio: 16 / 9">
+                                                <img src="{{ $video->thumbnail() }}" id="thumbnail-picture" alt="Thumbnail" style="width: 100%; aspect-ratio: 16 / 9">
                                             </div>
                                         </div>
                                     </div>

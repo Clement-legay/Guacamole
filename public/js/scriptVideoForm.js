@@ -90,7 +90,6 @@ $("#cancelModal").click(function(){
 });
 
 $("#crop").click(function(){
-    const formTarget = document.getElementById('thumbnail_cropped');
     canvas = cropper.getCroppedCanvas({
         fillColor: '#fff',
         imageSmoothingEnabled: true,
@@ -105,11 +104,13 @@ $("#crop").click(function(){
         let reader = new FileReader();
         reader.readAsDataURL(blob);
         reader.onloadend = function() {
-          const pictureRender = document.getElementById('thumbnail-picture');
-            pictureRender.src = reader.result;
-            console.log(formTarget)
-            formTarget.value = reader.result;
-            console.log(formTarget.value)
+            const pictureRender = document.getElementById('thumbnail-picture');
+            if (pictureRender) {
+                pictureRender.src = reader.result;
+            } else {
+                document.getElementById('thumbnailOpener').style.backgroundImage = "url(" + reader.result + ")"
+            }
+            $('#thumbnail_cropped').val(reader.result);
             $modal.modal('hide');
         }
     });

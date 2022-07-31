@@ -18,7 +18,7 @@
             @if((url()->current() == route('video.create')) == false)
                 <div id="avatar-row" class="row justify-content-center align-content-center">
                     <a href="{{route('watch', $video->id64())}}">
-                        <img src="{{ asset($video->thumbnail) }}" alt="{{ $video->title }}" width="100%">
+                        <img src="{{ $video->thumbnail() }}" alt="{{ $video->title }}" width="100%">
                     </a>
                 </div>
                 <div class="row justify-content-center align-content-start pt-2 link-name">

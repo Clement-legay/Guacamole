@@ -63,7 +63,7 @@
 {{--                    <button class="btn">--}}
 {{--                        <i style="font-size: 1.2em" class="bi bi-bell-fill"></i>--}}
 {{--                    </button>--}}
-                    <a href="{{ route('video.create') }}" class="btn">
+                    <a href="{{ route('profile.upload') }}" class="btn">
                         <i style="font-size: 1.2em" class="bi bi-upload"></i>
                     </a>
                 </div>

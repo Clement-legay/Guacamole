@@ -29,9 +29,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/categories', [CategoryController::class, 'searchCategory'])->name('API_categories');
 Route::put('/views/{id}', [ViewController::class, 'update'])->name('API_views');
+Route::get('/frame/{video}/get', [videoController::class, 'getFrame'])->name('API_frame_get');
+Route::post('{user}/video/upload', [videoController::class, 'uploadVideoFile'])->name('API_upload_video_file');
+Route::get('{video}/progress', [videoController::class, 'getVideoProgress'])->name('API_process_progress');
 
 
 Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
+
     Route::post('/{user}/profile_picture/update', [UserController::class, 'updateAvatar'])->name('API_user_update_avatar');
     Route::post('/{user}/subscribe/{channel}', [SubscribeController::class, 'sendSubscribe'])->name('API_subscribe');
     Route::delete('/{user}/unsubscribe/{channel}', [SubscribeController::class, 'sendUnsubscribe'])->name('API_unsubscribe');
